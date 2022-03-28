@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package user;
+
+service UserService {
+    rpc Login (AuthCode) returns (Tokens) {}
+    rpc Me (google.protobuf.Empty) returns (Tokens) {}
+}
+
+message AuthCode {
+    string code = 1;
+}
+
+message Tokens {
+    string accessToken = 1;
+    string refreshToken = 2;
+}
+
+message User {
+    string id = 1;
+    string email = 2;
+    string name = 3;
+    string picture = 4;
+}

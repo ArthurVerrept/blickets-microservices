@@ -1,0 +1,26 @@
+{
+  "name": "proto-npm",
+  "version": "1.0.0",
+  "description": "proto's for my app",
+  "main": "lib/index.js",
+  "scripts": {
+    "gen": "npm run gen:stubs && npm run gen:index && npm run build",
+    "gen:all": "npm run gen:gateway && npm run gen:service && npm run gen:code && npm run build",
+    "gen:stubs": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=addGrpcMetadata=true --ts_proto_opt=returnObservable=true --ts_proto_opt=outputEncodeMethods=false --ts_proto_opt=lowerCaseServiceMethods=true --ts_proto_opt=outputJsonMethods=false --ts_proto_opt=outputClientImpl=false --ts_proto_opt=oneof=unions --ts_proto_out=./src/out ./src/protos/*.proto",
+    "gen:service": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=outputEncodeMethods=false --ts_proto_opt=outputServices=false --ts_proto_opt=outputJsonMethods=false --ts_proto_opt=outputClientImpl=false --ts_proto_out=./ ./src/protos/*.proto",
+    "build": "tsc",
+    "gen:index": "node src/gen-out.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.5.4",
+    "@grpc/proto-loader": "^0.6.9",
+    "rxjs": "^7.5.4",
+    "ts-proto": "^1.104.0"
+  },
+  "author": "Arthur Verrept",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}
