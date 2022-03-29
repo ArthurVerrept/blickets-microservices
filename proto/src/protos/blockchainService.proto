@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package blockchain;
+
+service BlockchainService {
+    rpc CreateAccount (google.protobuf.Empty) returns (WalletKeys) {}
+}
+
+message WalletKeys {
+    string address = 1;
+    string privateKey = 2;
+}
