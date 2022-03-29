@@ -33,7 +33,6 @@ export class GoogleAuthenticationService {
         
         return await this.getAppTokensForUser(tokens.access_token, tokens.refresh_token)
       } catch (e) {
-        console.log(e)
         throw new RpcException({
           code: status.PERMISSION_DENIED,
           message: 'Invalid Google grant, go through sign in flow again'

@@ -16,7 +16,6 @@ export class UserController implements OnModuleInit {
 
     @Post('google-login')
     getTokens(@Body() authCode: AuthCode) {
-        console.log('in gateway', authCode.code)
         return this.userService.login(authCode)
     }
 }

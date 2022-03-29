@@ -10,7 +10,6 @@ export class GoogleAuthenticationController {
 
     @GrpcMethod('UserService', 'Login')
     async login(authCode: AuthCode) {
-        console.log(authCode)
         if (!authCode.code) {
             throw new RpcException({
                 code: status.PERMISSION_DENIED,
