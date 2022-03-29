@@ -16,10 +16,10 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
             rejectUnauthorized: false
           },
           entities: [
-            'dist/src/**/*.entity.js'
+            'dist/models/**/*.entity.js'
           ],
           namingStrategy: new SnakeNamingStrategy(),
-          synchronize: false
+          synchronize: true
         } : {
           type: 'postgres',
           host: configService.get('POSTGRES_HOST'),
@@ -28,7 +28,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
           password: configService.get('POSTGRES_PASSWORD'),
           database: configService.get('POSTGRES_DB'),
           entities: [
-            'dist/src/**/*.entity.js'
+            'dist/models/**/*.entity.js'
           ],
           namingStrategy: new SnakeNamingStrategy(),
           // synchronize should only be used for local development

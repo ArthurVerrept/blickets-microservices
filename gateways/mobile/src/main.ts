@@ -11,7 +11,7 @@ async function bootstrap() {
   // app.useGlobalGuards(new MetaGuard())
   app.useGlobalInterceptors(new GrpcErrorIntercept())
   await app.listen(3000, () => {
-    logger.log('Gateway is listening...')
+    logger.verbose('Gateway is listening...')
   })
   
 }

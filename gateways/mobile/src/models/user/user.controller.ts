@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, OnModuleInit } from '@nestjs/common'
+import { Body, Controller, Get, Inject, OnModuleInit, Post } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { UserService, UserServiceName, AuthCode } from 'proto-npm'
 
@@ -14,8 +14,9 @@ export class UserController implements OnModuleInit {
         @Inject(UserServiceName) private client: ClientGrpc,
     ) {}
 
-    @Get('google-login')
-    getTokens(@Body() user: AuthCode) {
-        return this.userService.login(user)
+    @Post('google-login')
+    getTokens(@Body() authCode: AuthCode) {
+        console.log('in gateway', authCode.code)
+        return this.userService.login(authCode)
     }
 }
