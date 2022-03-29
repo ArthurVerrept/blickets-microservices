@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { AuthenticationModule } from './authentication/authentication.module'
 import { DatabaseModule } from './database/database.module'
 import { GoogleAuthenticationModule } from './models/google-authentication/google-authentication.module'

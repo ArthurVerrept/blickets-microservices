@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { status } from '@grpc/grpc-js'
 import { ConfigService } from '@nestjs/config'
 import { RpcException } from '@nestjs/microservices'
