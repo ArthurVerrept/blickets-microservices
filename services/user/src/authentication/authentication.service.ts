@@ -14,28 +14,29 @@ export class AuthenticationService {
     ){}
 
 
-    // public async generateNewAccessToken(userId: number) {
-    //     const payload = { sub: userId } 
-    //     const accessToken = this.jwtService.sign(payload, { 
-    //         secret: this.configService.get('JWT_SECRET'),
-    //         expiresIn: '180s'
-    //     })
+    public async generateNewAccessToken(userId: number) {
+        const payload = { id: userId } 
+        const accessToken = this.jwtService.sign(payload, { 
+            secret: this.configService.get('JWT_SECRET'),
+            expiresIn: '180s'
+        })
+        return { accessToken }
 
-    //     try {
-    //         // returning email so ryan can add to keychain
-    //         const user = await this.userService.getUser(userId)
-    //         return { accessToken, email: user.email }
-    //     } catch {
-    //         // if token has been revoked through google it means that user
-    //         // it will fail into here where we return a specific 400 to tell
-    //         // the client to redirect
-    //         throw new HttpException({ error_description: 'Google refresh token revoked, sign in again', error: 'invalid_grant' }, 400)
-    //     }
-    // }
+        // try {
+        //     // returning email so ryan can add to keychain
+        //     const user = await this.userService.getUser(userId)
+        //     return { accessToken, email: user.email }
+        // } catch {
+        //     // if token has been revoked through google it means that user
+        //     // it will fail into here where we return a specific 400 to tell
+        //     // the client to redirect
+        //     throw new HttpException({ error_description: 'Google refresh token revoked, sign in again', error: 'invalid_grant' }, 400)
+        // }
+    }
 
 
     public getCookiesWithJwtToken(user: User) {
-        const payload = { sub: user.id } 
+        const payload = { id: user.id } 
         const accessToken = this.jwtService.sign(payload, { 
             secret: this.configService.get('JWT_SECRET'),
             expiresIn: `${this.configService.get('JWT_EXPIRATION_TIME')}s`

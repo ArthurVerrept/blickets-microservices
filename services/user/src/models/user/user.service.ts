@@ -8,9 +8,12 @@ import { RpcException } from '@nestjs/microservices'
 @Injectable()
 export class UserService {
     constructor(
-        // private readonly googleAuthenticationService: GoogleAuthenticationService,
         @InjectRepository(User) private usersRepository: Repository<User>
     ){}
+
+    async getOneById(id: number): Promise<User> {
+      return await this.usersRepository.findOneOrFail(id) // SELECT * from user WHERE id = ?
+    }
 
     async getByEmail(email: string): Promise<User>  {
         const user = await this.usersRepository.findOne({ email })
@@ -64,4 +67,14 @@ export class UserService {
     //     return userData
     //   }
     // }
+
+    async getUserIfRefreshTokenMatches(refreshToken: string, id: number) {
+      const user = await this.getOneById(id) // findOrFail()
+   
+      const isRefreshTokenMatching = (refreshToken === user.currentRefreshToken)
+   
+      if (isRefreshTokenMatching) {
+        return user
+      } 
+    }
 }

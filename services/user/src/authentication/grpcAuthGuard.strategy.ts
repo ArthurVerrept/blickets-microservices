@@ -1,5 +1,6 @@
 import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
 import {Observable} from 'rxjs'
+import { status } from '@grpc/grpc-js'
 import {JwtService} from '@nestjs/jwt'
 import { RpcException } from '@nestjs/microservices'
 
@@ -18,7 +19,7 @@ export class GrpcAuthGuard implements CanActivate {
 
             if (!metadata) {
                 throw new RpcException({
-                    code: 16,
+                    code: status.UNAUTHENTICATED,
                     message: 'No metadata provided'
                 })
             }
@@ -27,14 +28,14 @@ export class GrpcAuthGuard implements CanActivate {
 
         if (!header) {
             throw new RpcException({
-                code: 16,
+                code: status.UNAUTHENTICATED,
                 message: 'No authorization token provided'
             })
         }
 
         if (!header.includes(prefix)) {
             throw new RpcException({
-                code: 16,
+                code: status.UNAUTHENTICATED,
                 message: 'Expected token of type Bearer'
             })
         }
@@ -53,7 +54,7 @@ export class GrpcAuthGuard implements CanActivate {
             return true
         } catch (e) {
             throw new RpcException({
-                code: 16,
+                code: status.UNAUTHENTICATED,
                 message: e
             })
         }

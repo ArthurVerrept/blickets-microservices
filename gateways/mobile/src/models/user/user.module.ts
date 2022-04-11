@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common'
 import { UserController } from './user.controller'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
-import { UserService } from './user.service'
 import { UserServiceName, UserServicePath } from 'proto-npm'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
@@ -28,6 +27,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
     })
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: []
 })
 export class UserModule {}

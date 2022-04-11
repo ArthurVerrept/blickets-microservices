@@ -10,8 +10,8 @@ const microserviceOptions = {
   transport: Transport.GRPC,
   options: {
     package: BlockchainServiceName,
-    protoPath: BlockchainServicePath
-    // url: 'localhost:50051'
+    protoPath: BlockchainServicePath,
+    url: 'localhost:50051'
   }
 }
 
@@ -19,7 +19,7 @@ async function bootstrap() {
   console.log(BlockchainServicePath)
   const app = await NestFactory.createMicroservice(AppModule, microserviceOptions)
   await app.listen()
-  logger.log('microservice is listening...')
+  logger.log('Blockchain service is listening...')
 }
 
 bootstrap()

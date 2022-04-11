@@ -9,6 +9,10 @@ export interface AuthCode {
   code: string;
 }
 
+export interface AccessToken {
+  accessToken: string;
+}
+
 export interface Tokens {
   accessToken: string;
   refreshToken: string;
@@ -23,5 +27,6 @@ export interface User {
 
 export interface UserService {
   login(request: AuthCode, metadata?: Metadata): Observable<Tokens>;
+  refresh(request: Empty, metadata?: Metadata): Observable<AccessToken>;
   me(request: Empty, metadata?: Metadata): Observable<Tokens>;
 }

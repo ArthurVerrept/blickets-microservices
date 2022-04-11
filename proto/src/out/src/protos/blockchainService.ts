@@ -11,5 +11,12 @@ export interface WalletKeys {
 }
 
 export interface BlockchainService {
-  createAccount(request: Empty, metadata?: Metadata): Observable<WalletKeys>;
+  /**
+   * currently creating account on server, this is a security concern for that one request
+   * it does however save me lots of headaches on the front end.
+   */
+  createEthereumAccount(
+    request: Empty,
+    metadata?: Metadata
+  ): Observable<WalletKeys>;
 }

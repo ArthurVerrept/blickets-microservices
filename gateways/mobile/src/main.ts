@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { MetaGuard } from './common/guards/metadata.guard'
 import { GrpcErrorIntercept } from './common/interceptors/grpcError.interceptor'
 
 const logger = new Logger('Main')

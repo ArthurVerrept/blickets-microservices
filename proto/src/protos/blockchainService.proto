@@ -5,7 +5,9 @@ import "google/protobuf/empty.proto";
 package blockchain;
 
 service BlockchainService {
-    rpc CreateAccount (google.protobuf.Empty) returns (WalletKeys) {}
+    // currently creating account on server, this is a security concern for that one request
+    // it does however save me lots of headaches on the front end.
+    rpc CreateEthereumAccount (google.protobuf.Empty) returns (WalletKeys) {}
 }
 
 message WalletKeys {
