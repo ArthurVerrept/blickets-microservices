@@ -1,6 +1,6 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Body, Controller, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
-import { ClientGrpc, GrpcStreamCall, GrpcStreamMethod } from '@nestjs/microservices'
+import { ClientGrpc } from '@nestjs/microservices'
 import { BlockchainService, BlockchainServiceName, DeleteImageRequest } from 'proto-npm'
 import { ApiBody, ApiConsumes } from '@nestjs/swagger'
 import { Express } from 'express'
