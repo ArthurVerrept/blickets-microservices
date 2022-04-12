@@ -5,9 +5,9 @@ import "google/protobuf/empty.proto";
 package user;
 
 service UserService {
-    rpc Login (AuthCode) returns (Tokens) {}
-    rpc Refresh (google.protobuf.Empty) returns (AccessToken) {}
-    rpc Me (google.protobuf.Empty) returns (Tokens) {}
+    rpc Login (AuthCode) returns (Tokens);
+    rpc Refresh (google.protobuf.Empty) returns (AccessToken);
+    rpc Me (google.protobuf.Empty) returns (Tokens);
 }
 
 message AuthCode {

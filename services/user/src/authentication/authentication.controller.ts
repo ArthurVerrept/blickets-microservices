@@ -11,8 +11,6 @@ export class AuthenticationController {
     @UseGuards(GrpcRefreshAuthGuard)
     @GrpcMethod('UserService', 'Refresh')
     async refresh({}, metadata: Metadata) {
-        console.log('in')
-
         return await this.authenticationService.generateNewAccessToken(metadata.getMap().user['id'])
     }   
 }

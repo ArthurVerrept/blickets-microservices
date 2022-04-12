@@ -7,10 +7,26 @@ package blockchain;
 service BlockchainService {
     // currently creating account on server, this is a security concern for that one request
     // it does however save me lots of headaches on the front end.
-    rpc CreateEthereumAccount (google.protobuf.Empty) returns (WalletKeys) {}
+    rpc CreateEthereumAccount (google.protobuf.Empty) returns (WalletKeys);
+    rpc UploadFile (UploadImageRequest) returns (UploadImageResponse);
+    rpc DeleteFile (DeleteImageRequest) returns (google.protobuf.Empty);
 }
 
 message WalletKeys {
     string address = 1;
     string privateKey = 2;
+}
+
+message UploadImageRequest {
+    bytes binary = 1;
+    string mime = 2;
+}
+
+message UploadImageResponse {
+    string id = 1;
+    string url = 2;
+}
+
+message DeleteImageRequest {
+    string id = 1;
 }
