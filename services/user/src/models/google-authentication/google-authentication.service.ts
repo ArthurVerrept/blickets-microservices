@@ -3,7 +3,7 @@ import { status } from '@grpc/grpc-js'
 import { ConfigService } from '@nestjs/config'
 import { RpcException } from '@nestjs/microservices'
 import { Auth, google } from 'googleapis'
-import { AuthCode } from 'proto-npm'
+import { GoogleAuthCode } from 'proto-npm'
 import { UserService } from '../user/user.service'
 import User from '../user/entities/user.entity'
 import { AuthenticationService } from 'src/authentication/authentication.service'
@@ -26,7 +26,7 @@ export class GoogleAuthenticationService {
     )
   }
 
-  async login(authCode: AuthCode) {
+  async login(authCode: GoogleAuthCode) {
       try {
         // get access and refresh tokens from google
         const { tokens } = await this.oauthClient.getToken(authCode)

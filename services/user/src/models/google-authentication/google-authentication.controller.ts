@@ -1,7 +1,7 @@
 import { status } from '@grpc/grpc-js'
 import { Controller } from '@nestjs/common'
 import { GrpcMethod, RpcException } from '@nestjs/microservices'
-import { AuthCode } from 'proto-npm'
+import { GoogleAuthCode } from 'proto-npm'
 import { GoogleAuthenticationService } from './google-authentication.service'
 
 @Controller('google-authentication')
@@ -9,7 +9,7 @@ export class GoogleAuthenticationController {
     constructor(private googleAuthService: GoogleAuthenticationService) {}
 
     @GrpcMethod('UserService', 'Login')
-    async login(authCode: AuthCode) {
+    async login(authCode: GoogleAuthCode) {
         if (!authCode.code) {
             throw new RpcException({
                 code: status.PERMISSION_DENIED,

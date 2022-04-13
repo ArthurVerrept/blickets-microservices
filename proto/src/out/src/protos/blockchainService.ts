@@ -24,6 +24,19 @@ export interface DeleteImageRequest {
   id: string;
 }
 
+export interface Events {
+  addresses: string[];
+}
+
+export interface CreateEventRequest {
+  file: UploadImageRequest | undefined;
+  name: string;
+  eventName: string;
+  ticketAmount: number;
+  ticketPrice: number;
+  resaleCost: number;
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -41,4 +54,6 @@ export interface BlockchainService {
     request: DeleteImageRequest,
     metadata?: Metadata
   ): Observable<Empty>;
+  getEvents(request: Empty, metadata?: Metadata): Observable<Events>;
+  createEvent(request: Empty, metadata?: Metadata): Observable<Events>;
 }

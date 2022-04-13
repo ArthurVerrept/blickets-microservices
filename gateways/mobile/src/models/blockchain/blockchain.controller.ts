@@ -1,5 +1,5 @@
 import { Metadata } from '@grpc/grpc-js'
-import { Body, Controller, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { BlockchainService, BlockchainServiceName, DeleteImageRequest } from 'proto-npm'
 import { ApiBody, ApiConsumes } from '@nestjs/swagger'
@@ -59,10 +59,15 @@ export class BlockchainController implements OnModuleInit {
         return this.blockchainService.uploadFile(send, metadata)
     }
 
-
+    @HttpCode(200)
     @Post('delete-image')
-    deleteImage(@Meta() metadata: Metadata, @Body() image: DeleteImageRequest) {
-        console.log(image)
-        return this.blockchainService.deleteFile(image, metadata)
+    deleteImage(@Meta() metadata: Metadata, @Body() file: DeleteImageRequest) {
+        return this.blockchainService.deleteFile(file, metadata)
+    }
+
+    @Get('events')
+    getEvents(@Meta() metadata: Metadata) {
+        // a return of just an object means there are no dpeloyed contracts
+        return this.blockchainService.getEvents({}, metadata)
     }
 }

@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
-import { Body, Controller, Inject, OnModuleInit, Post } from '@nestjs/common'
+import { Body, Controller, Get, Inject, OnModuleInit, Post } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { UserService, UserServiceName, AuthCode } from 'proto-npm'
+import { UserService, UserServiceName, GoogleAuthCode } from 'proto-npm'
 import { Meta } from 'src/common/decorators/meta.decorator'
 
 @Controller('user')
@@ -15,10 +15,15 @@ export class UserController implements OnModuleInit {
     constructor(
         @Inject(UserServiceName) private client: ClientGrpc,
     ) {}
+    
+    @Get('gen-auth-url')
+    genAuthUrl() {
+        return this.userService.genGoogleAuthUrl({})
+    }
 
     @Post('google-login')
-    getTokens(@Body() authCode: AuthCode) {
-        return this.userService.login(authCode)
+    getTokens(@Body() authCode: GoogleAuthCode) {
+        return this.userService.googleLogin(authCode)
     }
 
     @Post('refresh-token')

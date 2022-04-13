@@ -5,7 +5,11 @@ import { Empty } from "../../google/protobuf/empty";
 
 export const protobufPackage = "user";
 
-export interface AuthCode {
+export interface GoogleAuthUrl {
+  url: string;
+}
+
+export interface GoogleAuthCode {
   code: string;
 }
 
@@ -26,7 +30,11 @@ export interface User {
 }
 
 export interface UserService {
-  login(request: AuthCode, metadata?: Metadata): Observable<Tokens>;
+  genGoogleAuthUrl(
+    request: Empty,
+    metadata?: Metadata
+  ): Observable<GoogleAuthUrl>;
+  googleLogin(request: GoogleAuthCode, metadata?: Metadata): Observable<Tokens>;
   refresh(request: Empty, metadata?: Metadata): Observable<AccessToken>;
   me(request: Empty, metadata?: Metadata): Observable<Tokens>;
 }
