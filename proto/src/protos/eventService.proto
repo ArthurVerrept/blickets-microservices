@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package event;
+
+service EventService {
+    rpc CreateEvent (CreateEventRequest) returns (google.protobuf.Empty);
+}
+
+message CreateEventRequest {
+    string txnId = 1;
+    string cid = 2;
+}
+

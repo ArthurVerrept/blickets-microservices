@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
 import AWS from 'aws-sdk'
 import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
-import { UploadImageRequest, CreateEventRequest } from 'proto-npm'
+import { UploadImageRequest, DeployEventRequest } from 'proto-npm'
 import { NFTStorage, File } from 'nft.storage'
 
 @Injectable()
@@ -86,7 +86,7 @@ export class EthereumService {
     }
     
 
-    async createTransactionData(eventData: CreateEventRequest) {
+    async createTransactionData(eventData: DeployEventRequest) {
         const data = this.web3.eth.abi.encodeFunctionCall({
             name: 'createEvent',
             type: 'function',

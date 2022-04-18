@@ -28,7 +28,7 @@ export interface Events {
   addresses: string[];
 }
 
-export interface CreateEventRequest {
+export interface DeployEventRequest {
   file: UploadImageResponse | undefined;
   name: string;
   eventName: string;
@@ -38,7 +38,7 @@ export interface CreateEventRequest {
   date: string;
 }
 
-export interface CreateEventResponse {
+export interface DeployEventResponse {
   to: string;
   data: string;
 }
@@ -61,8 +61,8 @@ export interface BlockchainService {
     metadata?: Metadata
   ): Observable<Empty>;
   getEvents(request: Empty, metadata?: Metadata): Observable<Events>;
-  createEvent(
-    request: CreateEventRequest,
+  deployEventParameters(
+    request: DeployEventRequest,
     metadata?: Metadata
-  ): Observable<CreateEventResponse>;
+  ): Observable<DeployEventResponse>;
 }

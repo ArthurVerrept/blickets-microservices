@@ -2,7 +2,7 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from '../grpcAuthGuard.strategy'
 import { EthereumService } from './ethereum.service'
-import { UploadImageRequest, CreateEventRequest } from 'proto-npm'
+import { UploadImageRequest, DeployEventRequest } from 'proto-npm'
 import { ConfigService } from '@nestjs/config'
 
 @Controller('ethereum')
@@ -22,8 +22,8 @@ export class EthereumController {
     }
 
     // @UseGuards(GrpcAuthGuard)
-    @GrpcMethod('BlockchainService', 'CreateEvent')
-    async createEvent(eventData: CreateEventRequest) {
+    @GrpcMethod('BlockchainService', 'DeployEventParameters')
+    async DeployEventParameters(eventData: DeployEventRequest) {
         // get image and data
 
         // upload image to ipfs saving CID just in memory here

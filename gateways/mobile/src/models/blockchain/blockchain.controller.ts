@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Body, Controller, Get, HttpCode, Inject, OnModuleInit, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { BlockchainService, BlockchainServiceName, DeleteImageRequest, CreateEventRequest } from 'proto-npm'
+import { BlockchainService, BlockchainServiceName, DeployEventRequest } from 'proto-npm'
 import { ApiBody, ApiConsumes } from '@nestjs/swagger'
 import { Express } from 'express'
 import { Meta } from 'src/common/decorators/meta.decorator'
@@ -31,11 +31,11 @@ export class BlockchainController implements OnModuleInit {
         return this.blockchainService.getEvents({}, metadata)
     }
     
-    @Post('create-event')
-    createEvent(@Meta() metadata: Metadata, @Body() eventData: CreateEventRequest) {
+    @Post('event-deploy-parameters')
+    CreateEventTransaction(@Meta() metadata: Metadata, @Body() eventData: DeployEventRequest) {
         console.log(eventData)
         // a return of just an object means there are no deployed contracts
-        return this.blockchainService.createEvent(eventData, metadata)
+        return this.blockchainService.deployEventParameters(eventData, metadata)
     }
 
     @Post('upload-image')
