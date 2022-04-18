@@ -16,7 +16,7 @@ export interface UploadImageRequest {
 }
 
 export interface UploadImageResponse {
-  id: string;
+  cid: string;
   url: string;
 }
 
@@ -29,12 +29,18 @@ export interface Events {
 }
 
 export interface CreateEventRequest {
-  file: UploadImageRequest | undefined;
+  file: UploadImageResponse | undefined;
   name: string;
   eventName: string;
-  ticketAmount: number;
-  ticketPrice: number;
-  resaleCost: number;
+  ticketAmount: string;
+  ticketPrice: string;
+  resaleCost: string;
+  date: string;
+}
+
+export interface CreateEventResponse {
+  to: string;
+  data: string;
 }
 
 export interface BlockchainService {
@@ -55,5 +61,8 @@ export interface BlockchainService {
     metadata?: Metadata
   ): Observable<Empty>;
   getEvents(request: Empty, metadata?: Metadata): Observable<Events>;
-  createEvent(request: Empty, metadata?: Metadata): Observable<Events>;
+  createEvent(
+    request: CreateEventRequest,
+    metadata?: Metadata
+  ): Observable<CreateEventResponse>;
 }

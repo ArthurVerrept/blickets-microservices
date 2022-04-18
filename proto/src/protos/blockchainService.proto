@@ -11,7 +11,7 @@ service BlockchainService {
     rpc UploadFile (UploadImageRequest) returns (UploadImageResponse);
     rpc DeleteFile (DeleteImageRequest) returns (google.protobuf.Empty);
     rpc GetEvents (google.protobuf.Empty) returns (Events);
-    rpc CreateEvent (google.protobuf.Empty) returns (Events);
+    rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse);
 }
 
 message WalletKeys {
@@ -25,7 +25,7 @@ message UploadImageRequest {
 }
 
 message UploadImageResponse {
-    string id = 1;
+    string cid = 1;
     string url = 2;
 }
 
@@ -38,10 +38,17 @@ message Events {
 }
 
 message CreateEventRequest {
-    UploadImageRequest file = 1;
+    UploadImageResponse file = 1;
     string name = 2;
     string eventName = 3;
-    int64 ticketAmount = 4;
-    int32 ticketPrice = 5;
-    int32 resaleCost = 6;
+    string ticketAmount = 4;
+    string ticketPrice = 5;
+    string resaleCost = 6;
+    string date = 7;
+}
+
+
+message CreateEventResponse {
+    string to = 1;
+    string data = 2;
 }

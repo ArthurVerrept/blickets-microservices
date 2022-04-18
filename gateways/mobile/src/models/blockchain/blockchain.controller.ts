@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
-import { Body, Controller, Get, HttpCode, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Inject, OnModuleInit, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { BlockchainService, BlockchainServiceName, DeleteImageRequest } from 'proto-npm'
+import { BlockchainService, BlockchainServiceName, DeleteImageRequest, CreateEventRequest } from 'proto-npm'
 import { ApiBody, ApiConsumes } from '@nestjs/swagger'
 import { Express } from 'express'
 import { Meta } from 'src/common/decorators/meta.decorator'
@@ -24,6 +24,20 @@ export class BlockchainController implements OnModuleInit {
         return this.blockchainService.createEthereumAccount({}, metadata)
     }
 
+    
+    @Get('events')
+    getEvents(@Meta() metadata: Metadata) {
+        // a return of just an object means there are no dpeloyed contracts
+        return this.blockchainService.getEvents({}, metadata)
+    }
+    
+    @Post('create-event')
+    createEvent(@Meta() metadata: Metadata, @Body() eventData: CreateEventRequest) {
+        console.log(eventData)
+        // a return of just an object means there are no deployed contracts
+        return this.blockchainService.createEvent(eventData, metadata)
+    }
+
     @Post('upload-image')
     @UseInterceptors(FileInterceptor(
         // limit file upload to 100 megabytes.
@@ -39,18 +53,6 @@ export class BlockchainController implements OnModuleInit {
             }
         }
     ))
-    @ApiConsumes('multipart/form-data')
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                file: { // 👈 this property
-                    type: 'string',
-                    format: 'binary'
-                }
-            }
-        }
-    })
     uploadImage(@Meta() metadata: Metadata, @UploadedFile() file: Express.Multer.File) {
         const send = {
             binary: file.buffer,
@@ -58,16 +60,10 @@ export class BlockchainController implements OnModuleInit {
         }
         return this.blockchainService.uploadFile(send, metadata)
     }
-
-    @HttpCode(200)
-    @Post('delete-image')
-    deleteImage(@Meta() metadata: Metadata, @Body() file: DeleteImageRequest) {
-        return this.blockchainService.deleteFile(file, metadata)
-    }
-
-    @Get('events')
-    getEvents(@Meta() metadata: Metadata) {
-        // a return of just an object means there are no dpeloyed contracts
-        return this.blockchainService.getEvents({}, metadata)
-    }
+    
+    // @HttpCode(200)
+    // @Post('delete-image')
+    // deleteImage(@Meta() metadata: Metadata, @Body() file: DeleteImageRequest) {
+    //     return this.blockchainService.deleteFile(file, metadata)
+    // }
 }

@@ -16,7 +16,7 @@ export class UserController implements OnModuleInit {
         @Inject(UserServiceName) private client: ClientGrpc,
     ) {}
     
-    @Get('gen-auth-url')
+    @Get('auth-url')
     genAuthUrl() {
         return this.userService.genGoogleAuthUrl({})
     }

@@ -5,9 +5,16 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { GrpcErrorIntercept } from './common/interceptors/grpcError.interceptor'
 
 const logger = new Logger('Main')
+const port = 3000
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+
+  app.enableCors({
+    origin: '*',
+    methods: 'GET, PUT, POST, DELETE',
+    allowedHeaders: 'Content-Type, Authorization'
+  })
   // app.useGlobalGuards(new MetaGuard())
   app.useGlobalInterceptors(new GrpcErrorIntercept())
 
@@ -20,8 +27,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
 
 
-  await app.listen(3000, () => {
-    logger.verbose('Gateway is listening...')
+  await app.listen(port, () => {
+    logger.verbose('Gateway is listening on port: ' + port)
   })
   
 }

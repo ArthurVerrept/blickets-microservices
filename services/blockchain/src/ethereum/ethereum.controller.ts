@@ -2,7 +2,7 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from '../grpcAuthGuard.strategy'
 import { EthereumService } from './ethereum.service'
-import { UploadImageRequest, DeleteImageRequest } from 'proto-npm'
+import { UploadImageRequest, CreateEventRequest } from 'proto-npm'
 import { ConfigService } from '@nestjs/config'
 
 @Controller('ethereum')
@@ -23,27 +23,32 @@ export class EthereumController {
 
     // @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'CreateEvent')
-    async createEvent() {
-        // upload image
-        // create event txn with img link
-        // add event txnId to db
-        // send transaction
-        // if complete get contract address from txn using ID saved
+    async createEvent(eventData: CreateEventRequest) {
+        // get image and data
+
+        // upload image to ipfs saving CID just in memory here
+
+        // create transaction object with encoded createEvent method as data field
+        const data = await this.ethereumService.createTransactionData(eventData)
+        return data
+        // save txnId to db event with created event with deployed_status as "pending" and CID as metadata link
+        // send transaction object to front end to be sent
+        // once sent front end will send confirmation to change deployed_status to "complete" and metadata should be pinned to IPFS as to not be garbage collected.
         
-        // if transaction fails delete image & delete event form db
-       return this.ethereumService.createEvent()
+        // if transaction fails delete image & delete event form db, change deployed_status to "failed", since metadata is unpinned to will be deleted
+        // return this.ethereumService.createEvent()
     }
 
 
     // @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'UploadFile')
     async uploadFile(file: UploadImageRequest) {
-      return this.ethereumService.uploadFile(file)
+      return this.ethereumService.uploadDecentralised(file)
     } 
 
-    // @UseGuards(GrpcAuthGuard)
-    @GrpcMethod('BlockchainService', 'DeleteFile')
-    async deleteFile(file: DeleteImageRequest) {
-        return this.ethereumService.deleteFile(file)
-    } 
+    // // @UseGuards(GrpcAuthGuard)
+    // @GrpcMethod('BlockchainService', 'DeleteFile')
+    // async deleteFile(file: DeleteImageRequest) {
+    //     return this.ethereumService.deleteFile(file)
+    // } 
 }

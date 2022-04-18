@@ -8,7 +8,7 @@ import { GoogleAuthenticationService } from './google-authentication.service'
 export class GoogleAuthenticationController {
     constructor(private googleAuthService: GoogleAuthenticationService) {}
 
-    @GrpcMethod('UserService', 'Login')
+    @GrpcMethod('UserService', 'GoogleLogin')
     async login(authCode: GoogleAuthCode) {
         if (!authCode.code) {
             throw new RpcException({
@@ -17,5 +17,11 @@ export class GoogleAuthenticationController {
             })
         }
         return await this.googleAuthService.login(authCode)
-    }     
+    }  
+
+    @GrpcMethod('UserService', 'GenGoogleAuthUrl')
+    async genGoogleAuthUrl() {
+        return this.googleAuthService.generateAuthUrl()
+    }  
+       
 }

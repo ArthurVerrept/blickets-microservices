@@ -22,9 +22,20 @@ export class GoogleAuthenticationService {
     this.oauthClient = new google.auth.OAuth2(
       clientID,
       clientSecret,
-      'http://127.0.0.1:5500/google-auth.html'
+      'http://localhost:8080/google-redirect'
     )
   }
+
+  generateAuthUrl() {
+    const url = this.oauthClient.generateAuthUrl({
+      // 'online' (default) or 'offline' (gets refresh_token)
+      access_type: 'offline',
+
+      scope: ['profile', 'email']
+    })
+    return { url }
+  }
+
 
   async login(authCode: GoogleAuthCode) {
       try {
