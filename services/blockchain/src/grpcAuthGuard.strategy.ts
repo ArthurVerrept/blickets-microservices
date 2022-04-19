@@ -53,7 +53,6 @@ export class GrpcAuthGuard implements CanActivate {
             const valid = this.jwtService.verify(token)
             return true
         } catch (e) {
-            console.log(e)
             throw new RpcException({
                 code: status.UNAUTHENTICATED,
                 message: e

@@ -3,11 +3,10 @@ import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from '../grpcAuthGuard.strategy'
 import { EthereumService } from './ethereum.service'
 import { UploadImageRequest, DeployEventRequest } from 'proto-npm'
-import { ConfigService } from '@nestjs/config'
 
 @Controller('ethereum')
 export class EthereumController {
-    constructor(private ethereumService: EthereumService, private configService: ConfigService) {}
+    constructor(private ethereumService: EthereumService) {}
 
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'CreateEthereumAccount')

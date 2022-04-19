@@ -8,12 +8,13 @@ import { EthereumService } from './ethereum.service'
   imports:[
     ConfigModule,
     JwtModule.registerAsync({
-    imports: [ConfigModule],
-    inject: [ConfigService],
-    useFactory: async (configService: ConfigService) => ({
-      secret: configService.get('JWT_SECRET')
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET')
+      })
     })
-  })],
+  ],
   controllers: [EthereumController],
   providers: [EthereumService]
 })
