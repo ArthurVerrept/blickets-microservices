@@ -14,7 +14,7 @@ import { EthereumService } from './ethereum.service'
         secret: configService.get('JWT_SECRET')
       })
     })
-  ],
+],
   controllers: [EthereumController],
   providers: [EthereumService]
 })

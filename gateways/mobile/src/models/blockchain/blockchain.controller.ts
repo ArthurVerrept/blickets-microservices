@@ -31,7 +31,6 @@ export class BlockchainController implements OnModuleInit {
     
     @Post('event-deploy-parameters')
     CreateEventTransaction(@Meta() metadata: Metadata, @Body() eventData: DeployEventRequest) {
-        console.log(eventData)
         // a return of just an object means there are no deployed contracts
         return this.blockchainService.deployEventParameters(eventData, metadata)
     }

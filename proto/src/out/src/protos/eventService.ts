@@ -1,13 +1,14 @@
 /* eslint-disable */
 import { Observable } from "rxjs";
 import { Metadata } from "@grpc/grpc-js";
+import { Empty } from "../../google/protobuf/empty";
 
 export const protobufPackage = "event";
 
 export interface CreateEventRequest {
   txHash: string;
   cid: string;
-  date: string;
+  eventDate: string;
 }
 
 export interface Event {
@@ -25,5 +26,5 @@ export interface EventService {
   createEvent(
     request: CreateEventRequest,
     metadata?: Metadata
-  ): Observable<Event>;
+  ): Observable<Empty>;
 }

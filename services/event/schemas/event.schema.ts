@@ -5,7 +5,7 @@ export type EventDocument = Event & Document
 
 @Schema()
 export class Event {
-    @Prop()
+    @Prop({ required: true })
     userId: number
 
     @Prop({ required: true })
@@ -20,7 +20,7 @@ export class Event {
     @Prop({ default: false })
     deployedStatus: boolean
     
-    @Prop()
+    @Prop({ required: false })
     admins: number[]
 
     @Prop()

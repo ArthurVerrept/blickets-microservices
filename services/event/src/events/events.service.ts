@@ -7,9 +7,13 @@ import { Event, EventDocument } from 'schemas/event.schema'
 export class EventsService {
     constructor(@InjectModel(Event.name) private eventModel: Model<EventDocument>) {}
 
-    async createEvent(eventData) {
-      console.log(eventData)
-        // const createdEvent = new this.eventModel(eventData)
-        // return createdEvent.save()
+    async createEvent(eventData, metadata) {
+        const createdEvent = new this.eventModel({
+          ...eventData,
+          userId: metadata.getMap().user.id
+        })
+        const newEvent = await createdEvent.save()
+        // console.log(newEvent._id.toString())
+        return {}
       }
 }
