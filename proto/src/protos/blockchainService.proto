@@ -44,7 +44,6 @@ message DeployEventRequest {
     string ticketAmount = 4;
     string ticketPrice = 5;
     string resaleCost = 6;
-    string date = 7;
 }
 
 message DeployEventResponse {

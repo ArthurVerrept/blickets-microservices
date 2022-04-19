@@ -1,15 +1,26 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 package event;
 
 service EventService {
-    rpc CreateEvent (CreateEventRequest) returns (google.protobuf.Empty);
+    rpc CreateEvent (CreateEventRequest) returns (Event);
 }
 
 message CreateEventRequest {
-    string txnId = 1;
+    string txHash = 1;
     string cid = 2;
+    string date = 3;
+}
+
+
+message Event {
+    string id = 1;
+    string userId = 2;
+    string cid = 3;
+    optional string contractAddress = 4;
+    string txHash = 5;
+    bool deployedStatus = 6;
+    repeated string admins = 7;
+    string date = 8;
 }
 

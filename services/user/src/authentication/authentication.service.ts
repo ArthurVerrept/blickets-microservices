@@ -18,7 +18,7 @@ export class AuthenticationService {
         const payload = { id: userId } 
         const accessToken = this.jwtService.sign(payload, { 
             secret: this.configService.get('JWT_SECRET'),
-            expiresIn: '180s'
+            expiresIn: '30s'
         })
         return { accessToken }
 

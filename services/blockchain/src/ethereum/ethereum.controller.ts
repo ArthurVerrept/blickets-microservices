@@ -15,13 +15,13 @@ export class EthereumController {
         return this.ethereumService.createEthereumAccount()
     }
 
-    // @UseGuards(GrpcAuthGuard)
+    @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'GetEvents')
     async getEvents() {
        return this.ethereumService.getDeployedEvents()
     }
 
-    // @UseGuards(GrpcAuthGuard)
+    @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'DeployEventParameters')
     async DeployEventParameters(eventData: DeployEventRequest) {
         // get image and data
@@ -31,6 +31,7 @@ export class EthereumController {
         // create transaction object with encoded createEvent method as data field
         const data = await this.ethereumService.createTransactionData(eventData)
         return data
+
         // save txnId to db event with created event with deployed_status as "pending" and CID as metadata link
         // send transaction object to front end to be sent
         // once sent front end will send confirmation to change deployed_status to "complete" and metadata should be pinned to IPFS as to not be garbage collected.
@@ -40,13 +41,13 @@ export class EthereumController {
     }
 
 
-    // @UseGuards(GrpcAuthGuard)
+    @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'UploadFile')
     async uploadFile(file: UploadImageRequest) {
       return this.ethereumService.uploadDecentralised(file)
     } 
 
-    // // @UseGuards(GrpcAuthGuard)
+    // @UseGuards(GrpcAuthGuard)
     // @GrpcMethod('BlockchainService', 'DeleteFile')
     // async deleteFile(file: DeleteImageRequest) {
     //     return this.ethereumService.deleteFile(file)

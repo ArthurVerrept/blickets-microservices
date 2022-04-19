@@ -35,7 +35,6 @@ export interface DeployEventRequest {
   ticketAmount: string;
   ticketPrice: string;
   resaleCost: string;
-  date: string;
 }
 
 export interface DeployEventResponse {

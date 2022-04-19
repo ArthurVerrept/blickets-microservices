@@ -32,7 +32,7 @@ export class EthereumService {
         this.nftStorageKey = this.configService.get('NFT_STORAGE_KEY')
         this.web3 = new Web3("https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX")
         // this.web3 = new Web3("https://eth-goerli.alchemyapi.io/v2/6BG6x2EmqojNNgMy1lr9MFeX1N7wVAwf")
-        this.EventFactoryContractAddress = '0x132a69d7feed586e98d2e0f22f72ce7e79f750e8'      // rinkeby
+        this.EventFactoryContractAddress = '0x02952C1268330358A9979159313fd9A5FC17120B'      // rinkeby
         // this.EventFactoryContractAddress = '0x5F313e120429320608DB5D7e1F54f98785c5AeC4'         // goerli
         this.eventFactoryContract = new this.web3.eth.Contract(this.eventFactoryABI, this.EventFactoryContractAddress)
         // gen account from passphrase web3
@@ -110,13 +110,9 @@ export class EthereumService {
                 {
                     type: 'uint256',
                     name: '_resaleCost'
-                },
-                {
-                    type: 'address',
-                    name: '_owner'
                 }
             ]
-        }, [eventData.name, eventData.eventName, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost), '0xA705121486a1440CF621615c4F312EdE7d89146D'])
+        }, [eventData.name, eventData.eventName, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost)])
 
 
         const transactionParams = {
