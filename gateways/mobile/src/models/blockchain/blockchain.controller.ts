@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Body, Controller, Get, Inject, OnModuleInit, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { BlockchainService, BlockchainServiceName, DeployEventRequest } from 'proto-npm'
+import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest } from 'proto-npm'
 import { Express } from 'express'
 import { Meta } from 'src/common/decorators/meta.decorator'
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -30,7 +30,7 @@ export class BlockchainController implements OnModuleInit {
     }
     
     @Post('event-deploy-parameters')
-    CreateEventTransaction(@Meta() metadata: Metadata, @Body() eventData: DeployEventRequest) {
+    createEventTransaction(@Meta() metadata: Metadata, @Body() eventData: DeployEventRequest) {
         // a return of just an object means there are no deployed contracts
         return this.blockchainService.deployEventParameters(eventData, metadata)
     }
@@ -56,6 +56,12 @@ export class BlockchainController implements OnModuleInit {
             mime: file.mimetype
         }
         return this.blockchainService.uploadFile(send, metadata)
+    }
+
+    @Post('transaction-status')
+    transactionStatus(@Meta() metadata: Metadata, @Body() txHash: TransactionStatusRequest) {
+        console.log(txHash)
+        return this.blockchainService.transactionStatus(txHash, metadata)
     }
     
     // @HttpCode(200)

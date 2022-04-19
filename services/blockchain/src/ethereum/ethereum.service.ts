@@ -10,6 +10,7 @@ import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
 import { UploadImageRequest, DeployEventRequest } from 'proto-npm'
 import { NFTStorage, File } from 'nft.storage'
+import axios from'axios'
 
 @Injectable()
 export class EthereumService {
@@ -121,6 +122,31 @@ export class EthereumService {
         }
 
         return transactionParams
+    }
+
+    async transactionStatus(txHash: string) {
+        const res =  await this.web3.eth.getTransactionReceipt(txHash)
+        console.log(res)
+
+        // res will be null while transaction is confirming
+        if (res == null) {
+            return 'pending'
+        }
+        if(res.status == true) {
+            // to view internal transactions (contract creations from within a contract) use etherscan api
+            // match the txHash passed in with the hash field to get the new contract address at contractAddress
+            // https://api-rinkeby.etherscan.io/api?module=account&action=txlistinternal&address=0x02952c1268330358a9979159313fd9a5fc17120b&sort=asc&apikey=YourApiKeyToken
+            const internalTransactions = await axios.get(`https://api-rinkeby.etherscan.io/api?module=account&action=txlistinternal&address=${this.EventFactoryContractAddress}&sort=asc&apikey=YourApiKeyToken`)
+            // console.log(internalTransactions.data.result)  
+            internalTransactions.data.result.forEach((txn) => {
+                if (txn.hash === txHash) {
+                    // this is the new contract address to be added to the mongodb entry
+                    console.log(txn.contractAddress)
+                }
+            })
+        }
+
+        return {}
     }
 
     // async uploadFile(file: UploadImageRequest) {

@@ -42,6 +42,10 @@ export interface DeployEventResponse {
   data: string;
 }
 
+export interface TransactionStatusRequest {
+  txHash: string;
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -67,4 +71,8 @@ export interface BlockchainService {
     request: DeployEventRequest,
     metadata?: Metadata
   ): Observable<DeployEventResponse>;
+  transactionStatus(
+    request: TransactionStatusRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
 }
