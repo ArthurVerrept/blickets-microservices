@@ -10,7 +10,7 @@ service BlockchainService {
     rpc CreateEthereumAccount (google.protobuf.Empty) returns (WalletKeys);
     rpc UploadFile (UploadImageRequest) returns (UploadImageResponse);
     rpc DeleteFile (DeleteImageRequest) returns (google.protobuf.Empty);
-    rpc GetEvents (google.protobuf.Empty) returns (Events);
+    rpc GetAllDeployedEvents (google.protobuf.Empty) returns (AllDeployedEvents);
     rpc DeployEventParameters (DeployEventRequest) returns (DeployEventResponse);
 }
 
@@ -33,7 +33,7 @@ message DeleteImageRequest {
     string id = 1;
 }
 
-message Events {
+message AllDeployedEvents {
     repeated string addresses = 1;
 }
 

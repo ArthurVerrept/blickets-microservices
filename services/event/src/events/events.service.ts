@@ -10,10 +10,38 @@ export class EventsService {
     async createEvent(eventData, metadata) {
         const createdEvent = new this.eventModel({
           ...eventData,
-          userId: metadata.getMap().user.id
+          userId: metadata.getMap().user.id,
+          createdTime: new Date()
         })
-        const newEvent = await createdEvent.save()
+        // console.log(createdEvent)
+
+        // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // // @ts-ignore
+        // createdEvent = {
+        //   userId: createdEvent.userId,
+        //   cid: createdEvent.cid,
+        //   contractAddress: createdEvent.contractAddress,
+        //   txHash: createdEvent.txHash,
+        //   deployedStatus: createdEvent.deployedStatus,
+        //   eventDate: createdEvent.eventDate,
+        //   _id: createdEvent._id
+        // }
         // console.log(newEvent._id.toString())
+        await createdEvent.save()
         return {}
-      }
+    }
+
+    async getEvents(metadata) {
+      const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
+      // events.forEach(event => {
+      //   if(event.admins === []){
+      //     event = {
+            
+      //     }
+      //   }
+      // })
+      console.log(events)
+
+      return { events }
+  }
 }

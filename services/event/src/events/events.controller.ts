@@ -14,4 +14,10 @@ export class EventsController {
     createAccount(eventData: CreateEventRequest, metadata: Metadata) {
         return this.eventService.createEvent(eventData, metadata)
     }
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('EventService', 'MyCreatedEvents')
+    myCreatedEvents(_, metadata: Metadata) {
+        return this.eventService.getEvents(metadata)
+    }
 }

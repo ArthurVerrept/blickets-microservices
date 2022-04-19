@@ -24,7 +24,7 @@ export interface DeleteImageRequest {
   id: string;
 }
 
-export interface Events {
+export interface AllDeployedEvents {
   addresses: string[];
 }
 
@@ -59,7 +59,10 @@ export interface BlockchainService {
     request: DeleteImageRequest,
     metadata?: Metadata
   ): Observable<Empty>;
-  getEvents(request: Empty, metadata?: Metadata): Observable<Events>;
+  getAllDeployedEvents(
+    request: Empty,
+    metadata?: Metadata
+  ): Observable<AllDeployedEvents>;
   deployEventParameters(
     request: DeployEventRequest,
     metadata?: Metadata

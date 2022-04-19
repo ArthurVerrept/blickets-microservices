@@ -1,5 +1,5 @@
 import { Metadata } from '@grpc/grpc-js'
-import { Controller, Post, Inject, OnModuleInit, Body } from '@nestjs/common'
+import { Controller, Post, Inject, OnModuleInit, Body, Get } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { EventService, EventServiceName, CreateEventRequest } from 'proto-npm'
 import { Meta } from 'src/common/decorators/meta.decorator'
@@ -19,5 +19,10 @@ export class EventController implements OnModuleInit {
     @Post('create-event')
     createEvent(@Meta() metadata: Metadata, @Body() eventData) {
         return this.eventService.createEvent(eventData, metadata)
+    }
+
+    @Get('my-created-events')
+    myCreatedEvents(@Meta() metadata: Metadata) {
+        return this.eventService.myCreatedEvents({}, metadata)
     }
 }

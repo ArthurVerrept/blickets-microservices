@@ -15,7 +15,7 @@ export class EthereumController {
     }
 
     @UseGuards(GrpcAuthGuard)
-    @GrpcMethod('BlockchainService', 'GetEvents')
+    @GrpcMethod('BlockchainService', 'GetAllDeployedEvents')
     async getEvents() {
        return this.ethereumService.getDeployedEvents()
     }

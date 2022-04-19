@@ -6,28 +6,28 @@ export type EventDocument = Event & Document
 @Schema()
 export class Event {
     @Prop({ required: true })
-    userId: number
+    userId: string
 
     @Prop({ required: true })
     cid: string
 
-    @Prop()
+    @Prop({ default: '' })
     contractAddress: string
 
-    @Prop()
+    @Prop({ required: true })
     txHash: string
 
     @Prop({ default: false })
     deployedStatus: boolean
     
-    @Prop({ required: false })
+    @Prop({ default: undefined })
     admins: number[]
 
-    @Prop()
+    @Prop({ required: true })
     createdTime: Date
 
     @Prop()
-    eventDate: Date
+    eventDate: string
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event)

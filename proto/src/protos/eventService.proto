@@ -6,6 +6,7 @@ package event;
 
 service EventService {
     rpc CreateEvent (CreateEventRequest) returns (google.protobuf.Empty);
+    rpc MyCreatedEvents (google.protobuf.Empty) returns (MyEvents);
 }
 
 message CreateEventRequest {
@@ -15,14 +16,17 @@ message CreateEventRequest {
 }
 
 
-message Event {
-    string id = 1;
-    string userId = 2;
-    string cid = 3;
-    optional string contractAddress = 4;
-    string txHash = 5;
-    bool deployedStatus = 6;
-    repeated string admins = 7;
-    string date = 8;
+message MyEvents {
+    repeated MongoEvent events = 1;
+}
+
+message MongoEvent {
+    string userId = 1;
+    string cid = 2;
+    string contractAddress = 3;
+    string txHash = 4;
+    bool deployedStatus = 5;
+    repeated int32 admins = 6;
+    string eventDate = 7;
 }
 

@@ -25,7 +25,7 @@ export class GrpcAuthGuard implements CanActivate {
             }
             header = metadata.get('Authorization')[0]
         }
-
+        
         if (!header) {
             throw new RpcException({
                 code: status.UNAUTHENTICATED,

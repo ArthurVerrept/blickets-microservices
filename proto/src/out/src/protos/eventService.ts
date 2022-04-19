@@ -11,15 +11,18 @@ export interface CreateEventRequest {
   eventDate: string;
 }
 
-export interface Event {
-  id: string;
+export interface MyEvents {
+  events: MongoEvent[];
+}
+
+export interface MongoEvent {
   userId: string;
   cid: string;
-  contractAddress?: string | undefined;
+  contractAddress: string;
   txHash: string;
   deployedStatus: boolean;
-  admins: string[];
-  date: string;
+  admins: number[];
+  eventDate: string;
 }
 
 export interface EventService {
@@ -27,4 +30,5 @@ export interface EventService {
     request: CreateEventRequest,
     metadata?: Metadata
   ): Observable<Empty>;
+  myCreatedEvents(request: Empty, metadata?: Metadata): Observable<MyEvents>;
 }
