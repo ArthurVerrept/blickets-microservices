@@ -49,12 +49,6 @@ export class EthereumService {
         return { addresses: deployed }
     }
 
-    // async createEvent() {
-    //     const deployed = await this.eventFactoryContract.methods.getDeployedEvents().call()
-    //     return { addresses: deployed }
-    // }
-
-
     async uploadDecentralised(file: UploadImageRequest) {
         // if the size is bigger than 10 mb return an error
         if(Buffer.byteLength(file.binary)/1000000 > 10) {
@@ -125,6 +119,7 @@ export class EthereumService {
     }
 
     async transactionStatus(txHash: string) {
+        // try getting the transaction receipt
         const res =  await this.web3.eth.getTransactionReceipt(txHash)
         console.log(res)
 
@@ -132,6 +127,7 @@ export class EthereumService {
         if (res == null) {
             return 'pending'
         }
+
         if(res.status == true) {
             // to view internal transactions (contract creations from within a contract) use etherscan api
             // match the txHash passed in with the hash field to get the new contract address at contractAddress
@@ -142,8 +138,13 @@ export class EthereumService {
                 if (txn.hash === txHash) {
                     // this is the new contract address to be added to the mongodb entry
                     console.log(txn.contractAddress)
+                    // call event service and update event with contract address
                 }
             })
+        }
+        
+        if (res.status == false) {
+            // set deployed status to false and save error
         }
 
         return {}

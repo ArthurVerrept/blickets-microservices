@@ -25,10 +25,18 @@ export interface MongoEvent {
   eventDate: string;
 }
 
+export interface UpdateEventRequest {
+  contractAddress?: string | undefined;
+}
+
 export interface EventService {
   createEvent(
     request: CreateEventRequest,
     metadata?: Metadata
   ): Observable<Empty>;
   myCreatedEvents(request: Empty, metadata?: Metadata): Observable<MyEvents>;
+  updateEventStatus(
+    request: UpdateEventRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
 }

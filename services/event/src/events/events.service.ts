@@ -23,4 +23,10 @@ export class EventsService {
 
     return { events }
   }
+
+  async updateEventStatus(metadata) {
+    const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
+
+    return { events }
+  }
 }

@@ -7,6 +7,7 @@ package event;
 service EventService {
     rpc CreateEvent (CreateEventRequest) returns (google.protobuf.Empty);
     rpc MyCreatedEvents (google.protobuf.Empty) returns (MyEvents);
+    rpc UpdateEventStatus (UpdateEventRequest) returns (google.protobuf.Empty);
 }
 
 message CreateEventRequest {
@@ -30,3 +31,6 @@ message MongoEvent {
     string eventDate = 7;
 }
 
+message UpdateEventRequest {
+    optional string contractAddress = 1;
+}
