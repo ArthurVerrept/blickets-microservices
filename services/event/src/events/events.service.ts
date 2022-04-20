@@ -3,8 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
 import { UpdateEventRequest } from 'proto-npm'
-import { status } from '@grpc/grpc-js'
-import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class EventsService {
