@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { HttpException, Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
@@ -35,18 +35,10 @@ export class EventsService implements OnModuleInit {
   async myCreatedEvents(metadata) {
     const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
 
-    // if event.deployedStatus === 'success'
     for (const event of events) {
         if (event.deployedStatus === 'success') {
-          console.log('name')
-
           const name$ = this.blockchainService.eventName({ contractAddress: event.contractAddress }, metadata)
-          try{
-            const name = await lastValueFrom(name$)
-          } catch (e) {
-            throw new RpcException(e)
-          }
-          // console.log(name)
+          const name = await lastValueFrom(name$)
         }
     }
     // get name for this event from blockchain name
@@ -55,7 +47,7 @@ export class EventsService implements OnModuleInit {
   }
 
   async updateEventStatus(req: UpdateEventRequest) {
-    let update = { }
+    let update = { } 
 
     if(req.contractAddress){
       update = { contractAddress: req.contractAddress, deployedStatus: 'success' }

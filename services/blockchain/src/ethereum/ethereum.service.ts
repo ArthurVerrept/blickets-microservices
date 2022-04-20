@@ -131,39 +131,25 @@ export class EthereumService implements OnModuleInit {
                     // this is where the new contract address is passed with the txnHash to the event microservice to update the entry
                     const newStat$ = this.eventService.updateEventStatus({ txHash, contractAddress: txn.contractAddress }, metadata)
                     // rxjs observables mean we have to do this jank lastValueFrom function to wait for a response
-                    // wrapped in a try catch in case anything goes wrong
-                    try {
-                        await lastValueFrom(newStat$)
-                    } catch (e) {
-                        throw new RpcException(e)
-                    }
+                    await lastValueFrom(newStat$)
                     return {}
                 }
             }
         }
         
         if (res.status == false) {
+            // here we dont sent the contract address which tells the event service
+            // to set the event status as 'failed'
             const newStat$ = this.eventService.updateEventStatus({ txHash }, metadata)
             // rxjs observables mean we have to do this jank lastValueFrom function to wait for a response
-            // wrapped in a try catch in case anything goes wrong
-            try {
-                await lastValueFrom(newStat$)
-            } catch (e) {
-                throw new RpcException(e)
-            }
+            await lastValueFrom(newStat$)
             return {}
-            // set deployed status to false and save error
         }
     }
 
     async eventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const eventName = await currentContract.methods.name.call().call()
-        // throw new RpcException({
-        //     code: status.UNAUTHENTICATED,
-        //     message: 'Expected token of type Bearer'
-        // })
-        throw new HttpException('blah blah blah',  HttpStatus.NOT_FOUND)
         return { eventName }
     }
 
