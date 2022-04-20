@@ -32,14 +32,17 @@ export class EventsService implements OnModuleInit {
       return {}
   }
 
-  async getEvents(metadata) {
+  async myCreatedEvents(metadata) {
     const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
 
     // if event.deployedStatus === 'success'
     for (const event of events) {
         if (event.deployedStatus === 'success') {
+          console.log('name')
+
           const name$ = this.blockchainService.eventName({ contractAddress: event.contractAddress }, metadata)
-          await lastValueFrom(name$)
+          const name = await lastValueFrom(name$)
+          console.log(name)
         }
     }
     // get name for this event from blockchain name

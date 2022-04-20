@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { HttpException, Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { Contract } from 'web3-eth-contract'
 import { Metadata, status } from '@grpc/grpc-js'
 import { ConfigService } from '@nestjs/config'
@@ -158,9 +158,9 @@ export class EthereumService implements OnModuleInit {
 
     async eventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
-        console.log('ayyy')
-        console.log(await currentContract.methods.name.call().call())
-        return {}
+        const eventName = await currentContract.methods.name.call().call()
+        throw new HttpException('fuckoff', 404)
+        return { eventName }
     }
 
     // async uploadFile(file: UploadImageRequest) {

@@ -18,7 +18,8 @@ export class EventsController {
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('EventService', 'MyCreatedEvents')
     myCreatedEvents(_, metadata: Metadata) {
-        return this.eventService.getEvents(metadata)
+        console.log('in?')
+        return this.eventService.myCreatedEvents(metadata)
     }
 
     @UseGuards(GrpcAuthGuard)
