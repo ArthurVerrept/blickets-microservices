@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { Contract } from 'web3-eth-contract'
 import { Metadata, status } from '@grpc/grpc-js'
 import { ConfigService } from '@nestjs/config'
@@ -159,7 +159,11 @@ export class EthereumService implements OnModuleInit {
     async eventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const eventName = await currentContract.methods.name.call().call()
-        throw new HttpException('fuckoff', 404)
+        // throw new RpcException({
+        //     code: status.UNAUTHENTICATED,
+        //     message: 'Expected token of type Bearer'
+        // })
+        throw new HttpException('blah blah blah',  HttpStatus.NOT_FOUND)
         return { eventName }
     }
 

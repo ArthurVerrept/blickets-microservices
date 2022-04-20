@@ -1,4 +1,4 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, UnauthorizedException, BadRequestException, ForbiddenException, NotFoundException, ServiceUnavailableException } from '@nestjs/common'
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, UnauthorizedException, BadRequestException, ForbiddenException, NotFoundException, ServiceUnavailableException, InternalServerErrorException } from '@nestjs/common'
 import { Observable, throwError } from 'rxjs'
 import { catchError} from 'rxjs/operators'
 
@@ -7,6 +7,7 @@ export class GrpcErrorIntercept implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError(err => {
+        console.log(err)
         switch (err.code) {
           case 16:
             return throwError(() => new UnauthorizedException(this.genError(401, err.message)))
@@ -23,7 +24,7 @@ export class GrpcErrorIntercept implements NestInterceptor {
           case 14:
             return throwError(() => new ServiceUnavailableException(this.genError(503, err.message)))
           default:
-             return throwError(() => new Error(err))
+             return throwError(() => new InternalServerErrorException(this.genError(500, err.message)))
         }
       }),
     )

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
 import { UpdateEventRequest, BlockchainServiceName, BlockchainService } from 'proto-npm'
-import { ClientGrpc } from '@nestjs/microservices'
+import { ClientGrpc, RpcException } from '@nestjs/microservices'
 import { lastValueFrom } from 'rxjs'
 
 @Injectable()
@@ -41,8 +41,12 @@ export class EventsService implements OnModuleInit {
           console.log('name')
 
           const name$ = this.blockchainService.eventName({ contractAddress: event.contractAddress }, metadata)
-          const name = await lastValueFrom(name$)
-          console.log(name)
+          try{
+            const name = await lastValueFrom(name$)
+          } catch (e) {
+            throw new RpcException(e)
+          }
+          // console.log(name)
         }
     }
     // get name for this event from blockchain name
