@@ -92,7 +92,6 @@ export class EthereumService implements OnModuleInit {
     
 
     async deployEventParameters(eventData: DeployEventRequest) {
-        console.log('help')
         const data = this.eventFactoryContract.methods.createEvent(eventData.name, eventData.eventName, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost)).encodeABI()
 
         const transactionParams = {
@@ -155,6 +154,13 @@ export class EthereumService implements OnModuleInit {
             return {}
             // set deployed status to false and save error
         }
+    }
+
+    async eventName(contractAddress: string) {
+        const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
+        console.log('ayyy')
+        console.log(await currentContract.methods.name.call().call())
+        return {}
     }
 
     // async uploadFile(file: UploadImageRequest) {

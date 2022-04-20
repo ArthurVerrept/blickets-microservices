@@ -1,12 +1,25 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
-import { UpdateEventRequest } from 'proto-npm'
+import { UpdateEventRequest, BlockchainServiceName, BlockchainService } from 'proto-npm'
+import { ClientGrpc } from '@nestjs/microservices'
+import { lastValueFrom } from 'rxjs'
 
 @Injectable()
-export class EventsService {
-  constructor(@InjectModel(Event.name) private eventModel: Model<EventDocument>) {}
+export class EventsService implements OnModuleInit {
+  private blockchainService: BlockchainService
+
+      
+  onModuleInit(): void {
+      this.blockchainService = this.client.getService<BlockchainService>('BlockchainService')
+  }
+
+
+  constructor(
+    @InjectModel(Event.name) private eventModel: Model<EventDocument>,
+    @Inject(BlockchainServiceName) private client: ClientGrpc
+  ) {}
 
   async createEvent(eventData, metadata) {
       const createdEvent = new this.eventModel({
@@ -21,6 +34,15 @@ export class EventsService {
 
   async getEvents(metadata) {
     const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
+
+    // if event.deployedStatus === 'success'
+    for (const event of events) {
+        if (event.deployedStatus === 'success') {
+          const name$ = this.blockchainService.eventName({ contractAddress: event.contractAddress }, metadata)
+          await lastValueFrom(name$)
+        }
+    }
+    // get name for this event from blockchain name
 
     return { events }
   }

@@ -45,6 +45,14 @@ export interface TransactionStatusRequest {
   txHash: string;
 }
 
+export interface EventNameRequest {
+  contractAddress: string;
+}
+
+export interface EventNameResponse {
+  eventName: string;
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -74,4 +82,8 @@ export interface BlockchainService {
     request: TransactionStatusRequest,
     metadata?: Metadata
   ): Observable<Empty>;
+  eventName(
+    request: EventNameRequest,
+    metadata?: Metadata
+  ): Observable<EventNameResponse>;
 }

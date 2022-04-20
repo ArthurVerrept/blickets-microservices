@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
+import { ClientsModule, Transport } from '@nestjs/microservices'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Event, EventSchema } from 'schemas/event.schema'
 import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
+import { BlockchainServiceName, BlockchainServicePath } from 'proto-npm'
 
 @Module({
   imports: [
@@ -22,6 +24,17 @@ import { EventsService } from './events.service'
         secret: configService.get('JWT_SECRET')
       })
     }),
+    ClientsModule.register([
+      {
+        name: BlockchainServiceName,
+        transport: Transport.GRPC,
+        options: {
+            package: BlockchainServiceName,
+            protoPath: BlockchainServicePath,
+            url: 'localhost:50051'
+        }
+      }
+    ]),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }])
   ],
   controllers: [EventsController],

@@ -13,6 +13,7 @@ service BlockchainService {
     rpc GetAllDeployedEvents (google.protobuf.Empty) returns (AllDeployedEvents);
     rpc DeployEventParameters (DeployEventRequest) returns (DeployEventResponse);
     rpc TransactionStatus (TransactionStatusRequest) returns (google.protobuf.Empty);
+    rpc eventName (EventNameRequest) returns (EventNameResponse);
 }
 
 message WalletKeys {
@@ -54,3 +55,12 @@ message DeployEventResponse {
 message TransactionStatusRequest {
     string txHash = 1;
 }
+
+message EventNameRequest {
+    string contractAddress = 1;
+}
+
+message EventNameResponse {
+    string eventName = 1;
+}
+
