@@ -8,6 +8,9 @@ export class Event {
     @Prop({ required: true })
     userId: string
 
+    @Prop()
+    name: string
+
     @Prop({ required: true })
     cid: string
 

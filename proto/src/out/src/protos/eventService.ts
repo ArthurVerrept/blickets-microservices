@@ -17,6 +17,7 @@ export interface MyEvents {
 
 export interface MongoEvent {
   userId: string;
+  name?: string | undefined;
   cid: string;
   contractAddress: string;
   txHash: string;

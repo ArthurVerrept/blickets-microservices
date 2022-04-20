@@ -39,6 +39,7 @@ export class EventsService implements OnModuleInit {
         if (event.deployedStatus === 'success') {
           const name$ = this.blockchainService.eventName({ contractAddress: event.contractAddress }, metadata)
           const name = await lastValueFrom(name$)
+          event.name = name.eventName
         }
     }
     // get name for this event from blockchain name

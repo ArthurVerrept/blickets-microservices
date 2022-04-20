@@ -23,12 +23,13 @@ message MyEvents {
 
 message MongoEvent {
     string userId = 1;
-    string cid = 2;
-    string contractAddress = 3;
-    string txHash = 4;
-    string deployedStatus = 5;
-    repeated int32 admins = 6;
-    string eventDate = 7;
+    optional string name = 2;
+    string cid = 3;
+    string contractAddress = 4;
+    string txHash = 5;
+    string deployedStatus = 6;
+    repeated int32 admins = 7;
+    string eventDate = 8;
 }
 
 message UpdateEventRequest {
