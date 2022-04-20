@@ -3,6 +3,7 @@ import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from '../grpcAuthGuard.strategy'
 import { EthereumService } from './ethereum.service'
 import { UploadImageRequest, DeployEventRequest, TransactionStatusRequest } from 'proto-npm'
+import { Metadata } from '@grpc/grpc-js'
 
 @Controller('ethereum')
 export class EthereumController {
@@ -42,8 +43,8 @@ export class EthereumController {
 
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'TransactionStatus')
-    async transactionStatus(req: TransactionStatusRequest) {
-      return this.ethereumService.transactionStatus(req.txHash)
+    async transactionStatus(req: TransactionStatusRequest, metadata: Metadata) {
+      return this.ethereumService.transactionStatus(req.txHash, metadata)
     } 
 
     @UseGuards(GrpcAuthGuard)

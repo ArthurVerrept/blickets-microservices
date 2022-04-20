@@ -26,11 +26,12 @@ message MongoEvent {
     string cid = 2;
     string contractAddress = 3;
     string txHash = 4;
-    bool deployedStatus = 5;
+    string deployedStatus = 5;
     repeated int32 admins = 6;
     string eventDate = 7;
 }
 
 message UpdateEventRequest {
-    optional string contractAddress = 1;
+    string txHash = 1;
+    optional string contractAddress = 2;
 }

@@ -17,8 +17,8 @@ export class Event {
     @Prop({ required: true })
     txHash: string
 
-    @Prop({ default: false })
-    deployedStatus: boolean
+    @Prop({ default: 'pending' })
+    deployedStatus: string
     
     @Prop({ default: undefined })
     admins: number[]

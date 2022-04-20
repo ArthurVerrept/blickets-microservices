@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
+import { UpdateEventRequest } from 'proto-npm'
+import { status } from '@grpc/grpc-js'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class EventsService {
@@ -24,9 +27,16 @@ export class EventsService {
     return { events }
   }
 
-  async updateEventStatus(metadata) {
-    const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
+  async updateEventStatus(req: UpdateEventRequest) {
 
-    return { events }
+    throw new RpcException({
+      code: status.UNAUTHENTICATED,
+      message: 'TokenExpiredError'
+    })
+    if(req.txHash){
+      await this.eventModel.findOneAndUpdate({ txHash: req.txHash }, {contractAddress: req.contractAddress, deployedStatus: 'success' })
+    }
+
+    return { }
   }
 }

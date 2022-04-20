@@ -18,7 +18,7 @@ const microserviceOptions = {
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, microserviceOptions)
   await app.listen()
-  logger.log('Blockchain service is listening...')
+  logger.verbose('Blockchain service is listening...')
 }
 
 bootstrap()

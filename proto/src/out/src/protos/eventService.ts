@@ -20,12 +20,13 @@ export interface MongoEvent {
   cid: string;
   contractAddress: string;
   txHash: string;
-  deployedStatus: boolean;
+  deployedStatus: string;
   admins: number[];
   eventDate: string;
 }
 
 export interface UpdateEventRequest {
+  txHash: string;
   contractAddress?: string | undefined;
 }
 

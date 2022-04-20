@@ -14,8 +14,8 @@ export class GrpcErrorIntercept implements NestInterceptor {
             return throwError(() => new BadRequestException(this.genError(400, err.message)))
           case 3:
             return throwError(() => new BadRequestException(this.genError(400, err.message)))
-          // case 8:
-          //   return throwError(() => new BadRequestException(this.genError(400, err.message)))
+          case 8:
+            return throwError(() => new BadRequestException(this.genError(429, err.message)))
           case 7:
             return throwError(() => new ForbiddenException(this.genError(403, err.message)))
           case 12:
