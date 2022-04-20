@@ -39,12 +39,11 @@ message AllDeployedEvents {
 }
 
 message DeployEventRequest {
-    UploadImageResponse file = 1;
-    string name = 2;
-    string eventName = 3;
-    string ticketAmount = 4;
-    string ticketPrice = 5;
-    string resaleCost = 6;
+    string name = 1;
+    string eventName = 2;
+    string ticketAmount = 3;
+    string ticketPrice = 4;
+    string resaleCost = 5;
 }
 
 message DeployEventResponse {

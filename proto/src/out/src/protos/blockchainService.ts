@@ -29,7 +29,6 @@ export interface AllDeployedEvents {
 }
 
 export interface DeployEventRequest {
-  file: UploadImageResponse | undefined;
   name: string;
   eventName: string;
   ticketAmount: string;

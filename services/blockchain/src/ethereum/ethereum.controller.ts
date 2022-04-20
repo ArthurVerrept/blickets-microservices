@@ -24,20 +24,8 @@ export class EthereumController {
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'DeployEventParameters')
     async DeployEventParameters(eventData: DeployEventRequest) {
-        // get image and data
-
-        // upload image to ipfs saving CID just in memory here
-
-        // create transaction object with encoded createEvent method as data field
-        const data = await this.ethereumService.createTransactionData(eventData)
+        const data = await this.ethereumService.deployEventParameters(eventData)
         return data
-
-        // save txnId to db event with created event with deployed_status as "pending" and CID as metadata link
-        // send transaction object to front end to be sent
-        // once sent front end will send confirmation to change deployed_status to "complete" and metadata should be pinned to IPFS as to not be garbage collected.
-        
-        // if transaction fails delete image & delete event form db, change deployed_status to "failed", since metadata is unpinned to will be deleted
-        // return this.ethereumService.createEvent()
     }
 
 
@@ -52,10 +40,4 @@ export class EthereumController {
     async uploadFile(file: UploadImageRequest) {
       return this.ethereumService.uploadDecentralised(file)
     } 
-
-    // @UseGuards(GrpcAuthGuard)
-    // @GrpcMethod('BlockchainService', 'DeleteFile')
-    // async deleteFile(file: DeleteImageRequest) {
-    //     return this.ethereumService.deleteFile(file)
-    // } 
 }

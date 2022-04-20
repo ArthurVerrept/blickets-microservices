@@ -60,7 +60,6 @@ export class BlockchainController implements OnModuleInit {
 
     @Post('transaction-status')
     transactionStatus(@Meta() metadata: Metadata, @Body() txHash: TransactionStatusRequest) {
-        console.log(txHash)
         return this.blockchainService.transactionStatus(txHash, metadata)
     }
     

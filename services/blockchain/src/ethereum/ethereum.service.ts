@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
 import AWS from 'aws-sdk'
 import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
-import { UploadImageRequest, DeployEventRequest, EventServiceName, EventService } from 'proto-npm'
+import { UploadImageRequest, CreateEventRequest, DeployEventRequest, EventServiceName, EventService } from 'proto-npm'
 import { NFTStorage, File } from 'nft.storage'
 import axios from'axios'
 import { lastValueFrom } from 'rxjs'
@@ -91,34 +91,9 @@ export class EthereumService implements OnModuleInit {
     }
     
 
-    async createTransactionData(eventData: DeployEventRequest) {
-        const data = this.web3.eth.abi.encodeFunctionCall({
-            name: 'createEvent',
-            type: 'function',
-            inputs: [
-                {
-                    type: 'string',
-                    name: '_name'
-                },
-                {
-                    type: 'string',
-                    name: '_eventName'
-                },
-                {
-                    type: 'uint256',
-                    name: '_ticketAmount'
-                },
-                {
-                    type: 'uint256',
-                    name: '_ticketPrice'
-                },
-                {
-                    type: 'uint256',
-                    name: '_resaleCost'
-                }
-            ]
-        }, [eventData.name, eventData.eventName, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost)])
-
+    async deployEventParameters(eventData: DeployEventRequest) {
+        console.log('help')
+        const data = this.eventFactoryContract.methods.createEvent(eventData.name, eventData.eventName, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost)).encodeABI()
 
         const transactionParams = {
             to: this.EventFactoryContractAddress,
@@ -131,7 +106,7 @@ export class EthereumService implements OnModuleInit {
     async transactionStatus(txHash: string, metadata: Metadata) {
         // try getting the transaction receipt which tells us the status of the transaction
         const res =  await this.web3.eth.getTransactionReceipt(txHash)
-
+        console.log(res)
         // res will be null while transaction is confirming on blockchain
         if (res == null) {
             return 'pending'
@@ -145,7 +120,7 @@ export class EthereumService implements OnModuleInit {
             if (internalTransactions.data.status === '0') {
                 throw new RpcException({
                     code: status.RESOURCE_EXHAUSTED,
-                    message: 'ETHERSCAN API ERROR: ' + internalTransactions.data.result
+                    message: `ETHERSCAN API ERROR: ${internalTransactions.data.result}`
                 })
             }
             
@@ -169,6 +144,15 @@ export class EthereumService implements OnModuleInit {
         }
         
         if (res.status == false) {
+            const newStat$ = this.eventService.updateEventStatus({ txHash }, metadata)
+            // rxjs observables mean we have to do this jank lastValueFrom function to wait for a response
+            // wrapped in a try catch in case anything goes wrong
+            try {
+                await lastValueFrom(newStat$)
+            } catch (e) {
+                throw new RpcException(e)
+            }
+            return {}
             // set deployed status to false and save error
         }
     }

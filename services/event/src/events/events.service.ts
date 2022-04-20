@@ -26,9 +26,14 @@ export class EventsService {
   }
 
   async updateEventStatus(req: UpdateEventRequest) {
-    if(req.txHash){
-      await this.eventModel.findOneAndUpdate({ txHash: req.txHash }, {contractAddress: req.contractAddress, deployedStatus: 'success' })
+    let update = { }
+
+    if(req.contractAddress){
+      update = { contractAddress: req.contractAddress, deployedStatus: 'success' }
+    } else {
+      update = { deployedStatus: 'failed' }
     }
+    await this.eventModel.findOneAndUpdate({ txHash: req.txHash }, update)
 
     return {}
   }
