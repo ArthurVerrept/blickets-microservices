@@ -28,15 +28,10 @@ export class EventsService {
   }
 
   async updateEventStatus(req: UpdateEventRequest) {
-
-    throw new RpcException({
-      code: status.UNAUTHENTICATED,
-      message: 'TokenExpiredError'
-    })
     if(req.txHash){
       await this.eventModel.findOneAndUpdate({ txHash: req.txHash }, {contractAddress: req.contractAddress, deployedStatus: 'success' })
     }
 
-    return { }
+    return {}
   }
 }
