@@ -43,7 +43,7 @@ export class EthereumController {
 
     
     @UseGuards(GrpcAuthGuard)
-    @GrpcMethod('BlockchainService', 'EventName')
+    @GrpcMethod('BlockchainService', 'eventDisplayDetails')
     async eventName(req: EventNameRequest) {
       return this.ethereumService.eventName(req.contractAddress)
     } 

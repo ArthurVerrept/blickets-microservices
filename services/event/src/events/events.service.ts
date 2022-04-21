@@ -4,7 +4,6 @@ import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
 import { UpdateEventRequest, BlockchainServiceName, BlockchainService } from 'proto-npm'
 import { ClientGrpc, RpcException } from '@nestjs/microservices'
-import { lastValueFrom } from 'rxjs'
 
 @Injectable()
 export class EventsService implements OnModuleInit {
@@ -22,7 +21,6 @@ export class EventsService implements OnModuleInit {
   ) {}
 
   async createEvent(eventData, metadata) {
-    console.log(eventData)
       const createdEvent = new this.eventModel({
         ...eventData,
         userId: metadata.getMap().user.id,
@@ -35,15 +33,6 @@ export class EventsService implements OnModuleInit {
 
   async myCreatedEvents(metadata) {
     const events = await this.eventModel.find({userId: metadata.getMap().user.id}).select('-_id -__v -createdTime').exec()
-
-    for (const event of events) {
-        if (event.deployedStatus === 'success') {
-          const name$ = this.blockchainService.eventName({ contractAddress: event.contractAddress }, metadata)
-          const name = await lastValueFrom(name$)
-          event.name = name.eventName
-        }
-    }
-    // get name for this event from blockchain name
 
     return { events }
   }

@@ -50,6 +50,7 @@ export interface EventNameRequest {
 
 export interface EventNameResponse {
   eventName: string;
+  symbol: string;
 }
 
 export interface BlockchainService {
@@ -81,7 +82,7 @@ export interface BlockchainService {
     request: TransactionStatusRequest,
     metadata?: Metadata
   ): Observable<Empty>;
-  eventName(
+  eventDisplayDetails(
     request: EventNameRequest,
     metadata?: Metadata
   ): Observable<EventNameResponse>;

@@ -21,6 +21,24 @@ export class UserController implements OnModuleInit {
         return this.userService.genGoogleAuthUrl({})
     }
 
+    @Get('test')
+    test() {
+        // console.log()
+        const str = 'ipfs://bafybeifbbrrspimefnc2dl4jibmjffcu56jekm7axm2bww3kzm6hgmibxe/1157df52-05d1-4b46-9780-f2395f1a99f7'
+        const first = str.split('//')[1]
+        const cid = first.split('/')[0]
+
+        const ref = first.split('/')[1]
+
+        const a = `https://${cid}.ipfs.nftstorage.link/${ref}`
+        console.log(a)
+
+    // const epoch = new Date('2022-04-28').getTime()
+    //   console.log(epoch)
+    //   console.log(new Date(epoch))
+    }
+    
+
     @Post('google-login')
     getTokens(@Body() authCode: GoogleAuthCode) {
         return this.userService.googleLogin(authCode)

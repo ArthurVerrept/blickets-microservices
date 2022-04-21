@@ -13,7 +13,9 @@ service EventService {
 message CreateEventRequest {
     string txHash = 1;
     string imageUrl = 2;
-    string eventDate = 3;
+    int32 eventDate = 3;
+    string eventName = 4;
+    string symbol = 5;
 }
 
 
@@ -23,13 +25,14 @@ message MyEvents {
 
 message MongoEvent {
     string userId = 1;
-    optional string name = 2;
-    string imageUrl = 3;
-    string contractAddress = 4;
-    string txHash = 5;
-    string deployedStatus = 6;
-    repeated int32 admins = 7;
-    string eventDate = 8;
+    string eventName = 2;
+    string symbol = 3;
+    string imageUrl = 4;
+    string contractAddress = 5;
+    string txHash = 6;
+    string deployedStatus = 7;
+    repeated int32 admins = 8;
+    int32 eventDate = 9;
 }
 
 message UpdateEventRequest {

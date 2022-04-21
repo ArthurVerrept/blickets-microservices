@@ -92,9 +92,16 @@ export class EthereumService implements OnModuleInit {
         // https://bafyreih4cvvrpgpz5vfvdx35vemukcffc27fwxm7rpna33377zgfazt6fy.ipfs.nftstorage.link/metadata.json
         const ipfsData$ = this.httpService.get(`http://${nftRet.ipnft}.ipfs.nftstorage.link/metadata.json`)
         const ipfsData = await lastValueFrom(ipfsData$)
-        console.log(ipfsData.data.image)
 
-        return { imageUrl: ipfsData.data.image }
+        const str = ipfsData.data.image
+        const first = str.split('//')[1]
+        const cid = first.split('/')[0]
+
+        const ref = first.split('/')[1]
+
+        const httpImageUrl = `https://${cid}.ipfs.nftstorage.link/${ref}`
+
+        return { imageUrl: httpImageUrl }
     }
     
 
@@ -157,7 +164,8 @@ export class EthereumService implements OnModuleInit {
     async eventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const eventName = await currentContract.methods.name.call().call()
-        return { eventName }
+        const symbol = await currentContract.methods.symbol.call().call()
+        return { eventName, symbol }
     }
 
     // async uploadFile(file: UploadImageRequest) {

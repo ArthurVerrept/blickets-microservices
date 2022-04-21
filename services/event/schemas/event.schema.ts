@@ -9,7 +9,10 @@ export class Event {
     userId: string
 
     @Prop()
-    name: string
+    eventName: string
+
+    @Prop()
+    symbol: string
 
     @Prop({ required: true })
     imageUrl: string
@@ -30,7 +33,7 @@ export class Event {
     createdTime: Date
 
     @Prop()
-    eventDate: string
+    eventDate: number
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event)
