@@ -12,7 +12,7 @@ service EventService {
 
 message CreateEventRequest {
     string txHash = 1;
-    string cid = 2;
+    string imageUrl = 2;
     string eventDate = 3;
 }
 
@@ -24,7 +24,7 @@ message MyEvents {
 message MongoEvent {
     string userId = 1;
     optional string name = 2;
-    string cid = 3;
+    string imageUrl = 3;
     string contractAddress = 4;
     string txHash = 5;
     string deployedStatus = 6;

@@ -7,7 +7,7 @@ export const protobufPackage = "event";
 
 export interface CreateEventRequest {
   txHash: string;
-  cid: string;
+  imageUrl: string;
   eventDate: string;
 }
 
@@ -18,7 +18,7 @@ export interface MyEvents {
 export interface MongoEvent {
   userId: string;
   name?: string | undefined;
-  cid: string;
+  imageUrl: string;
   contractAddress: string;
   txHash: string;
   deployedStatus: string;

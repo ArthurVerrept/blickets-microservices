@@ -16,8 +16,7 @@ export interface UploadImageRequest {
 }
 
 export interface UploadImageResponse {
-  cid: string;
-  url: string;
+  imageUrl: string;
 }
 
 export interface DeleteImageRequest {
@@ -30,7 +29,7 @@ export interface AllDeployedEvents {
 
 export interface DeployEventRequest {
   name: string;
-  eventName: string;
+  symbol: string;
   ticketAmount: string;
   ticketPrice: string;
   resaleCost: string;

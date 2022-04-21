@@ -22,6 +22,7 @@ export class EventsService implements OnModuleInit {
   ) {}
 
   async createEvent(eventData, metadata) {
+    console.log(eventData)
       const createdEvent = new this.eventModel({
         ...eventData,
         userId: metadata.getMap().user.id,

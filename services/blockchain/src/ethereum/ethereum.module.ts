@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
 import { EthereumController } from './ethereum.controller'
 import { EthereumService } from './ethereum.service'
 import { EventServiceName, EventServicePath } from 'proto-npm'
+import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports:[
@@ -26,7 +27,8 @@ import { EventServiceName, EventServicePath } from 'proto-npm'
             url: 'localhost:50052'
         }
       }
-    ])
+    ]),
+    HttpModule
   ],
   controllers: [EthereumController],
   providers: [EthereumService]

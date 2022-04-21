@@ -17,7 +17,7 @@ export class EventController implements OnModuleInit {
     }
     
     @Post('create-event')
-    createEvent(@Meta() metadata: Metadata, @Body() eventData) {
+    createEvent(@Meta() metadata: Metadata, @Body() eventData: CreateEventRequest) {
         return this.eventService.createEvent(eventData, metadata)
     }
 

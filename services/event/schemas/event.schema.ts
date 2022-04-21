@@ -12,7 +12,7 @@ export class Event {
     name: string
 
     @Prop({ required: true })
-    cid: string
+    imageUrl: string
 
     @Prop({ default: '' })
     contractAddress: string

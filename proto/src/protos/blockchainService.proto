@@ -27,8 +27,7 @@ message UploadImageRequest {
 }
 
 message UploadImageResponse {
-    string cid = 1;
-    string url = 2;
+    string imageUrl = 2;
 }
 
 message DeleteImageRequest {
@@ -41,7 +40,7 @@ message AllDeployedEvents {
 
 message DeployEventRequest {
     string name = 1;
-    string eventName = 2;
+    string symbol = 2;
     string ticketAmount = 3;
     string ticketPrice = 4;
     string resaleCost = 5;

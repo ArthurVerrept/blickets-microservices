@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { Contract } from 'web3-eth-contract'
 import { Metadata, status } from '@grpc/grpc-js'
 import { ConfigService } from '@nestjs/config'
@@ -37,13 +38,14 @@ export class EthereumService implements OnModuleInit {
     constructor(
         private configService: ConfigService,
         @Inject(EventServiceName) private client: ClientGrpc,
+        private httpService: HttpService
     ) {
         // AWS.config.update({ accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'), secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY') })
         // this.s3 = new AWS.S3()
         this.nftStorageKey = this.configService.get('NFT_STORAGE_KEY')
         this.web3 = new Web3("https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX")
         // this.web3 = new Web3("https://eth-goerli.alchemyapi.io/v2/6BG6x2EmqojNNgMy1lr9MFeX1N7wVAwf")
-        this.EventFactoryContractAddress = '0x02952C1268330358A9979159313fd9A5FC17120B'      // rinkeby
+        this.EventFactoryContractAddress = '0xea07fd4d2d9ebd9a5ecd9affff716e3cc52a1402'      // rinkeby
         // this.EventFactoryContractAddress = '0x5F313e120429320608DB5D7e1F54f98785c5AeC4'         // goerli
         this.eventFactoryContract = new this.web3.eth.Contract(this.eventFactoryABI, this.EventFactoryContractAddress)
         // gen account from passphrase web3
@@ -87,12 +89,17 @@ export class EthereumService implements OnModuleInit {
             description: 'description'
         })
 
-        return { cid: nftRet.ipnft, url: nftRet.url }
+        // https://bafyreih4cvvrpgpz5vfvdx35vemukcffc27fwxm7rpna33377zgfazt6fy.ipfs.nftstorage.link/metadata.json
+        const ipfsData$ = this.httpService.get(`http://${nftRet.ipnft}.ipfs.nftstorage.link/metadata.json`)
+        const ipfsData = await lastValueFrom(ipfsData$)
+        console.log(ipfsData.data.image)
+
+        return { imageUrl: ipfsData.data.image }
     }
     
 
     async deployEventParameters(eventData: DeployEventRequest) {
-        const data = this.eventFactoryContract.methods.createEvent(eventData.name, eventData.eventName, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost)).encodeABI()
+        const data = this.eventFactoryContract.methods.createEvent(eventData.name, eventData.symbol, eventData.ticketAmount, this.web3.utils.toWei(eventData.ticketPrice), this.web3.utils.toWei(eventData.resaleCost)).encodeABI()
 
         const transactionParams = {
             to: this.EventFactoryContractAddress,
@@ -150,6 +157,8 @@ export class EthereumService implements OnModuleInit {
     async eventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const eventName = await currentContract.methods.name.call().call()
+        const sym = await currentContract.methods.symbol.call().call()
+        console.log(eventName, sym)
         return { eventName }
     }
 
