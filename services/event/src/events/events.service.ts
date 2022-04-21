@@ -1,9 +1,11 @@
-import { HttpException, Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
 import { UpdateEventRequest, BlockchainServiceName, BlockchainService } from 'proto-npm'
-import { ClientGrpc, RpcException } from '@nestjs/microservices'
+import { ClientGrpc } from '@nestjs/microservices'
+import { Metadata } from '@grpc/grpc-js'
+import { lastValueFrom } from 'rxjs'
 
 @Injectable()
 export class EventsService implements OnModuleInit {
@@ -50,10 +52,27 @@ export class EventsService implements OnModuleInit {
     return {}
   }
 
-  async allEvents() {
 
-    const events = await this.eventModel.find({ deployedStatus: 'success' }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus'))
+  async allEvents(metadata: Metadata) {
+    const events = await this.eventModel.find({ deployedStatus: 'success' }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus')).exec()
 
-    return { events }
+    const returnEvents = []
+    for(const event of events) {
+      const price$ = this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
+      const price = await lastValueFrom(price$)
+
+      returnEvents.push({ 
+        eventDate: event.eventDate, 
+        contractAddress: event.contractAddress, 
+        imageUrl: event.imageUrl, 
+        symbol: event.symbol, 
+        eventName: event.eventName, 
+        ticketPrice: price.ticketPrice, 
+        ticketAmount: price.ticketAmount, 
+        ticketIdCounter: price.ticketIdCounter
+      })
+    }
+
+    return { events: returnEvents }
   }
 }

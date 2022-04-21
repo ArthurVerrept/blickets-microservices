@@ -13,7 +13,9 @@ service BlockchainService {
     rpc GetAllDeployedEvents (google.protobuf.Empty) returns (AllDeployedEvents);
     rpc DeployEventParameters (DeployEventRequest) returns (DeployEventResponse);
     rpc TransactionStatus (TransactionStatusRequest) returns (google.protobuf.Empty);
-    rpc EventDisplayDetails (EventNameRequest) returns (EventNameResponse);
+    rpc EventDisplayDetails (EventDisplayRequest) returns (EventDisplayResponse);
+    rpc EthPrice (google.protobuf.Empty) returns (EthPriceResponse);
+    // rpc BuyTicket (EventNameRequest) returns (EventNameResponse);
 }
 
 message WalletKeys {
@@ -55,12 +57,17 @@ message TransactionStatusRequest {
     string txHash = 1;
 }
 
-message EventNameRequest {
+message EventDisplayRequest {
     string contractAddress = 1;
 }
 
-message EventNameResponse {
-    string eventName = 1;
-    string symbol = 2;
+message EventDisplayResponse {
+    float ticketPrice = 1;
+    int32 ticketIdCounter = 2;
+    int32 ticketAmount = 3;
 }
 
+message EthPriceResponse {
+    uint32 ethPriceUSD = 1;
+    int32 lastTime = 2;
+}

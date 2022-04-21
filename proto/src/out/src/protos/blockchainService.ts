@@ -44,13 +44,19 @@ export interface TransactionStatusRequest {
   txHash: string;
 }
 
-export interface EventNameRequest {
+export interface EventDisplayRequest {
   contractAddress: string;
 }
 
-export interface EventNameResponse {
-  eventName: string;
-  symbol: string;
+export interface EventDisplayResponse {
+  ticketPrice: number;
+  ticketIdCounter: number;
+  ticketAmount: number;
+}
+
+export interface EthPriceResponse {
+  ethPriceUSD: number;
+  lastTime: number;
 }
 
 export interface BlockchainService {
@@ -83,7 +89,9 @@ export interface BlockchainService {
     metadata?: Metadata
   ): Observable<Empty>;
   eventDisplayDetails(
-    request: EventNameRequest,
+    request: EventDisplayRequest,
     metadata?: Metadata
-  ): Observable<EventNameResponse>;
+  ): Observable<EventDisplayResponse>;
+  /** rpc BuyTicket (EventNameRequest) returns (EventNameResponse); */
+  ethPrice(request: Empty, metadata?: Metadata): Observable<EthPriceResponse>;
 }

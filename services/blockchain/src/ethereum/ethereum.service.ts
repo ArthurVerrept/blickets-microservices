@@ -61,6 +61,18 @@ export class EthereumService implements OnModuleInit {
         return { addresses: deployed }
     }
 
+    async ethPrice() {
+        const ethPrice = await axios.get(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=4YSEQETQN57VR2BENRNWBJ9RTGS9R66X7T`)
+        if (ethPrice.data.status === '0') {
+            throw new RpcException({
+                code: status.RESOURCE_EXHAUSTED,
+                message: `ETHERSCAN API ERROR ${ethPrice.data.result}`
+            })
+        }
+
+        return { ethPriceUSD: parseFloat(ethPrice.data.result.ethusd), lastTime: parseInt(ethPrice.data.result.ethusd_timestamp) }
+    }
+
     async uploadDecentralised(file: UploadImageRequest) {
         // if the size is bigger than 10 mb return an error
         if(Buffer.byteLength(file.binary)/1000000 > 10) {
@@ -119,7 +131,7 @@ export class EthereumService implements OnModuleInit {
     async transactionStatus(txHash: string, metadata: Metadata) {
         // try getting the transaction receipt which tells us the status of the transaction
         const res =  await this.web3.eth.getTransactionReceipt(txHash)
-        console.log(res)
+        
         // res will be null while transaction is confirming on blockchain
         if (res == null) {
             return 'pending'
@@ -133,7 +145,7 @@ export class EthereumService implements OnModuleInit {
             if (internalTransactions.data.status === '0') {
                 throw new RpcException({
                     code: status.RESOURCE_EXHAUSTED,
-                    message: `ETHERSCAN API ERROR: ${internalTransactions.data.result}`
+                    message: `ETHERSCAN API ERROR ${internalTransactions.data.result}`
                 })
             }
             
@@ -161,17 +173,29 @@ export class EthereumService implements OnModuleInit {
         }
     }
 
-    async eventName(contractAddress: string) {
+    async displayDetails(contractAddress: string) {
+        const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
+        const ticketPrice = await currentContract.methods.ticketPrice.call().call()
+        const ticketAmount = await currentContract.methods.ticketAmount.call().call()
+        const ticketIdCounter = await currentContract.methods.ticketIdCounter.call().call()
+
+        const priceEth = parseFloat(this.web3.utils.fromWei(ticketPrice))
+        return { ticketPrice: priceEth, ticketIdCounter: parseInt(ticketIdCounter), ticketAmount: parseInt(ticketAmount) }
+    }
+    
+    
+    // currently unused kept for future if needed
+    async blockchainEventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const eventName = await currentContract.methods.name.call().call()
         const symbol = await currentContract.methods.symbol.call().call()
         return { eventName, symbol }
     }
 
+    // TODO: finish this shit
     async buyTicket(purchaseAmount: number, contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const currentTicketId = currentContract.methods.ticketIdCounter.call()
-        console.log(currentTicketId)
 
         // Create Token Uri 
         // const data = currentContract.methods.buyTicket(purchaseAmount).encodeABI()

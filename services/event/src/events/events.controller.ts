@@ -29,7 +29,7 @@ export class EventsController {
 
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('EventService', 'AllEvents')
-    allEvents() {
-        return this.eventService.allEvents()
+    allEvents(_, metadata: Metadata) {
+        return this.eventService.allEvents(metadata)
     }
 }

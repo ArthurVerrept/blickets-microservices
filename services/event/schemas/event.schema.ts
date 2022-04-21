@@ -14,6 +14,9 @@ export class Event {
     @Prop()
     symbol: string
 
+    @Prop()
+    ticketPrice: number
+
     @Prop({ required: true })
     imageUrl: string
 

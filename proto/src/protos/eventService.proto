@@ -51,4 +51,7 @@ message Event {
     string imageUrl = 3;
     string contractAddress = 4;
     int32 eventDate = 5;
+    string ticketPrice = 6;
+    string ticketAmount = 7;
+    string ticketIdCounter = 8;
 }

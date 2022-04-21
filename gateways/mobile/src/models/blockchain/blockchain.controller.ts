@@ -62,6 +62,11 @@ export class BlockchainController implements OnModuleInit {
     transactionStatus(@Meta() metadata: Metadata, @Body() txHash: TransactionStatusRequest) {
         return this.blockchainService.transactionStatus(txHash, metadata)
     }
+
+    @Get('eth-price')
+    ethPrice(@Meta() metadata: Metadata) {
+        return this.blockchainService.ethPrice({}, metadata)
+    }
     
     // @HttpCode(200)
     // @Post('delete-image')

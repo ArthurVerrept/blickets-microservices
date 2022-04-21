@@ -23,7 +23,6 @@ export class UserController implements OnModuleInit {
 
     @Get('test')
     test() {
-        // console.log()
         const str = 'ipfs://bafybeifbbrrspimefnc2dl4jibmjffcu56jekm7axm2bww3kzm6hgmibxe/1157df52-05d1-4b46-9780-f2395f1a99f7'
         const first = str.split('//')[1]
         const cid = first.split('/')[0]

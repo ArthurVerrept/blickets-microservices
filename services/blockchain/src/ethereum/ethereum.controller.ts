@@ -2,7 +2,12 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from '../grpcAuthGuard.strategy'
 import { EthereumService } from './ethereum.service'
-import { UploadImageRequest, DeployEventRequest, TransactionStatusRequest, EventNameRequest } from 'proto-npm'
+import { 
+  UploadImageRequest, 
+  DeployEventRequest, 
+  TransactionStatusRequest, 
+  EventDisplayRequest 
+} from 'proto-npm'
 import { Metadata } from '@grpc/grpc-js'
 
 @Controller('ethereum')
@@ -41,10 +46,16 @@ export class EthereumController {
       return this.ethereumService.uploadDecentralised(file)
     } 
 
-    
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'eventDisplayDetails')
-    async eventName(req: EventNameRequest) {
-      return this.ethereumService.eventName(req.contractAddress)
+    async ticketPrice(req: EventDisplayRequest) {
+      return this.ethereumService.displayDetails(req.contractAddress)
+    } 
+ 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('BlockchainService', 'EthPrice')
+    async ethPrice() {
+      return this.ethereumService.ethPrice()
     } 
 }

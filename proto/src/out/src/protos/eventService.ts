@@ -44,6 +44,9 @@ export interface Event {
   imageUrl: string;
   contractAddress: string;
   eventDate: number;
+  ticketPrice: string;
+  ticketAmount: string;
+  ticketIdCounter: string;
 }
 
 export interface EventService {
