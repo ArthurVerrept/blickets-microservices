@@ -26,4 +26,10 @@ export class EventsController {
     updateEventStatus(req: UpdateEventRequest) {
         return this.eventService.updateEventStatus(req)
     }
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('EventService', 'AllEvents')
+    allEvents() {
+        return this.eventService.allEvents()
+    }
 }

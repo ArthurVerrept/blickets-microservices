@@ -168,6 +168,22 @@ export class EthereumService implements OnModuleInit {
         return { eventName, symbol }
     }
 
+    async buyTicket(purchaseAmount: number, contractAddress: string) {
+        const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
+        const currentTicketId = currentContract.methods.ticketIdCounter.call()
+        console.log(currentTicketId)
+
+        // Create Token Uri 
+        // const data = currentContract.methods.buyTicket(purchaseAmount).encodeABI()
+        // const transactionParams = {
+        //     to: contractAddress,
+        //     data
+        // }
+        // return transactionParams
+
+        return {}
+    }
+
     // async uploadFile(file: UploadImageRequest) {
     //     // if the size is bigger than 10 mb return an error
     //     if(Buffer.byteLength(file.binary)/1000000 > 10) {

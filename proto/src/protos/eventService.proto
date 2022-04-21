@@ -8,6 +8,8 @@ service EventService {
     rpc CreateEvent (CreateEventRequest) returns (google.protobuf.Empty);
     rpc MyCreatedEvents (google.protobuf.Empty) returns (MyEvents);
     rpc UpdateEventStatus (UpdateEventRequest) returns (google.protobuf.Empty);
+    // get all events where deployed status = 'success'
+    rpc AllEvents (google.protobuf.Empty) returns (AllEventsResponse);
 }
 
 message CreateEventRequest {
@@ -17,7 +19,6 @@ message CreateEventRequest {
     string eventName = 4;
     string symbol = 5;
 }
-
 
 message MyEvents {
     repeated MongoEvent events = 1;
@@ -38,4 +39,16 @@ message MongoEvent {
 message UpdateEventRequest {
     string txHash = 1;
     optional string contractAddress = 2;
+}
+
+message AllEventsResponse {
+    repeated Event events = 1;
+}
+
+message Event {
+    string eventName = 1;
+    string symbol = 2;
+    string imageUrl = 3;
+    string contractAddress = 4;
+    int32 eventDate = 5;
 }

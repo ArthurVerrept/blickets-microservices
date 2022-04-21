@@ -34,6 +34,18 @@ export interface UpdateEventRequest {
   contractAddress?: string | undefined;
 }
 
+export interface AllEventsResponse {
+  events: Event[];
+}
+
+export interface Event {
+  eventName: string;
+  symbol: string;
+  imageUrl: string;
+  contractAddress: string;
+  eventDate: number;
+}
+
 export interface EventService {
   createEvent(
     request: CreateEventRequest,
@@ -44,4 +56,6 @@ export interface EventService {
     request: UpdateEventRequest,
     metadata?: Metadata
   ): Observable<Empty>;
+  /** get all events where deployed status = 'success' */
+  allEvents(request: Empty, metadata?: Metadata): Observable<AllEventsResponse>;
 }

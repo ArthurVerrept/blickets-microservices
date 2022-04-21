@@ -49,4 +49,11 @@ export class EventsService implements OnModuleInit {
 
     return {}
   }
+
+  async allEvents() {
+
+    const events = await this.eventModel.find({ deployedStatus: 'success' }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus'))
+
+    return { events }
+  }
 }

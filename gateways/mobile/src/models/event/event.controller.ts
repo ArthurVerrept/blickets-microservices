@@ -25,4 +25,9 @@ export class EventController implements OnModuleInit {
     myCreatedEvents(@Meta() metadata: Metadata) {
         return this.eventService.myCreatedEvents({}, metadata)
     }
+
+    @Get('all-events')
+    allEvents(@Meta() metadata: Metadata) {
+        return this.eventService.allEvents({}, metadata)
+    }
 }
