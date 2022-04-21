@@ -157,8 +157,6 @@ export class EthereumService implements OnModuleInit {
     async eventName(contractAddress: string) {
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const eventName = await currentContract.methods.name.call().call()
-        const sym = await currentContract.methods.symbol.call().call()
-        console.log(eventName, sym)
         return { eventName }
     }
 
