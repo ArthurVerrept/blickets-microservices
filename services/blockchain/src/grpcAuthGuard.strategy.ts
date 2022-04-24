@@ -50,7 +50,7 @@ export class GrpcAuthGuard implements CanActivate {
         }
         
         try {
-            const valid = this.jwtService.verify(token)
+            this.jwtService.verify(token)
             return true
         } catch (e) {
             throw new RpcException({

@@ -13,6 +13,10 @@ export interface GoogleAuthCode {
   code: string;
 }
 
+export interface AddAddressRequest {
+  address: string;
+}
+
 export interface AccessToken {
   accessToken: string;
 }
@@ -20,6 +24,7 @@ export interface AccessToken {
 export interface Tokens {
   accessToken: string;
   refreshToken: string;
+  addresses: string[];
 }
 
 export interface User {
@@ -29,12 +34,24 @@ export interface User {
   picture: string;
 }
 
+export interface MyAddressesResponse {
+  addresses: string[];
+}
+
 export interface UserService {
   genGoogleAuthUrl(
     request: Empty,
     metadata?: Metadata
   ): Observable<GoogleAuthUrl>;
   googleLogin(request: GoogleAuthCode, metadata?: Metadata): Observable<Tokens>;
+  addAddress(
+    request: AddAddressRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
   refresh(request: Empty, metadata?: Metadata): Observable<AccessToken>;
   me(request: Empty, metadata?: Metadata): Observable<Tokens>;
+  myAddresses(
+    request: Empty,
+    metadata?: Metadata
+  ): Observable<MyAddressesResponse>;
 }

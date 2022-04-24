@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Body, Controller, Get, Inject, OnModuleInit, Post } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { UserService, UserServiceName, GoogleAuthCode } from 'proto-npm'
+import { UserService, UserServiceName, GoogleAuthCode, AddAddressRequest } from 'proto-npm'
 import { Meta } from 'src/common/decorators/meta.decorator'
 
 @Controller('user')
@@ -46,5 +46,10 @@ export class UserController implements OnModuleInit {
     @Post('refresh-token')
     refreshTokens(@Meta() metadata: Metadata) {
         return this.userService.refresh({}, metadata)
+    }
+
+    @Post('add-address')
+    addAddress(@Meta() metadata: Metadata, @Body() req: AddAddressRequest) {
+        return this.userService.addAddress(req, metadata)
     }
 }

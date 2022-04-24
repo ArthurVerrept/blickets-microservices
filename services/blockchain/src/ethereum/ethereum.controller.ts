@@ -6,7 +6,9 @@ import {
   UploadImageRequest, 
   DeployEventRequest, 
   TransactionStatusRequest, 
-  EventDisplayRequest 
+  EventDisplayRequest,
+  BuyTicketsParamsRequest,
+  TicketPriceWeiRequest
 } from 'proto-npm'
 import { Metadata } from '@grpc/grpc-js'
 
@@ -57,5 +59,17 @@ export class EthereumController {
     @GrpcMethod('BlockchainService', 'EthPrice')
     async ethPrice() {
       return this.ethereumService.ethPrice()
+    } 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('BlockchainService', 'BuyTicketParams')
+    async buyTicketParams(req: BuyTicketsParamsRequest, metadata: Metadata) {
+      return this.ethereumService.buyTicketParams(req, metadata)
+    } 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('BlockchainService', 'TicketPriceWei')
+    async ticketPriceWei(req: TicketPriceWeiRequest) {
+      return this.ethereumService.ticketPriceWei(req.contractAddress)
     } 
 }

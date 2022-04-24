@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
-import { Body, Controller, Get, Inject, OnModuleInit, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Get, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest } from 'proto-npm'
+import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest, BuyTicketsParamsRequest } from 'proto-npm'
 import { Express } from 'express'
 import { Meta } from 'src/common/decorators/meta.decorator'
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -66,6 +66,11 @@ export class BlockchainController implements OnModuleInit {
     @Get('eth-price')
     ethPrice(@Meta() metadata: Metadata) {
         return this.blockchainService.ethPrice({}, metadata)
+    }
+
+    @Post('buy-tickets-params')
+    buyTicketsParams(@Meta() metadata: Metadata, @Body() req: BuyTicketsParamsRequest) {
+        return this.blockchainService.buyTicketParams(req, metadata)
     }
     
     // @HttpCode(200)

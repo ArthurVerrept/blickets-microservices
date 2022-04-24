@@ -9,8 +9,8 @@ import { v4 as uuidv4 } from 'uuid'
 import AWS from 'aws-sdk'
 import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
-import { UploadImageRequest, CreateEventRequest, DeployEventRequest, EventServiceName, EventService } from 'proto-npm'
-import { NFTStorage, File } from 'nft.storage'
+import { UploadImageRequest, CreateEventRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest } from 'proto-npm'
+import { NFTStorage, File, Blob } from 'nft.storage'
 import axios from'axios'
 import { lastValueFrom } from 'rxjs'
 
@@ -21,10 +21,9 @@ export class EthereumService implements OnModuleInit {
     onModuleInit(): void {
         this.eventService = this.client.getService<EventService>('EventService')
     }
-
+    nftstorage: NFTStorage
     web3: Web3
     s3: AWS.S3
-    nftStorageKey: string
     BN
 
     eventContract: Contract
@@ -42,10 +41,10 @@ export class EthereumService implements OnModuleInit {
     ) {
         // AWS.config.update({ accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'), secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY') })
         // this.s3 = new AWS.S3()
-        this.nftStorageKey = this.configService.get('NFT_STORAGE_KEY')
+        this.nftstorage = new NFTStorage({ token: this.configService.get('NFT_STORAGE_KEY') })
         this.web3 = new Web3("https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX")
         // this.web3 = new Web3("https://eth-goerli.alchemyapi.io/v2/6BG6x2EmqojNNgMy1lr9MFeX1N7wVAwf")
-        this.EventFactoryContractAddress = '0xea07fd4d2d9ebd9a5ecd9affff716e3cc52a1402'      // rinkeby
+        this.EventFactoryContractAddress = '0x3107e9e262ec21adb060cd4584f2960df24d8e59'      // rinkeby
         // this.EventFactoryContractAddress = '0x5F313e120429320608DB5D7e1F54f98785c5AeC4'         // goerli
         this.eventFactoryContract = new this.web3.eth.Contract(this.eventFactoryABI, this.EventFactoryContractAddress)
         // gen account from passphrase web3
@@ -92,10 +91,9 @@ export class EthereumService implements OnModuleInit {
         const id = uuidv4()
         const image = new File([file.binary], id, { type: file.mime })
 
-        const nftstorage = new NFTStorage({ token: this.nftStorageKey })
 
         // call client.store, passing in the image & metadata
-        const nftRet = await nftstorage.store({
+        const nftRet = await this.nftstorage.store({
             image,
             name: 'name',
             description: 'description'
@@ -131,7 +129,7 @@ export class EthereumService implements OnModuleInit {
     async transactionStatus(txHash: string, metadata: Metadata) {
         // try getting the transaction receipt which tells us the status of the transaction
         const res =  await this.web3.eth.getTransactionReceipt(txHash)
-        
+
         // res will be null while transaction is confirming on blockchain
         if (res == null) {
             return 'pending'
@@ -178,9 +176,15 @@ export class EthereumService implements OnModuleInit {
         const ticketPrice = await currentContract.methods.ticketPrice.call().call()
         const ticketAmount = await currentContract.methods.ticketAmount.call().call()
         const ticketIdCounter = await currentContract.methods.ticketIdCounter.call().call()
-
         const priceEth = parseFloat(this.web3.utils.fromWei(ticketPrice))
         return { ticketPrice: priceEth, ticketIdCounter: parseInt(ticketIdCounter), ticketAmount: parseInt(ticketAmount) }
+    }
+
+    // Currently unused kept for future if needed
+    async ticketPriceWei(contractAddress: string) {
+        const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
+        const ticketPrice = await currentContract.methods.ticketPrice.call().call()
+        return { ticketPriceWei: ticketPrice }
     }
     
     
@@ -193,20 +197,49 @@ export class EthereumService implements OnModuleInit {
     }
 
     // TODO: finish this shit
-    async buyTicket(purchaseAmount: number, contractAddress: string) {
-        const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
-        const currentTicketId = currentContract.methods.ticketIdCounter.call()
+    async buyTicketParams(req: BuyTicketsParamsRequest, metadata: Metadata) {
+        const currentContract = new this.web3.eth.Contract(this.eventABI, req.contractAddress)
 
+        const ticketIdCounter = await currentContract.methods.ticketIdCounter.call().call()
+        // get date, event name and image url from db
+        const event$ = this.eventService.eventByContractAddress({ contractAddress: req.contractAddress }, metadata)
+        const event = await lastValueFrom(event$)
+        const cleanScript = {
+            name: 'Ticket #' + ticketIdCounter,
+            description: 'An NFT that grants you access to ' + event.eventName + ', this NFT will be locked for resale on every website other than Blickets.com until the day after the event. You will be able to list this item however the sale will not go through unless it is past the event date.',
+            image: event.imageUrl,
+            attributes: [
+                {
+                    display_type: "date", 
+                    trait_type: "event date", 
+                    value: parseInt(event.eventDate)
+                }
+            ]
+        }
         // Create Token Uri 
-        // const data = currentContract.methods.buyTicket(purchaseAmount).encodeABI()
-        // const transactionParams = {
-        //     to: contractAddress,
-        //     data
-        // }
-        // return transactionParams
+        const jsonse = JSON.stringify(cleanScript)
 
-        return {}
+        const content = new Blob([jsonse], {type: "application/json"})
+        
+        // upload token uri to ipfs
+        const cid = await this.nftstorage.storeBlob(content)
+
+        const ipfsLink = `https://${cid}.ipfs.dweb.link`
+
+        const data = currentContract.methods.buyTickets(req.purchaseAmount, ipfsLink).encodeABI()
+        const ticketPrice = await currentContract.methods.ticketPrice.call().call()
+
+        const value = this.web3.utils.toHex(ticketPrice)
+        const transactionParams = {
+            to: req.contractAddress,
+            data,
+            value
+        }
+
+        return transactionParams
     }
+
+
 
     // async uploadFile(file: UploadImageRequest) {
     //     // if the size is bigger than 10 mb return an error

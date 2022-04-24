@@ -21,6 +21,9 @@ class User {
     @Exclude()
     @Column({ nullable: true })
     currentRefreshToken?: string
+
+    @Column("text", { array: true, nullable: true })
+    addresses?: string[]
 }
 
 export default User

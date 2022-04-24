@@ -30,7 +30,10 @@ export class GrpcErrorIntercept implements NestInterceptor {
   }
   genError(code: number, message: string) {
     if (message) {
-      const errMessage = message.split(': ')[1]
+      let errMessage = message
+      if(message.includes(':')){
+        errMessage = message.split(': ')[1]
+      }
       return {statusCode: code, message: errMessage}
     }
     return null

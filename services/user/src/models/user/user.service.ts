@@ -54,19 +54,26 @@ export class UserService {
         return this.usersRepository.save(newUser) // INSERT
     }
 
-    // async getUser(id: number) {
-    //   const user = await this.getOneById(id)
-  
-    //   // if created with google get google user
-    //   // this is where you would add other
-    //   // options for getting users from different
-    //   // services
-    //   if (user.isCreatedWithGoogle) {
-    //     const userData = await this.googleAuthenticationService.getUserData(user.googleRefreshToken)
+    async addAddress(req, metadata) {
+      const user = await this.usersRepository.findOne({id: metadata.getMap().user.id})
+
+      // if the address has already been saved
+      
+      let addresses = ['']
+      if (!user.addresses) {
         
-    //     return userData
-    //   }
-    // }
+        addresses = [req.address]
+      } else {
+        if (user.addresses.includes(req.address)) {
+          return {}
+        }
+        addresses = user.addresses
+        addresses.push(req.address)
+      }
+      await this.usersRepository.update(metadata.getMap().user.id, {addresses})
+
+      return {}
+    }
 
     async getUserIfRefreshTokenMatches(refreshToken: string, id: number) {
       const user = await this.getOneById(id) // findOrFail()
@@ -76,5 +83,10 @@ export class UserService {
       if (isRefreshTokenMatching) {
         return user
       } 
+    }
+
+    async myAddresses(metadata) {
+      const user = await this.usersRepository.findOneOrFail({id: metadata.getMap().user.id})
+      return { addresses: user.addresses }
     }
 }

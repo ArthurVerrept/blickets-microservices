@@ -76,7 +76,7 @@ export class GoogleAuthenticationService {
         // save app refresh token to db
         await this.userService.changeCurrentRefreshToken(user.id, refreshToken)
   
-        return { refreshToken, accessToken }
+        return { refreshToken, accessToken, addresses: user.addresses }
   
         // for some reason the error object is wrapped in another error
       } catch ({error}) {

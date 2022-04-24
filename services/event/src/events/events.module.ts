@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { Event, EventSchema } from 'schemas/event.schema'
 import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
-import { BlockchainServiceName, BlockchainServicePath } from 'proto-npm'
+import { BlockchainServiceName, BlockchainServicePath, UserServiceName, UserServicePath } from 'proto-npm'
 
 @Module({
   imports: [
@@ -32,6 +32,14 @@ import { BlockchainServiceName, BlockchainServicePath } from 'proto-npm'
             package: BlockchainServiceName,
             protoPath: BlockchainServicePath,
             url: 'localhost:50051'
+        }
+      },
+      {
+        name: UserServiceName,
+        transport: Transport.GRPC,
+        options: {
+            package: UserServiceName,
+            protoPath: UserServicePath
         }
       }
     ]),

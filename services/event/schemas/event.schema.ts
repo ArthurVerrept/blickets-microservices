@@ -36,7 +36,10 @@ export class Event {
     createdTime: Date
 
     @Prop()
-    eventDate: number
+    eventDate: string
+
+    @Prop()
+    deployerAddress: string
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event)

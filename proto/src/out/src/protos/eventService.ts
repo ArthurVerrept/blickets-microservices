@@ -8,9 +8,14 @@ export const protobufPackage = "event";
 export interface CreateEventRequest {
   txHash: string;
   imageUrl: string;
-  eventDate: number;
+  eventDate: string;
   eventName: string;
   symbol: string;
+  deployerAddress: string;
+}
+
+export interface MyEventsRequest {
+  address: string;
 }
 
 export interface MyEvents {
@@ -26,7 +31,7 @@ export interface MongoEvent {
   txHash: string;
   deployedStatus: string;
   admins: number[];
-  eventDate: number;
+  eventDate: string;
 }
 
 export interface UpdateEventRequest {
@@ -43,10 +48,14 @@ export interface Event {
   symbol: string;
   imageUrl: string;
   contractAddress: string;
-  eventDate: number;
+  eventDate: string;
   ticketPrice: string;
   ticketAmount: string;
   ticketIdCounter: string;
+}
+
+export interface EventByContractRequest {
+  contractAddress?: string | undefined;
 }
 
 export interface EventService {
@@ -54,11 +63,18 @@ export interface EventService {
     request: CreateEventRequest,
     metadata?: Metadata
   ): Observable<Empty>;
-  myCreatedEvents(request: Empty, metadata?: Metadata): Observable<MyEvents>;
+  myCreatedEvents(
+    request: MyEventsRequest,
+    metadata?: Metadata
+  ): Observable<MyEvents>;
   updateEventStatus(
     request: UpdateEventRequest,
     metadata?: Metadata
   ): Observable<Empty>;
   /** get all events where deployed status = 'success' */
   allEvents(request: Empty, metadata?: Metadata): Observable<AllEventsResponse>;
+  eventByContractAddress(
+    request: EventByContractRequest,
+    metadata?: Metadata
+  ): Observable<Event>;
 }

@@ -7,8 +7,10 @@ package user;
 service UserService {
     rpc GenGoogleAuthUrl (google.protobuf.Empty) returns (GoogleAuthUrl);
     rpc GoogleLogin (GoogleAuthCode) returns (Tokens);
+    rpc AddAddress (AddAddressRequest) returns (google.protobuf.Empty);
     rpc Refresh (google.protobuf.Empty) returns (AccessToken);
     rpc Me (google.protobuf.Empty) returns (Tokens);
+    rpc MyAddresses (google.protobuf.Empty) returns (MyAddressesResponse);
 }
 
 message GoogleAuthUrl {
@@ -19,6 +21,10 @@ message GoogleAuthCode {
     string code = 1;
 }
 
+message AddAddressRequest {
+    string address = 1;
+}
+
 message AccessToken {
     string accessToken = 1;
 }
@@ -26,6 +32,7 @@ message AccessToken {
 message Tokens {
     string accessToken = 1;
     string refreshToken = 2;
+    repeated string addresses = 3;
 }
 
 message User {
@@ -33,4 +40,9 @@ message User {
     string email = 2;
     string name = 3;
     string picture = 4;
+}
+
+
+message MyAddressesResponse {
+    repeated string addresses = 1;
 }

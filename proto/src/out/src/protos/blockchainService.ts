@@ -59,6 +59,25 @@ export interface EthPriceResponse {
   lastTime: number;
 }
 
+export interface BuyTicketsParamsRequest {
+  contractAddress: string;
+  purchaseAmount: number;
+}
+
+export interface BuyTicketsParamsResponse {
+  to: string;
+  data: string;
+  value: string;
+}
+
+export interface TicketPriceWeiRequest {
+  contractAddress: string;
+}
+
+export interface TicketPriceWeiResponse {
+  ticketPriceWei: string;
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -92,6 +111,13 @@ export interface BlockchainService {
     request: EventDisplayRequest,
     metadata?: Metadata
   ): Observable<EventDisplayResponse>;
-  /** rpc BuyTicket (EventNameRequest) returns (EventNameResponse); */
   ethPrice(request: Empty, metadata?: Metadata): Observable<EthPriceResponse>;
+  buyTicketParams(
+    request: BuyTicketsParamsRequest,
+    metadata?: Metadata
+  ): Observable<BuyTicketsParamsResponse>;
+  ticketPriceWei(
+    request: TicketPriceWeiRequest,
+    metadata?: Metadata
+  ): Observable<TicketPriceWeiResponse>;
 }

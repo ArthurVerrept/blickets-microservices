@@ -1,6 +1,6 @@
 import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
-import {Observable} from 'rxjs'
 import { status } from '@grpc/grpc-js'
+import {Observable} from 'rxjs'
 import {JwtService} from '@nestjs/jwt'
 import { RpcException } from '@nestjs/microservices'
 
@@ -32,7 +32,7 @@ export class GrpcAuthGuard implements CanActivate {
                 message: 'No authorization token provided'
             })
         }
-
+        
         if (!header.includes(prefix)) {
             throw new RpcException({
                 code: status.UNAUTHENTICATED,
@@ -41,8 +41,9 @@ export class GrpcAuthGuard implements CanActivate {
         }
 
         const token = header.slice(header.indexOf(' ') + 1)
+
+        const user = metadata.getMap().user.id
         
-        const user = metadata.getMap().user
         // if there is no user in the metadata
         if(!user) {
             // add decoded token to metadata to be used in controllers
