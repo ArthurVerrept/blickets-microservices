@@ -15,15 +15,15 @@ export class EventsService implements OnModuleInit {
 
       
   onModuleInit(): void {
-      // this.blockchainService = this.blockchainClient.getService<BlockchainService>('BlockchainService')
-      this.userService = this.client.getService<UserService>('UserService')
+      this.blockchainService = this.blockchainClient.getService<BlockchainService>('BlockchainService')
+      this.userService = this.userClient.getService<UserService>('UserService')
   }
 
 
   constructor(
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
-    // @Inject(BlockchainServiceName) private blockchainClient: ClientGrpc,
-    @Inject(UserServiceName) private client: ClientGrpc
+    @Inject(BlockchainServiceName) private blockchainClient: ClientGrpc,
+    @Inject(UserServiceName) private userClient: ClientGrpc
   ) {}
 
   async createEvent(eventData, metadata) {
