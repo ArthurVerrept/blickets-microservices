@@ -58,6 +58,18 @@ export interface EventByContractRequest {
   contractAddress?: string | undefined;
 }
 
+export interface CreateUserEventRequest {
+  contractAddress: string;
+}
+
+export interface DeleteUserEventRequest {
+  contractAddress: string;
+}
+
+export interface AllUserEventResponse {
+  contractAddresses: string[];
+}
+
 export interface EventService {
   createEvent(
     request: CreateEventRequest,
@@ -77,4 +89,16 @@ export interface EventService {
     request: EventByContractRequest,
     metadata?: Metadata
   ): Observable<Event>;
+  createUserEvent(
+    request: CreateUserEventRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
+  deleteUserEvent(
+    request: DeleteUserEventRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
+  allUserEvents(
+    request: Empty,
+    metadata?: Metadata
+  ): Observable<AllUserEventResponse>;
 }

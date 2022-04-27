@@ -72,4 +72,10 @@ export class EthereumController {
     async ticketPriceWei(req: TicketPriceWeiRequest) {
       return this.ethereumService.ticketPriceWei(req.contractAddress)
     } 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('BlockchainService', 'AllMyEvents')
+    async allMyEvents(_, metadata: Metadata) {
+      return this.ethereumService.allMyEvents(metadata)
+    } 
 }

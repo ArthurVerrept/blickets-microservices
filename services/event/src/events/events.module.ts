@@ -7,6 +7,7 @@ import { Event, EventSchema } from 'schemas/event.schema'
 import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
 import { BlockchainServiceName, BlockchainServicePath, UserServiceName, UserServicePath } from 'proto-npm'
+import { UserEvent, UserEventSchema } from 'schemas/userEvent.schema'
 
 @Module({
   imports: [
@@ -43,7 +44,7 @@ import { BlockchainServiceName, BlockchainServicePath, UserServiceName, UserServ
         }
       }
     ]),
-    MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }])
+    MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }, { name: UserEvent.name, schema: UserEventSchema }])
   ],
   controllers: [EventsController],
   providers: [EventsService]

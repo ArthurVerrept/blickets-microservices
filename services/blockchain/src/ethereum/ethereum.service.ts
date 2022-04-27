@@ -13,6 +13,7 @@ import { UploadImageRequest, CreateEventRequest, DeployEventRequest, EventServic
 import { NFTStorage, File, Blob } from 'nft.storage'
 import axios from'axios'
 import { lastValueFrom } from 'rxjs'
+import { AlchemyWeb3, AssetTransfersCategory, createAlchemyWeb3 } from '@alch/alchemy-web3'
 
 @Injectable()
 export class EthereumService implements OnModuleInit {
@@ -23,6 +24,7 @@ export class EthereumService implements OnModuleInit {
     }
     nftstorage: NFTStorage
     web3: Web3
+    alchemyWeb3: AlchemyWeb3
     s3: AWS.S3
     BN
 
@@ -42,7 +44,8 @@ export class EthereumService implements OnModuleInit {
         // AWS.config.update({ accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'), secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY') })
         // this.s3 = new AWS.S3()
         this.nftstorage = new NFTStorage({ token: this.configService.get('NFT_STORAGE_KEY') })
-        this.web3 = new Web3("https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX")
+        this.alchemyWeb3 = createAlchemyWeb3('https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX')
+        this.web3 = new Web3('https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX')
         // this.web3 = new Web3("https://eth-goerli.alchemyapi.io/v2/6BG6x2EmqojNNgMy1lr9MFeX1N7wVAwf")
         this.EventFactoryContractAddress = '0x3107e9e262ec21adb060cd4584f2960df24d8e59'      // rinkeby
         // this.EventFactoryContractAddress = '0x5F313e120429320608DB5D7e1F54f98785c5AeC4'         // goerli
@@ -172,6 +175,16 @@ export class EthereumService implements OnModuleInit {
     }
 
     async displayDetails(contractAddress: string) {
+        // try{
+        //     const a = await this.alchemyWeb3.alchemy.getAssetTransfers({
+        //         fromBlock: this.web3.utils.toHex(0),
+        //         toAddress: '0xA705121486a1440CF621615c4F312EdE7d89146D',
+        //         category: [AssetTransfersCategory.ERC721]
+        //     })
+        //     console.log(a)
+        // }catch (e){
+        //     console.log(e)
+        // }
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const ticketPrice = await currentContract.methods.ticketPrice.call().call()
         const ticketAmount = await currentContract.methods.ticketAmount.call().call()
@@ -196,16 +209,27 @@ export class EthereumService implements OnModuleInit {
         return { eventName, symbol }
     }
 
-    // TODO: finish this shit
-    async buyTicketParams(req: BuyTicketsParamsRequest, metadata: Metadata) {
+    async buyTicketParams(req: BuyTicketsParamsRequest, metadata) {
+        try {
+            const userEvent$ = this.eventService.createUserEvent({ contractAddress: req.contractAddress }, metadata) 
+            await lastValueFrom(userEvent$)
+        } catch (e) {
+            console.log(e)
+            throw new RpcException({
+              code: status.UNKNOWN,
+              message: e
+          })
+        }
+
         const currentContract = new this.web3.eth.Contract(this.eventABI, req.contractAddress)
 
-        const ticketIdCounter = await currentContract.methods.ticketIdCounter.call().call()
+        // removed id counter since a purchase of multiple tickets breaks it
+        // const ticketIdCounter = await currentContract.methods.ticketIdCounter.call().call()
         // get date, event name and image url from db
         const event$ = this.eventService.eventByContractAddress({ contractAddress: req.contractAddress }, metadata)
         const event = await lastValueFrom(event$)
         const cleanScript = {
-            name: 'Ticket #' + ticketIdCounter,
+            name: 'Ticket',
             description: 'An NFT that grants you access to ' + event.eventName + ', this NFT will be locked for resale on every website other than Blickets.com until the day after the event. You will be able to list this item however the sale will not go through unless it is past the event date.',
             image: event.imageUrl,
             attributes: [
@@ -221,24 +245,73 @@ export class EthereumService implements OnModuleInit {
 
         const content = new Blob([jsonse], {type: "application/json"})
         
-        // upload token uri to ipfs
-        const cid = await this.nftstorage.storeBlob(content)
 
-        const ipfsLink = `https://${cid}.ipfs.dweb.link`
+        try {
+            // upload token uri to ipfs
+            const cid = await this.nftstorage.storeBlob(content)
 
-        const data = currentContract.methods.buyTickets(req.purchaseAmount, ipfsLink).encodeABI()
-        const ticketPrice = await currentContract.methods.ticketPrice.call().call()
+            const ipfsLink = `https://${cid}.ipfs.dweb.link`
 
-        const value = this.web3.utils.toHex(ticketPrice)
-        const transactionParams = {
-            to: req.contractAddress,
-            data,
-            value
+            const data = currentContract.methods.buyTickets(req.purchaseAmount, ipfsLink).encodeABI()
+            const ticketPrice = await currentContract.methods.ticketPrice.call().call()
+            const value = this.web3.utils.toHex(ticketPrice)
+            const transactionParams = {
+                to: req.contractAddress,
+                data,
+                value
+            }
+
+            return transactionParams
+
+        } catch (e) {
+            // TODO add check that they do not already own a ticket before removeing it from their account
+            const userEvent$ = this.eventService.deleteUserEvent({ contractAddress: req.contractAddress }, metadata) 
+            await lastValueFrom(userEvent$)
+            console.log(e)
+            throw new RpcException({
+                code: status.UNKNOWN,
+                message: e
+            })
         }
-
-        return transactionParams
     }
 
+
+    // currently unused kept for future if needed
+    async allMyEvents(metadata) {
+        // get events that user is going to addresses from mongodb
+        const userEvents$ = this.eventService.allUserEvents({}, metadata)
+        const userEventContractAddresses = await lastValueFrom(userEvents$)
+        const userTickets = []
+        try {
+            // get all the tokens transferred to the users account from the list of 
+            // contract addresses above
+            const a = await this.alchemyWeb3.alchemy.getAssetTransfers({
+                fromBlock: this.web3.utils.toHex(0),
+                contractAddresses: userEventContractAddresses.contractAddresses,
+                toAddress: '0xA705121486a1440CF621615c4F312EdE7d89146D',
+                category: [AssetTransfersCategory.ERC721]
+            })
+            // if user has no tickets return empty object for grpc to be happy
+            if(!a.transfers.length) {
+                return {}
+            }
+            // for each transfer get link to tokenURI (metadata etc)
+            for (const transfer of a.transfers) {
+                const currentContract = new this.web3.eth.Contract(this.eventABI, transfer.rawContract.address)
+                const tokenuri = await currentContract.methods.tokenURI(this.web3.utils.hexToNumber(transfer.tokenId)).call()
+
+                const ret = {
+                    tokenURI: tokenuri,
+                    contractAddress: transfer.rawContract.address,
+                    ticketNumber: this.web3.utils.hexToNumber(transfer.tokenId)
+                }
+                userTickets.push(ret)
+            }
+        } catch (e){
+            console.log(e)
+        }
+        return { event: userTickets }
+    }
 
 
     // async uploadFile(file: UploadImageRequest) {

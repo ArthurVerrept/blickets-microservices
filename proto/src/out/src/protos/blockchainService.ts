@@ -78,6 +78,16 @@ export interface TicketPriceWeiResponse {
   ticketPriceWei: string;
 }
 
+export interface MyEvent {
+  tokenURI: string;
+  contractAddress: string;
+  ticketNumber: string;
+}
+
+export interface AllMyEventsResponse {
+  event: MyEvent[];
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -120,4 +130,8 @@ export interface BlockchainService {
     request: TicketPriceWeiRequest,
     metadata?: Metadata
   ): Observable<TicketPriceWeiResponse>;
+  allMyEvents(
+    request: Empty,
+    metadata?: Metadata
+  ): Observable<AllMyEventsResponse>;
 }

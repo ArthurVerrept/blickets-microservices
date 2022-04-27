@@ -11,6 +11,9 @@ service EventService {
     // get all events where deployed status = 'success'
     rpc AllEvents (google.protobuf.Empty) returns (AllEventsResponse);
     rpc EventByContractAddress (EventByContractRequest) returns (Event);
+    rpc CreateUserEvent (CreateUserEventRequest) returns (google.protobuf.Empty);
+    rpc DeleteUserEvent (DeleteUserEventRequest) returns (google.protobuf.Empty);
+    rpc AllUserEvents (google.protobuf.Empty) returns (AllUserEventResponse);
 }
 
 message CreateEventRequest {
@@ -64,4 +67,17 @@ message Event {
 
 message EventByContractRequest {
     optional string contractAddress = 1;
+}
+
+
+message CreateUserEventRequest {
+    string contractAddress = 1;
+}
+
+message DeleteUserEventRequest {
+    string contractAddress = 1;
+}
+
+message AllUserEventResponse {
+    repeated string contractAddresses = 1;
 }

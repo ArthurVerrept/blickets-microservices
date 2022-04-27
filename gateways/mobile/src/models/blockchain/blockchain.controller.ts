@@ -72,6 +72,12 @@ export class BlockchainController implements OnModuleInit {
     buyTicketsParams(@Meta() metadata: Metadata, @Body() req: BuyTicketsParamsRequest) {
         return this.blockchainService.buyTicketParams(req, metadata)
     }
+
+    @Get('my-events')
+    allMyEvents(@Meta() metadata: Metadata) {
+        return this.blockchainService.allMyEvents({}, metadata)
+    }
+    
     
     // @HttpCode(200)
     // @Post('delete-image')

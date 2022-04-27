@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { status } from '@grpc/grpc-js'
 import { Model } from 'mongoose'
 import { Event, EventDocument } from 'schemas/event.schema'
+import { UserEvent, UserEventDocument } from 'schemas/userEvent.schema'
 import { UpdateEventRequest, BlockchainServiceName, BlockchainService, UserServiceName, UserService } from 'proto-npm'
 import { ClientGrpc, RpcException } from '@nestjs/microservices'
 import { Metadata } from '@grpc/grpc-js'
@@ -22,6 +23,7 @@ export class EventsService implements OnModuleInit {
 
   constructor(
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
+    @InjectModel(UserEvent.name) private userEventModel: Model<UserEventDocument>,
     @Inject(BlockchainServiceName) private blockchainClient: ClientGrpc,
     @Inject(UserServiceName) private userClient: ClientGrpc
   ) {}
@@ -110,4 +112,34 @@ export class EventsService implements OnModuleInit {
   }
 
 
+  async createUserEvent(req, metadata) {
+    const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })
+    // if user has no events create array for his events
+    if (!userEvent) {
+      const userEvent = new this.userEventModel({
+        userId: metadata.getMap().user.id,
+        contractAddress: [req.contractAddress]
+      })
+      await userEvent.save()
+    // else add to his events the contract address of the event if it not present 
+    } else {
+      await this.userEventModel.findOneAndUpdate({ userId: metadata.getMap().user.id }, { $addToSet: { contractAddress: req.contractAddress } })
+    }
+  }
+
+  async deleteUserEvent(req, metadata) {
+    const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })
+    if (!userEvent) {
+
+    } else {
+      // find and remove contract address from array
+      await this.userEventModel.findOneAndUpdate({ userId: metadata.getMap().user.id }, { $pull: { contractAddress: req.contractAddress } })
+    }
+  }
+
+  async allUserEvents(req, metadata) {
+    const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })
+    console.log({ contractAddresses: userEvent.contractAddress })
+    return { contractAddresses: userEvent.contractAddress }
+  }
 }

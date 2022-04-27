@@ -40,6 +40,7 @@ export class UserController implements OnModuleInit {
 
     @Post('google-login')
     getTokens(@Body() authCode: GoogleAuthCode) {
+        console.log('in')
         return this.userService.googleLogin(authCode)
     }
 

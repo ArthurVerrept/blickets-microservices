@@ -25,7 +25,7 @@ export class GrpcAuthGuard implements CanActivate {
             }
             header = metadata.get('Authorization')[0]
         }
-
+        
         if (!header) {
             throw new RpcException({
                 code: status.UNAUTHENTICATED,
@@ -42,15 +42,11 @@ export class GrpcAuthGuard implements CanActivate {
 
         const token = header.slice(header.indexOf(' ') + 1)
         
-        const user = metadata.getMap().user
-        // if there is no user in the metadata
-        if(!user) {
-            // add decoded token to metadata to be used in controllers
-            metadata.set('user', this.jwtService.decode(token)) 
-        }
+        // no matter what re-set user as this stops a lot of weird errors
+        metadata.set('user', this.jwtService.decode(token)) 
         
         try {
-            this.jwtService.verify(token)
+            const valid = this.jwtService.verify(token)
             return true
         } catch (e) {
             throw new RpcException({

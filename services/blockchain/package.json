@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@alch/alchemy-web3": "^1.4.2-next.0",
     "@grpc/grpc-js": "^1.5.4",
     "@grpc/proto-loader": "^0.6.9",
     "@nestjs/axios": "0.0.7",
