@@ -307,12 +307,12 @@ export class EthereumService implements OnModuleInit {
             // for each transfer get link to tokenURI (metadata etc)
             for (const transfer of a.transfers) {
                 const currentContract = new this.web3.eth.Contract(this.eventABI, transfer.rawContract.address)
-                const tokenuri = await currentContract.methods.tokenURI(this.web3.utils.hexToNumber(transfer.tokenId)).call()
+                const tokenURI = await currentContract.methods.tokenURI(this.web3.utils.hexToNumber(transfer.tokenId)).call()
 
 
                 const [currEventInfo] = eventInfo.filter(e => e.contractAddress === transfer.rawContract.address)
                 const ret = {
-                    tokenURI: tokenuri,
+                    tokenURI,
                     contractAddress: transfer.rawContract.address,
                     ticketNumber: this.web3.utils.hexToNumber(transfer.tokenId),
                     eventName: currEventInfo.eventName,
@@ -326,8 +326,7 @@ export class EthereumService implements OnModuleInit {
             console.log(e)
         }
 
-        console.log(userTickets)
-        return { event: userTickets }
+        return { events: userTickets }
     }
 
 

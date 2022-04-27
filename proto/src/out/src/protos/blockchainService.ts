@@ -89,7 +89,7 @@ export interface MyEvent {
 }
 
 export interface AllMyEventsResponse {
-  event: MyEvent[];
+  events: MyEvent[];
 }
 
 export interface BlockchainService {

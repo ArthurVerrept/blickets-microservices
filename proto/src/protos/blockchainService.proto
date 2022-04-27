@@ -104,5 +104,5 @@ message MyEvent {
 }
 
 message AllMyEventsResponse {
-    repeated MyEvent event = 1;
+    repeated MyEvent events = 1;
 }
