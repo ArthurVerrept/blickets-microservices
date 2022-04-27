@@ -97,6 +97,10 @@ message MyEvent {
     string tokenURI = 1;
     string contractAddress = 2;
     string ticketNumber = 3;
+    string eventName = 4;
+    string symbol = 5;
+    string eventDate = 6;
+    string ticketAmount = 7;
 }
 
 message AllMyEventsResponse {

@@ -82,6 +82,10 @@ export interface MyEvent {
   tokenURI: string;
   contractAddress: string;
   ticketNumber: string;
+  eventName: string;
+  symbol: string;
+  eventDate: string;
+  ticketAmount: string;
 }
 
 export interface AllMyEventsResponse {

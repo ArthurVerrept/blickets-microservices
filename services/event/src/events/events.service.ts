@@ -92,7 +92,7 @@ export class EventsService implements OnModuleInit {
   }
 
   async eventByContractAddress(contractAddress: string, metadata: Metadata) {
-    const [event] = await this.eventModel.find({ contractAddress }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus')).exec()
+      const [event] = await this.eventModel.find({ contractAddress }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus')).exec()
 
       const price$ = this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
       const price = await lastValueFrom(price$)
@@ -110,7 +110,6 @@ export class EventsService implements OnModuleInit {
 
     return returnEvent
   }
-
 
   async createUserEvent(req, metadata) {
     const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })

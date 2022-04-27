@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid'
 import AWS from 'aws-sdk'
 import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
-import { UploadImageRequest, CreateEventRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest } from 'proto-npm'
+import { UploadImageRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest } from 'proto-npm'
 import { NFTStorage, File, Blob } from 'nft.storage'
 import axios from'axios'
 import { lastValueFrom } from 'rxjs'
@@ -295,21 +295,38 @@ export class EthereumService implements OnModuleInit {
             if(!a.transfers.length) {
                 return {}
             }
+
+            const eventInfo = []
+            // TODO: for each users event get data from event service
+            for (const contract of userEventContractAddresses.contractAddresses) {
+                const eventInfo$ = this.eventService.eventByContractAddress({ contractAddress: contract }, metadata)
+                eventInfo.push(await lastValueFrom(eventInfo$))
+            }
+            // console.log(eventInfo)
+
             // for each transfer get link to tokenURI (metadata etc)
             for (const transfer of a.transfers) {
                 const currentContract = new this.web3.eth.Contract(this.eventABI, transfer.rawContract.address)
                 const tokenuri = await currentContract.methods.tokenURI(this.web3.utils.hexToNumber(transfer.tokenId)).call()
 
+
+                const [currEventInfo] = eventInfo.filter(e => e.contractAddress === transfer.rawContract.address)
                 const ret = {
                     tokenURI: tokenuri,
                     contractAddress: transfer.rawContract.address,
-                    ticketNumber: this.web3.utils.hexToNumber(transfer.tokenId)
+                    ticketNumber: this.web3.utils.hexToNumber(transfer.tokenId),
+                    eventName: currEventInfo.eventName,
+                    symbol: currEventInfo.symbol,
+                    eventDate: currEventInfo.eventDate,
+                    ticketAmount: currEventInfo.ticketAmount
                 }
                 userTickets.push(ret)
             }
         } catch (e){
             console.log(e)
         }
+
+        console.log(userTickets)
         return { event: userTickets }
     }
 
