@@ -47,7 +47,7 @@ export class EthereumService implements OnModuleInit {
         this.alchemyWeb3 = createAlchemyWeb3('https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX')
         this.web3 = new Web3('https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX')
         // this.web3 = new Web3("https://eth-goerli.alchemyapi.io/v2/6BG6x2EmqojNNgMy1lr9MFeX1N7wVAwf")
-        this.EventFactoryContractAddress = '0x3107e9e262ec21adb060cd4584f2960df24d8e59'      // rinkeby
+        this.EventFactoryContractAddress = '0xdc81e5a6d725bc99e41409807b78bbc3af0aa2c7'      // rinkeby
         // this.EventFactoryContractAddress = '0x5F313e120429320608DB5D7e1F54f98785c5AeC4'         // goerli
         this.eventFactoryContract = new this.web3.eth.Contract(this.eventFactoryABI, this.EventFactoryContractAddress)
         // gen account from passphrase web3
@@ -281,6 +281,9 @@ export class EthereumService implements OnModuleInit {
         // get events that user is going to addresses from mongodb
         const userEvents$ = this.eventService.allUserEvents({}, metadata)
         const userEventContractAddresses = await lastValueFrom(userEvents$)
+        if(!userEventContractAddresses.contractAddresses) {
+            return {}
+        }
         const userTickets = []
         try {
             // get all the tokens transferred to the users account from the list of 
@@ -291,6 +294,7 @@ export class EthereumService implements OnModuleInit {
                 toAddress: '0xA705121486a1440CF621615c4F312EdE7d89146D',
                 category: [AssetTransfersCategory.ERC721]
             })
+            console.log(a)
             // if user has no tickets return empty object for grpc to be happy
             if(!a.transfers.length) {
                 return {}

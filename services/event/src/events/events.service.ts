@@ -138,6 +138,9 @@ export class EventsService implements OnModuleInit {
 
   async allUserEvents(req, metadata) {
     const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })
+    if(!userEvent) {
+      return {}
+    }
     return { contractAddresses: userEvent.contractAddress }
   }
 }
