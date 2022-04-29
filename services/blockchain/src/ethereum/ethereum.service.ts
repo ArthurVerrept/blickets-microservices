@@ -281,7 +281,6 @@ export class EthereumService implements OnModuleInit {
         // get events that user is going to addresses from mongodb
         const userEvents$ = this.eventService.allUserEvents({walletAddress}, metadata)
         const userEventContractAddresses = await lastValueFrom(userEvents$)
-
         if(!userEventContractAddresses.contractAddresses) {
             return {}
         }
