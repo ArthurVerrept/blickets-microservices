@@ -8,7 +8,8 @@ import {
   TransactionStatusRequest, 
   EventDisplayRequest,
   BuyTicketsParamsRequest,
-  TicketPriceWeiRequest
+  TicketPriceWeiRequest,
+  AllMyEventsRequest
 } from 'proto-npm'
 import { Metadata } from '@grpc/grpc-js'
 
@@ -75,7 +76,7 @@ export class EthereumController {
 
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('BlockchainService', 'AllMyEvents')
-    async allMyEvents(_, metadata: Metadata) {
-      return this.ethereumService.allMyEvents(metadata)
+    async allMyEvents(req: AllMyEventsRequest, metadata: Metadata) {
+      return this.ethereumService.allMyEvents(req.walletAddress, metadata)
     } 
 }

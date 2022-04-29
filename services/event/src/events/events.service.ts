@@ -112,17 +112,18 @@ export class EventsService implements OnModuleInit {
   }
 
   async createUserEvent(req, metadata) {
-    const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })
+    const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id, walletAddress: req.walletAddress })
     // if user has no events create array for his events
     if (!userEvent) {
       const userEvent = new this.userEventModel({
         userId: metadata.getMap().user.id,
+        walletAddress: req.walletAddress,
         contractAddress: [req.contractAddress]
       })
       await userEvent.save()
     // else add to his events the contract address of the event if it not present 
     } else {
-      await this.userEventModel.findOneAndUpdate({ userId: metadata.getMap().user.id }, { $addToSet: { contractAddress: req.contractAddress } })
+      await this.userEventModel.findOneAndUpdate({ userId: metadata.getMap().user.id, walletAddress: req.walletAddress }, { $addToSet: { contractAddress: req.contractAddress } })
     }
   }
 
@@ -132,12 +133,12 @@ export class EventsService implements OnModuleInit {
 
     } else {
       // find and remove contract address from array
-      await this.userEventModel.findOneAndUpdate({ userId: metadata.getMap().user.id }, { $pull: { contractAddress: req.contractAddress } })
+      await this.userEventModel.findOneAndUpdate({ userId: metadata.getMap().user.id, walletAddress: req.walletAddress }, { $pull: { contractAddress: req.contractAddress } })
     }
   }
 
   async allUserEvents(req, metadata) {
-    const userEvent = await this.userEventModel.findOne({ userId: metadata.getMap().user.id })
+    const userEvent = await this.userEventModel.findOne({userId: metadata.getMap().user.id, walletAddress: req.walletAddress})
     if(!userEvent) {
       return {}
     }

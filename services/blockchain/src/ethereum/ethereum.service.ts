@@ -211,7 +211,7 @@ export class EthereumService implements OnModuleInit {
 
     async buyTicketParams(req: BuyTicketsParamsRequest, metadata) {
         try {
-            const userEvent$ = this.eventService.createUserEvent({ contractAddress: req.contractAddress }, metadata) 
+            const userEvent$ = this.eventService.createUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
             await lastValueFrom(userEvent$)
         } catch (e) {
             console.log(e)
@@ -265,7 +265,7 @@ export class EthereumService implements OnModuleInit {
 
         } catch (e) {
             // TODO add check that they do not already own a ticket before removeing it from their account
-            const userEvent$ = this.eventService.deleteUserEvent({ contractAddress: req.contractAddress }, metadata) 
+            const userEvent$ = this.eventService.deleteUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
             await lastValueFrom(userEvent$)
             console.log(e)
             throw new RpcException({
@@ -277,24 +277,26 @@ export class EthereumService implements OnModuleInit {
 
 
     // currently unused kept for future if needed
-    async allMyEvents(metadata) {
+    async allMyEvents(walletAddress, metadata) {
         // get events that user is going to addresses from mongodb
-        const userEvents$ = this.eventService.allUserEvents({}, metadata)
+        const userEvents$ = this.eventService.allUserEvents({walletAddress}, metadata)
         const userEventContractAddresses = await lastValueFrom(userEvents$)
+
         if(!userEventContractAddresses.contractAddresses) {
             return {}
         }
         const userTickets = []
+        // TODO: filter by address (which needs to be passed in)
         try {
             // get all the tokens transferred to the users account from the list of 
             // contract addresses above
             const a = await this.alchemyWeb3.alchemy.getAssetTransfers({
                 fromBlock: this.web3.utils.toHex(0),
                 contractAddresses: userEventContractAddresses.contractAddresses,
-                toAddress: '0xA705121486a1440CF621615c4F312EdE7d89146D',
+                toAddress: walletAddress,
                 category: [AssetTransfersCategory.ERC721]
             })
-            console.log(a)
+
             // if user has no tickets return empty object for grpc to be happy
             if(!a.transfers.length) {
                 return {}

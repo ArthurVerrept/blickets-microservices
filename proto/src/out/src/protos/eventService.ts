@@ -60,10 +60,16 @@ export interface EventByContractRequest {
 
 export interface CreateUserEventRequest {
   contractAddress: string;
+  walletAddress: string;
 }
 
 export interface DeleteUserEventRequest {
   contractAddress: string;
+  walletAddress: string;
+}
+
+export interface AllUserEventsRequest {
+  walletAddress: string;
 }
 
 export interface AllUserEventResponse {
@@ -98,7 +104,7 @@ export interface EventService {
     metadata?: Metadata
   ): Observable<Empty>;
   allUserEvents(
-    request: Empty,
+    request: AllUserEventsRequest,
     metadata?: Metadata
   ): Observable<AllUserEventResponse>;
 }

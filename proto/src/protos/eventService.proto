@@ -13,7 +13,7 @@ service EventService {
     rpc EventByContractAddress (EventByContractRequest) returns (Event);
     rpc CreateUserEvent (CreateUserEventRequest) returns (google.protobuf.Empty);
     rpc DeleteUserEvent (DeleteUserEventRequest) returns (google.protobuf.Empty);
-    rpc AllUserEvents (google.protobuf.Empty) returns (AllUserEventResponse);
+    rpc AllUserEvents (AllUserEventsRequest) returns (AllUserEventResponse);
 }
 
 message CreateEventRequest {
@@ -72,10 +72,16 @@ message EventByContractRequest {
 
 message CreateUserEventRequest {
     string contractAddress = 1;
+    string walletAddress = 2;
 }
 
 message DeleteUserEventRequest {
     string contractAddress = 1;
+    string walletAddress = 2;
+}
+
+message AllUserEventsRequest {
+    string walletAddress = 1;
 }
 
 message AllUserEventResponse {

@@ -61,6 +61,7 @@ export interface EthPriceResponse {
 
 export interface BuyTicketsParamsRequest {
   contractAddress: string;
+  walletAddress: string;
   purchaseAmount: number;
 }
 
@@ -86,6 +87,10 @@ export interface MyEvent {
   symbol: string;
   eventDate: string;
   ticketAmount: string;
+}
+
+export interface AllMyEventsRequest {
+  walletAddress: string;
 }
 
 export interface AllMyEventsResponse {
@@ -135,7 +140,7 @@ export interface BlockchainService {
     metadata?: Metadata
   ): Observable<TicketPriceWeiResponse>;
   allMyEvents(
-    request: Empty,
+    request: AllMyEventsRequest,
     metadata?: Metadata
   ): Observable<AllMyEventsResponse>;
 }

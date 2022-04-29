@@ -7,9 +7,13 @@ export type UserEventDocument = UserEvent & Document
 export class UserEvent {
     @Prop({ required: true })
     userId: string
+    
+    @Prop({ required: true })
+    walletAddress: string
 
     @Prop({ default: undefined })
     contractAddress: string[]
+
 }
 
 export const UserEventSchema = SchemaFactory.createForClass(UserEvent)

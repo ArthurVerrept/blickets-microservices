@@ -17,7 +17,7 @@ service BlockchainService {
     rpc EthPrice (google.protobuf.Empty) returns (EthPriceResponse);
     rpc BuyTicketParams (BuyTicketsParamsRequest) returns (BuyTicketsParamsResponse);
     rpc TicketPriceWei (TicketPriceWeiRequest) returns (TicketPriceWeiResponse);
-    rpc AllMyEvents (google.protobuf.Empty) returns (AllMyEventsResponse);
+    rpc AllMyEvents (AllMyEventsRequest) returns (AllMyEventsResponse);
 }
 
 message WalletKeys {
@@ -76,7 +76,8 @@ message EthPriceResponse {
 
 message BuyTicketsParamsRequest {
     string contractAddress = 1;
-    uint32 purchaseAmount = 2;
+    string walletAddress = 2;
+    uint32 purchaseAmount = 3;
 }
 
 message BuyTicketsParamsResponse {
@@ -101,6 +102,10 @@ message MyEvent {
     string symbol = 5;
     string eventDate = 6;
     string ticketAmount = 7;
+}
+
+message AllMyEventsRequest {
+    string walletAddress = 1;
 }
 
 message AllMyEventsResponse {
