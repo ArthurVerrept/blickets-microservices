@@ -87,7 +87,6 @@ export interface MyEvent {
   symbol: string;
   eventDate: string;
   ticketAmount: string;
-  balance: string;
   title: string;
   description: string;
 }

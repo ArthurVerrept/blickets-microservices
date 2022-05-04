@@ -103,9 +103,8 @@ message MyEvent {
     string symbol = 5;
     string eventDate = 6;
     string ticketAmount = 7;
-    string balance = 8;
-    string title = 9;
-    string description = 10;
+    string title = 8;
+    string description = 9;
 }
 
 message AllMyEventsRequest {

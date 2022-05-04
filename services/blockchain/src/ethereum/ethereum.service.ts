@@ -318,7 +318,6 @@ export class EthereumService implements OnModuleInit {
                     symbol: currEventInfo.symbol,
                     eventDate: currEventInfo.eventDate,
                     ticketAmount: currEventInfo.ticketAmount,
-                    balance: nft.balance,
                     title: nft.title,
                     description: nft.description
                 }
