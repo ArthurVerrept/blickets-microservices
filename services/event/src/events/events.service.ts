@@ -35,6 +35,7 @@ export class EventsService implements OnModuleInit {
       const createdEvent = new this.eventModel({
         ...eventData,
         userId: metadata.getMap().user.id,
+        admins: [metadata.getMap().user.id],
         createdTime: new Date()
       })
 
@@ -142,25 +143,34 @@ export class EventsService implements OnModuleInit {
   }
 
   async eventInfo(req, metadata) {
-    console.log(req)
     // check userId owns this address
     await this.doesUserOwnAddress(req.address, metadata)
+
+    // get event info from mongodb
     const event = await this.eventModel.findOne({userId: metadata.getMap().user.id, deployerAddress: req.address}).select('-_id -__v -userId')
-    console.log(event.createdTime.getTime())
-    console.log(event)
-    // string eventName = 1;
-    // string symbol = 2;
-    // string imageUrl = 3;
-    // string txHash = 4;
-    // string deployedStatus = 5;
-    // string createdTime = 6;
-    // string eventDate = 7;
-    // string deployerAddress = 8;
-    // string currentBalance = 9;
-    // string ticketAmount = 10;
-    // string ticketsSold = 11;
-    // string ticketPrice = 12;
-    // string resalePrice = 13;
+    
+    // get event info from blockchain service
+    const blockchainEventInfo$ = this.blockchainService.blockchainEventInfo({contractAddress: req.contractAddress}, metadata)
+    const blockchainEventInfo = await lastValueFrom(blockchainEventInfo$)
+
+    // get admin info from user service 
+    const admins$ = this.userService.adminEmails({adminIds: event.admins}, metadata)
+    const admins = await lastValueFrom(admins$)
+    return {
+      eventName: event.eventName,
+      symbol: event.symbol,
+      imageUrl: event.imageUrl,
+      txHash: event.txHash,
+      deployedStatus: event.deployedStatus,
+      createdTime: event.createdTime.getTime().toString(),
+      eventDate: event.eventDate,
+      deployerAddress: event.deployerAddress,
+      admins: admins.admins,
+      currentBalance: blockchainEventInfo.currentBalance,
+      ticketAmount: blockchainEventInfo.ticketAmount,
+      ticketsSold: blockchainEventInfo.ticketsSold,
+      ticketPrice: blockchainEventInfo.ticketPrice
+    }
   }
 
   async masterKey(req, metadata){
@@ -180,7 +190,7 @@ export class EventsService implements OnModuleInit {
 
     // return masterkey
     const keys = await this.keysModel.findOne({keysId:0})
-    console.log(keys)
+
     return keys
   }
 

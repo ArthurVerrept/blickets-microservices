@@ -341,4 +341,26 @@ export class EthereumService implements OnModuleInit {
         
         return { result: true }
     }
+
+    async blockchainEventInfo(req) {
+        const currentContract = new this.web3.eth.Contract(this.eventABI, req.contractAddress)
+        
+        const contractBalance = await this.web3.eth.getBalance(req.contractAddress)
+
+        const ticketAmount = await currentContract.methods.ticketAmount.call().call()
+
+        const ticketsSold = await currentContract.methods.ticketIdCounter.call().call()
+
+        const ticketPrice = await currentContract.methods.ticketPrice.call().call()
+
+
+        return {
+            currentBalance: this.web3.utils.fromWei(contractBalance).toString(),
+            ticketAmount: ticketAmount,
+            ticketsSold: ticketsSold,
+            ticketPrice: this.web3.utils.fromWei(ticketPrice).toString()
+        }
+
+        // string resalePrice = 13;
+    }
 }

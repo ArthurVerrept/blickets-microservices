@@ -37,6 +37,14 @@ export interface MyAddressesResponse {
   addresses: string[];
 }
 
+export interface AdminEmailRequest {
+  adminIds: string[];
+}
+
+export interface AdminEmailResponse {
+  admins: string[];
+}
+
 export interface UserService {
   genGoogleAuthUrl(
     request: Empty,
@@ -53,4 +61,8 @@ export interface UserService {
     request: Empty,
     metadata?: Metadata
   ): Observable<MyAddressesResponse>;
+  adminEmails(
+    request: AdminEmailRequest,
+    metadata?: Metadata
+  ): Observable<AdminEmailResponse>;
 }

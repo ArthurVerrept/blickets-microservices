@@ -3,7 +3,7 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from 'src/authentication/grpcAuthGuard.strategy'
 import { UserService } from './user.service'
-import { AddAddressRequest } from 'proto-npm'
+import { AddAddressRequest, AdminEmailRequest } from 'proto-npm'
 
 @Controller('user')
 export class UserController {
@@ -25,5 +25,11 @@ export class UserController {
     @GrpcMethod('UserService', 'Me')
     async me(_, metadata: Metadata) {
         return this.userService.getUser(metadata)
-    }  
+    } 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('UserService', 'AdminEmails')
+    async adminEmails(req: AdminEmailRequest) {
+        return this.userService.adminEmails(req)
+    }   
 }

@@ -90,6 +90,7 @@ export interface EventInfoResponse {
   createdTime: string;
   eventDate: string;
   deployerAddress: string;
+  admins: string[];
   currentBalance: string;
   ticketAmount: string;
   ticketsSold: string;

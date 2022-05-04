@@ -30,7 +30,7 @@ export class Event {
     deployedStatus: string
     
     @Prop({ default: undefined })
-    admins: number[]
+    admins: string[]
 
     @Prop({ required: true })
     createdTime: Date

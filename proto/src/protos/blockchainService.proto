@@ -19,6 +19,7 @@ service BlockchainService {
     rpc TicketPriceWei (TicketPriceWeiRequest) returns (TicketPriceWeiResponse);
     rpc AllMyEvents (AllMyEventsRequest) returns (AllMyEventsResponse);
     rpc DoesAddressOwnTicket (DoesAddressOwnTicketRequest) returns (DoesAddressOwnTicketResponse);
+    rpc BlockchainEventInfo (BlockchainEventInfoRequest) returns (BlockchainEventInfoResponse);
 }
 
 message WalletKeys {
@@ -122,4 +123,16 @@ message DoesAddressOwnTicketRequest {
 
 message DoesAddressOwnTicketResponse {
     bool result = 1;
+}
+
+message BlockchainEventInfoRequest {
+    string contractAddress = 1;
+}
+
+message BlockchainEventInfoResponse {
+    string currentBalance = 1;
+    string ticketAmount = 2;
+    string ticketsSold = 3;
+    string ticketPrice = 4;
+    string resalePrice = 5;
 }

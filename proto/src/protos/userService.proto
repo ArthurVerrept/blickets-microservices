@@ -11,6 +11,7 @@ service UserService {
     rpc Refresh (google.protobuf.Empty) returns (AccessToken);
     rpc Me (google.protobuf.Empty) returns (User);
     rpc MyAddresses (google.protobuf.Empty) returns (MyAddressesResponse);
+    rpc AdminEmails (AdminEmailRequest) returns (AdminEmailResponse);
 }
 
 message GoogleAuthUrl {
@@ -41,7 +42,14 @@ message User {
     string picture = 3;
 }
 
-
 message MyAddressesResponse {
     repeated string addresses = 1;
+}
+
+message AdminEmailRequest {
+    repeated string adminIds = 1;
+}
+
+message AdminEmailResponse {
+    repeated string admins = 1;
 }

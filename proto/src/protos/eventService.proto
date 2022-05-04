@@ -105,11 +105,12 @@ message EventInfoResponse {
     string createdTime = 6;
     string eventDate = 7;
     string deployerAddress = 8;
-    string currentBalance = 9;
-    string ticketAmount = 10;
-    string ticketsSold = 11;
-    string ticketPrice = 12;
-    string resalePrice = 13;
+    repeated string admins = 9;
+    string currentBalance = 10;
+    string ticketAmount = 11;
+    string ticketsSold = 12;
+    string ticketPrice = 13;
+    string resalePrice = 14;
 }
 
 message MasterKeyRequest {

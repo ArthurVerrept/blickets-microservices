@@ -108,6 +108,18 @@ export interface DoesAddressOwnTicketResponse {
   result: boolean;
 }
 
+export interface BlockchainEventInfoRequest {
+  contractAddress: string;
+}
+
+export interface BlockchainEventInfoResponse {
+  currentBalance: string;
+  ticketAmount: string;
+  ticketsSold: string;
+  ticketPrice: string;
+  resalePrice: string;
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -158,4 +170,8 @@ export interface BlockchainService {
     request: DoesAddressOwnTicketRequest,
     metadata?: Metadata
   ): Observable<DoesAddressOwnTicketResponse>;
+  blockchainEventInfo(
+    request: BlockchainEventInfoRequest,
+    metadata?: Metadata
+  ): Observable<BlockchainEventInfoResponse>;
 }

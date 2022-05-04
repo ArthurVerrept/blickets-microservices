@@ -107,4 +107,15 @@ export class UserService {
         return userData
       }
     }
+
+    async adminEmails(req) {
+      const adminEmails = []
+
+      // there is always at least 1 admin per event as the owner is added on creation
+      for (const adminId of req.adminIds) {
+        adminEmails.push(await (await this.getOneById(adminId)).email)
+      }
+
+      return { admins: adminEmails }
+    }
 }
