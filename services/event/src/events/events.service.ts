@@ -43,14 +43,7 @@ export class EventsService implements OnModuleInit {
   }
 
   async myCreatedEvents(userAddress, metadata) {
-    const addresses$ = this.userService.myAddresses({}, metadata)
-    const addressRes = await lastValueFrom(addresses$)
-    if (!addressRes.addresses.includes(userAddress)){
-      throw new RpcException({
-        code: status.PERMISSION_DENIED,
-        message: 'Address not owned by account'
-      })
-    }
+    await this.doesUserOwnAddress(userAddress, metadata)
 
     const events = await this.eventModel.find({userId: metadata.getMap().user.id, deployerAddress: userAddress}).select('-_id -__v -createdTime').exec()
     
@@ -148,17 +141,31 @@ export class EventsService implements OnModuleInit {
     return { contractAddresses: userEvent.contractAddress }
   }
 
+  async eventInfo(req, metadata) {
+    console.log(req)
+    // check userId owns this address
+    await this.doesUserOwnAddress(req.address, metadata)
+    const event = await this.eventModel.findOne({userId: metadata.getMap().user.id, deployerAddress: req.address}).select('-_id -__v -userId')
+    console.log(event.createdTime.getTime())
+    console.log(event)
+    // string eventName = 1;
+    // string symbol = 2;
+    // string imageUrl = 3;
+    // string txHash = 4;
+    // string deployedStatus = 5;
+    // string createdTime = 6;
+    // string eventDate = 7;
+    // string deployerAddress = 8;
+    // string currentBalance = 9;
+    // string ticketAmount = 10;
+    // string ticketsSold = 11;
+    // string ticketPrice = 12;
+    // string resalePrice = 13;
+  }
+
   async masterKey(req, metadata){
     // check userId from JWT owns address being sent
-    const addresses$ = this.userService.myAddresses({}, metadata)
-    const addressRes = await lastValueFrom(addresses$)
-
-    if(!addressRes.addresses.includes(req.address)){
-      throw new RpcException({
-        code: status.PERMISSION_DENIED,
-        message: 'User must own address of request'
-      })
-    }
+    await this.doesUserOwnAddress(req.address, metadata)
 
     // check if address in question owns any tickets to event
     const isOwner$ = this.blockchainService.doesAddressOwnTicket({contractAddress: req.contractAddress, address: req.address}, metadata)
@@ -182,5 +189,17 @@ export class EventsService implements OnModuleInit {
     // call blockchain service check if account owns this ticket
     // add this ticketId to an entry that is keyed by the contract address of the event
     console.log(req)
+  }
+
+  async doesUserOwnAddress(address: string, metadata){
+    const addresses$ = this.userService.myAddresses({}, metadata)
+    const addressRes = await lastValueFrom(addresses$)
+
+    if(!addressRes.addresses.includes(address)){ 
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'User must own address in request'
+      })
+    }
   }
 }

@@ -14,6 +14,7 @@ service EventService {
     rpc CreateUserEvent (CreateUserEventRequest) returns (google.protobuf.Empty);
     rpc DeleteUserEvent (DeleteUserEventRequest) returns (google.protobuf.Empty);
     rpc AllUserEvents (AllUserEventsRequest) returns (AllUserEventResponse);
+    rpc EventInfo (EventInfoRequest) returns (EventInfoResponse);
     rpc MasterKey (MasterKeyRequest) returns (MasterKeyResponse);
     rpc ValidateQr (ValidateQrRequest) returns (google.protobuf.Empty);
 }
@@ -88,6 +89,27 @@ message AllUserEventsRequest {
 
 message AllUserEventResponse {
     repeated string contractAddresses = 1;
+}
+
+message EventInfoRequest {
+    string contractAddress = 1;
+    string address = 2;
+}
+
+message EventInfoResponse {
+    string eventName = 1;
+    string symbol = 2;
+    string imageUrl = 3;
+    string txHash = 4;
+    string deployedStatus = 5;
+    string createdTime = 6;
+    string eventDate = 7;
+    string deployerAddress = 8;
+    string currentBalance = 9;
+    string ticketAmount = 10;
+    string ticketsSold = 11;
+    string ticketPrice = 12;
+    string resalePrice = 13;
 }
 
 message MasterKeyRequest {

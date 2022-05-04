@@ -76,6 +76,27 @@ export interface AllUserEventResponse {
   contractAddresses: string[];
 }
 
+export interface EventInfoRequest {
+  contractAddress: string;
+  address: string;
+}
+
+export interface EventInfoResponse {
+  eventName: string;
+  symbol: string;
+  imageUrl: string;
+  txHash: string;
+  deployedStatus: string;
+  createdTime: string;
+  eventDate: string;
+  deployerAddress: string;
+  currentBalance: string;
+  ticketAmount: string;
+  ticketsSold: string;
+  ticketPrice: string;
+  resalePrice: string;
+}
+
 export interface MasterKeyRequest {
   contractAddress: string;
   address: string;
@@ -129,6 +150,10 @@ export interface EventService {
     request: AllUserEventsRequest,
     metadata?: Metadata
   ): Observable<AllUserEventResponse>;
+  eventInfo(
+    request: EventInfoRequest,
+    metadata?: Metadata
+  ): Observable<EventInfoResponse>;
   masterKey(
     request: MasterKeyRequest,
     metadata?: Metadata

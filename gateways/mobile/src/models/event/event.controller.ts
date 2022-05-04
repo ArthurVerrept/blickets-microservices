@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Controller, Post, Inject, OnModuleInit, Body, Get, Query, Req } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { EventService, EventServiceName, CreateEventRequest, MyEventsRequest, MasterKeyRequest, ValidateQrRequest } from 'proto-npm'
+import { EventService, EventServiceName, CreateEventRequest, MyEventsRequest, MasterKeyRequest, ValidateQrRequest, EventInfoRequest } from 'proto-npm'
 import { Meta } from 'src/common/decorators/meta.decorator'
 
 @Controller('event')
@@ -31,6 +31,10 @@ export class EventController implements OnModuleInit {
         return this.eventService.allEvents({}, metadata)
     }
 
+    @Get('event-info')
+    eventInfo(@Query() query: EventInfoRequest, @Meta() metadata: Metadata) {
+        return this.eventService.eventInfo(query, metadata)
+    }
 
     @Get('master-key')
     masterKey(@Query() query: MasterKeyRequest, @Meta() metadata: Metadata) {
