@@ -20,4 +20,10 @@ export class UserController {
     async myAddresses(_, metadata: Metadata) {
         return this.userService.myAddresses(metadata)
     }  
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('UserService', 'Me')
+    async me(_, metadata: Metadata) {
+        return this.userService.getUser(metadata)
+    }  
 }

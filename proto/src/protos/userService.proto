@@ -9,7 +9,7 @@ service UserService {
     rpc GoogleLogin (GoogleAuthCode) returns (Tokens);
     rpc AddAddress (AddAddressRequest) returns (google.protobuf.Empty);
     rpc Refresh (google.protobuf.Empty) returns (AccessToken);
-    rpc Me (google.protobuf.Empty) returns (Tokens);
+    rpc Me (google.protobuf.Empty) returns (User);
     rpc MyAddresses (google.protobuf.Empty) returns (MyAddressesResponse);
 }
 
@@ -36,10 +36,9 @@ message Tokens {
 }
 
 message User {
-    string id = 1;
-    string email = 2;
-    string name = 3;
-    string picture = 4;
+    string email = 1;
+    string name = 2;
+    string picture = 3;
 }
 
 

@@ -2,7 +2,7 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from 'src/grpcAuthGuard.strategy'
 import { EventsService } from './events.service'
-import { CreateEventRequest, UpdateEventRequest, EventByContractRequest, MyEventsRequest, CreateUserEventRequest } from 'proto-npm'
+import { CreateEventRequest, UpdateEventRequest, EventByContractRequest, MyEventsRequest, CreateUserEventRequest, MasterKeyRequest, ValidateQrRequest } from 'proto-npm'
 import { Metadata } from '@grpc/grpc-js'
 
 @Controller('events')
@@ -56,5 +56,16 @@ export class EventsController {
     allUserEvents(req, metadata: Metadata) {
         return this.eventService.allUserEvents(req, metadata)
     }
-    
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('EventService', 'MasterKey')
+    masterKey(req: MasterKeyRequest, metadata: Metadata) {
+        return this.eventService.masterKey(req, metadata)
+    }
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('EventService', 'ValidateQr')
+    validateQr(req: ValidateQrRequest) {
+        return this.eventService.validateQr(req)
+    }
 }

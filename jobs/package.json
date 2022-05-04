@@ -1,0 +1,17 @@
+{
+  "name": "jobs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "masterRefresh.js",
+  "scripts": {
+    "start:job": "node masterRefresh.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "mongodb": "^4.5.0",
+    "randomstring": "^1.2.2"
+  }
+}

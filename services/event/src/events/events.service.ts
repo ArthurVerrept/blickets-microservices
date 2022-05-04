@@ -8,6 +8,8 @@ import { UpdateEventRequest, BlockchainServiceName, BlockchainService, UserServi
 import { ClientGrpc, RpcException } from '@nestjs/microservices'
 import { Metadata } from '@grpc/grpc-js'
 import { lastValueFrom } from 'rxjs'
+import { Keys, KeysDocument } from 'schemas/keys.schema'
+
 
 @Injectable()
 export class EventsService implements OnModuleInit {
@@ -24,6 +26,7 @@ export class EventsService implements OnModuleInit {
   constructor(
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
     @InjectModel(UserEvent.name) private userEventModel: Model<UserEventDocument>,
+    @InjectModel(Keys.name) private keysModel: Model<KeysDocument>,
     @Inject(BlockchainServiceName) private blockchainClient: ClientGrpc,
     @Inject(UserServiceName) private userClient: ClientGrpc
   ) {}
@@ -143,5 +146,32 @@ export class EventsService implements OnModuleInit {
       return {}
     }
     return { contractAddresses: userEvent.contractAddress }
+  }
+
+  async masterKey(req, metadata){
+    // check userId from JWT owns address being sent
+    const addresses$ = this.userService.myAddresses({}, metadata)
+    const addressRes = await lastValueFrom(addresses$)
+    console.log(req)
+    if(!addressRes.addresses.includes(req.address)){
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'User must own address of request'
+      })
+    }
+
+    // check if address in question owns any tickets to event
+    const isOwner$ = this.blockchainService.doesAddressOwnTicket({contractAddress: req.contractAddress, address: req.address}, metadata)
+    const isOwner = await lastValueFrom(isOwner$)
+    console.log(isOwner)
+    console.log(metadata.getMap().user)
+    console.log(req)
+  }
+
+  async validateQr(req){
+    // check if userId of person sending this request is an admin on this event
+    // call blockchain service check if account owns this ticket
+    // add this ticketId to an entry that is keyed by the contract address of the event
+    console.log(req)
   }
 }

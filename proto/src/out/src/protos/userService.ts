@@ -28,7 +28,6 @@ export interface Tokens {
 }
 
 export interface User {
-  id: string;
   email: string;
   name: string;
   picture: string;
@@ -49,7 +48,7 @@ export interface UserService {
     metadata?: Metadata
   ): Observable<Empty>;
   refresh(request: Empty, metadata?: Metadata): Observable<AccessToken>;
-  me(request: Empty, metadata?: Metadata): Observable<Tokens>;
+  me(request: Empty, metadata?: Metadata): Observable<User>;
   myAddresses(
     request: Empty,
     metadata?: Metadata

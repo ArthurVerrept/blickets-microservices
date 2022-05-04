@@ -18,6 +18,7 @@ service BlockchainService {
     rpc BuyTicketParams (BuyTicketsParamsRequest) returns (BuyTicketsParamsResponse);
     rpc TicketPriceWei (TicketPriceWeiRequest) returns (TicketPriceWeiResponse);
     rpc AllMyEvents (AllMyEventsRequest) returns (AllMyEventsResponse);
+    rpc DoesAddressOwnTicket (DoesAddressOwnTicketRequest) returns (DoesAddressOwnTicketResponse);
 }
 
 message WalletKeys {
@@ -95,13 +96,16 @@ message TicketPriceWeiResponse {
 }
 
 message MyEvent {
-    string tokenURI = 1;
+    string media = 1;
     string contractAddress = 2;
     string ticketNumber = 3;
     string eventName = 4;
     string symbol = 5;
     string eventDate = 6;
     string ticketAmount = 7;
+    string balance = 8;
+    string title = 9;
+    string description = 10;
 }
 
 message AllMyEventsRequest {
@@ -110,4 +114,13 @@ message AllMyEventsRequest {
 
 message AllMyEventsResponse {
     repeated MyEvent events = 1;
+}
+
+message DoesAddressOwnTicketRequest {
+    string contractAddress = 1;
+    string address = 2;
+}
+
+message DoesAddressOwnTicketResponse {
+    bool result = 1;
 }

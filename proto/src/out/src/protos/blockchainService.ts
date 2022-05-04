@@ -80,13 +80,16 @@ export interface TicketPriceWeiResponse {
 }
 
 export interface MyEvent {
-  tokenURI: string;
+  media: string;
   contractAddress: string;
   ticketNumber: string;
   eventName: string;
   symbol: string;
   eventDate: string;
   ticketAmount: string;
+  balance: string;
+  title: string;
+  description: string;
 }
 
 export interface AllMyEventsRequest {
@@ -95,6 +98,15 @@ export interface AllMyEventsRequest {
 
 export interface AllMyEventsResponse {
   events: MyEvent[];
+}
+
+export interface DoesAddressOwnTicketRequest {
+  contractAddress: string;
+  address: string;
+}
+
+export interface DoesAddressOwnTicketResponse {
+  result: boolean;
 }
 
 export interface BlockchainService {
@@ -143,4 +155,8 @@ export interface BlockchainService {
     request: AllMyEventsRequest,
     metadata?: Metadata
   ): Observable<AllMyEventsResponse>;
+  doesAddressOwnTicket(
+    request: DoesAddressOwnTicketRequest,
+    metadata?: Metadata
+  ): Observable<DoesAddressOwnTicketResponse>;
 }

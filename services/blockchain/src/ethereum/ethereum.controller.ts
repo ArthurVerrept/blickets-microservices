@@ -9,7 +9,8 @@ import {
   EventDisplayRequest,
   BuyTicketsParamsRequest,
   TicketPriceWeiRequest,
-  AllMyEventsRequest
+  AllMyEventsRequest,
+  DoesAddressOwnTicketRequest
 } from 'proto-npm'
 import { Metadata } from '@grpc/grpc-js'
 
@@ -78,5 +79,11 @@ export class EthereumController {
     @GrpcMethod('BlockchainService', 'AllMyEvents')
     async allMyEvents(req: AllMyEventsRequest, metadata: Metadata) {
       return this.ethereumService.allMyEvents(req.walletAddress, metadata)
+    } 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('BlockchainService', 'DoesAddressOwnTicket')
+    async doesAddressOwnTicket(req: DoesAddressOwnTicketRequest) {
+      return this.ethereumService.doesAddressOwnTicket(req)
     } 
 }

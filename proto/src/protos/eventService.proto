@@ -14,6 +14,8 @@ service EventService {
     rpc CreateUserEvent (CreateUserEventRequest) returns (google.protobuf.Empty);
     rpc DeleteUserEvent (DeleteUserEventRequest) returns (google.protobuf.Empty);
     rpc AllUserEvents (AllUserEventsRequest) returns (AllUserEventResponse);
+    rpc MasterKey (MasterKeyRequest) returns (MasterKeyResponse);
+    rpc ValidateQr (ValidateQrRequest) returns (google.protobuf.Empty);
 }
 
 message CreateEventRequest {
@@ -86,4 +88,26 @@ message AllUserEventsRequest {
 
 message AllUserEventResponse {
     repeated string contractAddresses = 1;
+}
+
+message MasterKeyRequest {
+    string contractAddress = 1;
+    string address = 2;
+}
+
+message MasterKeyResponse {
+    int32 expiryTime = 1;
+    string masterKey = 2;
+}
+
+message ValidateQrRequest {
+    string masterCode = 1;
+    string contractAddress = 2;
+    string address = 3;
+    string ticketId = 4;
+}
+
+message ValidateQrResponse {
+    string message = 1;
+    string code = 2;
 }

@@ -279,6 +279,7 @@ export class EthereumService implements OnModuleInit {
     // currently unused kept for future if needed
     async allMyEvents(walletAddress, metadata) {
         // get events that user is going to addresses from mongodb
+        // we do this to stop random nft's from being returned.
         const userEvents$ = this.eventService.allUserEvents({walletAddress}, metadata)
         const userEventContractAddresses = await lastValueFrom(userEvents$)
         if(!userEventContractAddresses.contractAddresses) {
@@ -287,43 +288,39 @@ export class EthereumService implements OnModuleInit {
         const userTickets = []
         // TODO: filter by address (which needs to be passed in)
         try {
-            // get all the tokens transferred to the users account from the list of 
-            // contract addresses above
-            const a = await this.alchemyWeb3.alchemy.getAssetTransfers({
-                fromBlock: this.web3.utils.toHex(0),
+            // get all the nft's owned from list of contracts user has purchased from
+            const b = await this.alchemyWeb3.alchemy.getNfts({
                 contractAddresses: userEventContractAddresses.contractAddresses,
-                toAddress: walletAddress,
-                category: [AssetTransfersCategory.ERC721]
+                owner: walletAddress
             })
 
+            console.log(b)
+
             // if user has no tickets return empty object for grpc to be happy
-            if(!a.transfers.length) {
+            if(!b.ownedNfts.length) {
                 return {}
             }
 
             const eventInfo = []
-            // TODO: for each users event get data from event service
+            // for each users nft get data from event service
             for (const contract of userEventContractAddresses.contractAddresses) {
                 const eventInfo$ = this.eventService.eventByContractAddress({ contractAddress: contract }, metadata)
                 eventInfo.push(await lastValueFrom(eventInfo$))
             }
-            // console.log(eventInfo)
 
-            // for each transfer get link to tokenURI (metadata etc)
-            for (const transfer of a.transfers) {
-                const currentContract = new this.web3.eth.Contract(this.eventABI, transfer.rawContract.address)
-                const tokenURI = await currentContract.methods.tokenURI(this.web3.utils.hexToNumber(transfer.tokenId)).call()
-
-
-                const [currEventInfo] = eventInfo.filter(e => e.contractAddress === transfer.rawContract.address)
+            for (const nft of b.ownedNfts) {
+                const [currEventInfo] = eventInfo.filter(e => e.contractAddress === nft.contract.address)
                 const ret = {
-                    tokenURI,
-                    contractAddress: transfer.rawContract.address,
-                    ticketNumber: this.web3.utils.hexToNumber(transfer.tokenId),
+                    media: nft.media[0]['raw'],
+                    contractAddress: nft.contract.address,
+                    ticketNumber: this.web3.utils.hexToNumber(nft.id.tokenId),
                     eventName: currEventInfo.eventName,
                     symbol: currEventInfo.symbol,
                     eventDate: currEventInfo.eventDate,
-                    ticketAmount: currEventInfo.ticketAmount
+                    ticketAmount: currEventInfo.ticketAmount,
+                    balance: nft.balance,
+                    title: nft.title,
+                    description: nft.description
                 }
                 userTickets.push(ret)
             }
@@ -334,41 +331,18 @@ export class EthereumService implements OnModuleInit {
         return { events: userTickets }
     }
 
-
-    // async uploadFile(file: UploadImageRequest) {
-    //     // if the size is bigger than 10 mb return an error
-    //     if(Buffer.byteLength(file.binary)/1000000 > 10) {
-    //         throw new RpcException({
-    //             code: status.INVALID_ARGUMENT,
-    //             message: 'Image must not be larger than 10mb'
-    //         })
-    //     }
-
-    //     if(file.mime !== 'image/jpeg' && file.mime !== 'image/png' && file.mime !== 'image/gif') {
-    //         throw new RpcException({
-    //             code: status.INVALID_ARGUMENT,
-    //             message: 'Image must be of correct format'
-    //         })
-    //     }
-
-    //     new File([file.binary], 'idk', { type: file.mime })
-    //     const id = uuidv4()
-    //     console.log(id)
-    //     const upload = await this.s3.upload({
-    //         Bucket: 'blickets1/ticket_artwork',
-    //         Key: id,
-    //         Body: file.binary,
-    //         ContentType: file.mime,
-    //         ACL: 'public-read'
-    //       }).promise()
-    //     return {id, url: upload.Location}
-    // }
-
-    // async deleteFile(file: DeleteImageRequest) {
-    //     await this.s3.deleteObject({
-    //         Bucket: 'blickets1/ticket_artwork',
-    //         Key: file.id
-    //       }).promise()
-    //     return {}
-    // }
+    async doesAddressOwnTicket(req) {
+        try {
+            
+            const a = await this.alchemyWeb3.alchemy.getNfts({
+                owner: req.address,
+                contractAddresses: [req.contractAddress]
+                // withMetadata: false
+            })
+            console.log(a)
+        } catch (error) {
+            
+            console.log(error)
+        }
+    }
 }

@@ -76,6 +76,28 @@ export interface AllUserEventResponse {
   contractAddresses: string[];
 }
 
+export interface MasterKeyRequest {
+  contractAddress: string;
+  address: string;
+}
+
+export interface MasterKeyResponse {
+  expiryTime: number;
+  masterKey: string;
+}
+
+export interface ValidateQrRequest {
+  masterCode: string;
+  contractAddress: string;
+  address: string;
+  ticketId: string;
+}
+
+export interface ValidateQrResponse {
+  message: string;
+  code: string;
+}
+
 export interface EventService {
   createEvent(
     request: CreateEventRequest,
@@ -107,4 +129,12 @@ export interface EventService {
     request: AllUserEventsRequest,
     metadata?: Metadata
   ): Observable<AllUserEventResponse>;
+  masterKey(
+    request: MasterKeyRequest,
+    metadata?: Metadata
+  ): Observable<MasterKeyResponse>;
+  validateQr(
+    request: ValidateQrRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
 }

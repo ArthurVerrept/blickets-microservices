@@ -8,10 +8,10 @@ import { UserModule } from './models/user/user.module'
 
 @Module({
   imports: [
+    UserModule,
     ConfigModule.forRoot(),
     DatabaseModule,
     GoogleAuthenticationModule,
-    UserModule,
     AuthenticationModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

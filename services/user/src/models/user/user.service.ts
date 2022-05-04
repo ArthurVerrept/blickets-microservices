@@ -1,14 +1,18 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { status } from '@grpc/grpc-js'
 import { Repository } from 'typeorm'
-import { Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import User from './entities/user.entity'
 import { RpcException } from '@nestjs/microservices'
+import { GoogleAuthenticationService } from '../google-authentication/google-authentication.service'
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(User) private usersRepository: Repository<User>
+        @InjectRepository(User) 
+        private usersRepository: Repository<User>,
+        @Inject(forwardRef(() => GoogleAuthenticationService))
+        private googleAuthenticationService: GoogleAuthenticationService
     ){}
 
     async getOneById(id: number): Promise<User> {
@@ -88,5 +92,19 @@ export class UserService {
     async myAddresses(metadata) {
       const user = await this.usersRepository.findOneOrFail({id: metadata.getMap().user.id})
       return { addresses: user.addresses }
+    }
+
+    async getUser(metadata) {
+      const user = await this.getOneById(metadata.getMap().user.id)
+  
+      // if created with google get google user
+      // this is where you would add other
+      // options for getting users from different
+      // services
+      if (user.isCreatedWithGoogle) {
+        const userData = await this.googleAuthenticationService.getUserData(user.thirdPartyRefreshToken)
+
+        return userData
+      }
     }
 }

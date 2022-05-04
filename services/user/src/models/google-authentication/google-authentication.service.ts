@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { status } from '@grpc/grpc-js'
 import { ConfigService } from '@nestjs/config'
 import { RpcException } from '@nestjs/microservices'
@@ -12,8 +12,10 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 export class GoogleAuthenticationService {
   oauthClient: Auth.OAuth2Client
   constructor(
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly configService: ConfigService,
+    @Inject(forwardRef(() => AuthenticationService))
     private readonly authenticationService: AuthenticationService
   ) {
     const clientID = this.configService.get('GOOGLE_AUTH_CLIENT_ID')
@@ -108,5 +110,28 @@ export class GoogleAuthenticationService {
     }
 
     return this.authenticationService.getCookiesWithJwtToken(user)
+  }
+
+  async getUserData(googleRefreshToken: string) {
+    const userInfoClient = google.oauth2('v2').userinfo
+    
+    this.oauthClient.setCredentials({
+      refresh_token: googleRefreshToken
+    })
+    
+    const userInfoResponse = await userInfoClient.get({
+      auth: this.oauthClient
+    })
+    
+    // make a specific response so in the future if there
+    // are more oath2 providers theres consistency in the
+    // getUserData response
+    const returnObj = {
+      email: userInfoResponse.data.email,
+      name: userInfoResponse.data.name,
+      picture: userInfoResponse.data.picture
+    }
+
+    return returnObj
   }
 }
