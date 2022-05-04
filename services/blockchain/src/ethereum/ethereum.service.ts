@@ -294,8 +294,6 @@ export class EthereumService implements OnModuleInit {
                 owner: walletAddress
             })
 
-            console.log(b)
-
             // if user has no tickets return empty object for grpc to be happy
             if(!b.ownedNfts.length) {
                 return {}
