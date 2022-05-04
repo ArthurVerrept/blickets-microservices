@@ -29,4 +29,4 @@ async function run() {
     }
 }
 
-setInterval(run, 10*1000);
+setInterval(run, 10*3000);
