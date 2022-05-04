@@ -152,7 +152,7 @@ export class EventsService implements OnModuleInit {
     // check userId from JWT owns address being sent
     const addresses$ = this.userService.myAddresses({}, metadata)
     const addressRes = await lastValueFrom(addresses$)
-    console.log(req)
+
     if(!addressRes.addresses.includes(req.address)){
       throw new RpcException({
         code: status.PERMISSION_DENIED,
@@ -163,9 +163,18 @@ export class EventsService implements OnModuleInit {
     // check if address in question owns any tickets to event
     const isOwner$ = this.blockchainService.doesAddressOwnTicket({contractAddress: req.contractAddress, address: req.address}, metadata)
     const isOwner = await lastValueFrom(isOwner$)
-    console.log(isOwner)
-    console.log(metadata.getMap().user)
-    console.log(req)
+
+    if(!isOwner.result) {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Address must own NFT of event'
+      })
+    }
+
+    // return masterkey
+    const keys = await this.keysModel.findOne({keysId:0})
+    console.log(keys)
+    return keys
   }
 
   async validateQr(req){

@@ -96,7 +96,7 @@ message MasterKeyRequest {
 }
 
 message MasterKeyResponse {
-    int32 expiryTime = 1;
+    string expiryTime = 1;
     string masterKey = 2;
 }
 

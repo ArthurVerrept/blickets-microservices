@@ -9,10 +9,10 @@ export class Keys {
     id: string
     
     @Prop({ required: true })
-    createTime: number
+    createTime: string
 
     @Prop({ required: true })
-    expiryTime: number
+    expiryTime: string
 
     @Prop({ required: true })
     masterKey: string

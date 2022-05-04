@@ -289,13 +289,13 @@ export class EthereumService implements OnModuleInit {
         // TODO: filter by address (which needs to be passed in)
         try {
             // get all the nft's owned from list of contracts user has purchased from
-            const b = await this.alchemyWeb3.alchemy.getNfts({
+            const nfts = await this.alchemyWeb3.alchemy.getNfts({
                 contractAddresses: userEventContractAddresses.contractAddresses,
                 owner: walletAddress
             })
 
             // if user has no tickets return empty object for grpc to be happy
-            if(!b.ownedNfts.length) {
+            if(nfts.totalCount === 0) {
                 return {}
             }
 
@@ -306,7 +306,7 @@ export class EthereumService implements OnModuleInit {
                 eventInfo.push(await lastValueFrom(eventInfo$))
             }
 
-            for (const nft of b.ownedNfts) {
+            for (const nft of nfts.ownedNfts) {
                 const [currEventInfo] = eventInfo.filter(e => e.contractAddress === nft.contract.address)
                 const ret = {
                     media: nft.media[0]['raw'],
@@ -329,17 +329,16 @@ export class EthereumService implements OnModuleInit {
     }
 
     async doesAddressOwnTicket(req) {
-        try {
-            
-            const a = await this.alchemyWeb3.alchemy.getNfts({
-                owner: req.address,
-                contractAddresses: [req.contractAddress]
-                // withMetadata: false
-            })
-            console.log(a)
-        } catch (error) {
-            
-            console.log(error)
+        const nfts = await this.alchemyWeb3.alchemy.getNfts({
+            owner: req.address,
+            contractAddresses: [req.contractAddress],
+            withMetadata: false
+        })
+
+        if(nfts.totalCount === 0) {
+            return { result: false }
         }
+        
+        return { result: true }
     }
 }

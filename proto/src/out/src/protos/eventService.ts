@@ -82,7 +82,7 @@ export interface MasterKeyRequest {
 }
 
 export interface MasterKeyResponse {
-  expiryTime: number;
+  expiryTime: string;
   masterKey: string;
 }
 

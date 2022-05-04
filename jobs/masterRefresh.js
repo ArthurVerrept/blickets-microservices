@@ -12,10 +12,10 @@ async function run() {
         const col = db.collection('keys');
 
         // const p = await col.insertOne(keyDocument);
-        const myDoc = await col.findOneAndUpdate({id: 0}, { $set: 
+        const myDoc = await col.findOneAndUpdate({keysId: 0}, { $set: 
             {
-                'createdTime': new Date().getTime(),
-                'expiryTime': new Date().getTime() + 30000,
+                'createdTime': new Date().getTime().toString(),
+                'expiryTime': (new Date().getTime() + 30000).toString(),
                 "masterKey": randomstring.generate(),
             }
         });
