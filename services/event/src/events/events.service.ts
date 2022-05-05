@@ -225,6 +225,7 @@ export class EventsService implements OnModuleInit {
     }
 
     // get userId as string from user service
+    // will return error if no user is found by email
     const res$ = this.userService.adminId({ email: req.email }, metadata)
     const res = await lastValueFrom(res$)
 

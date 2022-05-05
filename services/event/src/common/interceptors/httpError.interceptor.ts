@@ -7,6 +7,8 @@ import { catchError } from 'rxjs/operators'
 @Injectable()
 export class HttpErrorIntercept implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    // TODO: in the future look at this
+    // https://docs.nestjs.com/microservices/exception-filters#exception-filters
     return next.handle().pipe(
       catchError(err => {
         // if the error is http turn into rpc
@@ -17,6 +19,7 @@ export class HttpErrorIntercept implements NestInterceptor {
           }))
         // otherwise just return the rpc error 
         } else {
+          console.log(err)
           return throwError(() => new RpcException(err))
         }
       })

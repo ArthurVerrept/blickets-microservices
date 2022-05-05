@@ -121,8 +121,14 @@ export class UserService {
 
     async adminId(req) {
       // TODO: add check to make sure request 
-      const user = await this.usersRepository.findOneOrFail({ email: req.email })
-      
-      return { adminId: user.id.toString() }
+      try {
+        const user = await this.usersRepository.findOneOrFail({ email: req.email })
+        return { adminId: user.id.toString() }
+      } catch (error) {
+        throw new RpcException({
+          code: status.NOT_FOUND,
+          message: 'Email can not be matched to user'
+        })
+      }
     }
 }
