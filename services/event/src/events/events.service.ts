@@ -148,7 +148,7 @@ export class EventsService implements OnModuleInit {
 
     // get event info from mongodb
     const event = await this.eventModel.findOne({ userId: metadata.getMap().user.id, deployerAddress: req.address, contractAddress: req.contractAddress }).select('-_id -__v -userId')
-    console.log(event.admins)
+
     // get event info from blockchain service
     const blockchainEventInfo$ = this.blockchainService.blockchainEventInfo({contractAddress: req.contractAddress}, metadata)
     const blockchainEventInfo = await lastValueFrom(blockchainEventInfo$)
@@ -229,6 +229,12 @@ export class EventsService implements OnModuleInit {
     const res$ = this.userService.adminId({ email: req.email }, metadata)
     const res = await lastValueFrom(res$)
 
+    if(event.admins.includes(res.adminId)) {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Admin has already been added'
+      })
+    }
     event.admins.push(res.adminId)
     event.save()
 
