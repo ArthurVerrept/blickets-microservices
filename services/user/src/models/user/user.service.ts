@@ -118,4 +118,11 @@ export class UserService {
 
       return { admins: adminEmails }
     }
+
+    async adminId(req) {
+      // TODO: add check to make sure request 
+      const user = await this.usersRepository.findOneOrFail({ email: req.email })
+      
+      return { adminId: user.id.toString() }
+    }
 }

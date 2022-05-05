@@ -120,6 +120,12 @@ export interface ValidateQrResponse {
   code: string;
 }
 
+export interface AddAdminRequest {
+  email: string;
+  address: string;
+  contractAddress: string;
+}
+
 export interface EventService {
   createEvent(
     request: CreateEventRequest,
@@ -163,4 +169,5 @@ export interface EventService {
     request: ValidateQrRequest,
     metadata?: Metadata
   ): Observable<Empty>;
+  addAdmin(request: AddAdminRequest, metadata?: Metadata): Observable<Empty>;
 }

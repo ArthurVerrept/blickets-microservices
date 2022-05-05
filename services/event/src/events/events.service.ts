@@ -147,8 +147,8 @@ export class EventsService implements OnModuleInit {
     await this.doesUserOwnAddress(req.address, metadata)
 
     // get event info from mongodb
-    const event = await this.eventModel.findOne({userId: metadata.getMap().user.id, deployerAddress: req.address}).select('-_id -__v -userId')
-    
+    const event = await this.eventModel.findOne({ userId: metadata.getMap().user.id, deployerAddress: req.address, contractAddress: req.contractAddress }).select('-_id -__v -userId')
+    console.log(event.admins)
     // get event info from blockchain service
     const blockchainEventInfo$ = this.blockchainService.blockchainEventInfo({contractAddress: req.contractAddress}, metadata)
     const blockchainEventInfo = await lastValueFrom(blockchainEventInfo$)
@@ -199,6 +199,39 @@ export class EventsService implements OnModuleInit {
     // call blockchain service check if account owns this ticket
     // add this ticketId to an entry that is keyed by the contract address of the event
     console.log(req)
+  }
+
+  async addAdmin(req, metadata) {
+    // check user owns address being sent in
+    await this.doesUserOwnAddress(req.address, metadata)
+
+    // get event to add admins to
+    const event = await this.eventModel.findOne({contractAddress: req.contractAddress})
+
+    // check address of sender is deployer address
+    if(event.deployerAddress !== req.address) {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Address being used to add admin must be event deployer address'
+      })
+    }
+
+    // check userId of sender is the same as userId of deployer
+    if(event.userId !== metadata.getMap().user.id.toString()) {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'User making request must event deployer'
+      })
+    }
+
+    // get userId as string from user service
+    const res$ = this.userService.adminId({ email: req.email }, metadata)
+    const res = await lastValueFrom(res$)
+
+    event.admins.push(res.adminId)
+    event.save()
+
+    return {}
   }
 
   async doesUserOwnAddress(address: string, metadata){

@@ -17,6 +17,7 @@ service EventService {
     rpc EventInfo (EventInfoRequest) returns (EventInfoResponse);
     rpc MasterKey (MasterKeyRequest) returns (MasterKeyResponse);
     rpc ValidateQr (ValidateQrRequest) returns (google.protobuf.Empty);
+    rpc AddAdmin (AddAdminRequest) returns (google.protobuf.Empty);
 }
 
 message CreateEventRequest {
@@ -133,4 +134,10 @@ message ValidateQrRequest {
 message ValidateQrResponse {
     string message = 1;
     string code = 2;
+}
+
+message AddAdminRequest {
+    string email = 1;
+    string address = 2;
+    string contractAddress = 3;
 }
