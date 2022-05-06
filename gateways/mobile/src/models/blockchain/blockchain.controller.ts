@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Body, Controller, Get, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest, BuyTicketsParamsRequest, AllMyEventsRequest } from 'proto-npm'
+import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest, BuyTicketsParamsRequest, AllMyEventsRequest, WithdrawRequest } from 'proto-npm'
 import { Express } from 'express'
 import { Meta } from 'src/common/decorators/meta.decorator'
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -77,6 +77,12 @@ export class BlockchainController implements OnModuleInit {
     allMyEvents(@Meta() metadata: Metadata, @Body() req: AllMyEventsRequest) {
         return this.blockchainService.allMyEvents(req, metadata)
     }
+
+    @Post('withdraw')
+    withdraw(@Meta() metadata: Metadata, @Body() req: WithdrawRequest) {
+        return this.blockchainService.withdraw(req, metadata)
+    }
+    
     
     
     // @HttpCode(200)

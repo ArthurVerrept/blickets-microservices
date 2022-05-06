@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { EthereumController } from './ethereum.controller'
 import { EthereumService } from './ethereum.service'
-import { EventServiceName, EventServicePath } from 'proto-npm'
+import { EventServiceName, EventServicePath, UserServiceName, UserServicePath } from 'proto-npm'
 import { HttpModule } from '@nestjs/axios'
 
 @Module({
@@ -25,6 +25,14 @@ import { HttpModule } from '@nestjs/axios'
             package: EventServiceName,
             protoPath: EventServicePath,
             url: 'localhost:50052'
+        }
+      },
+      {
+        name: UserServiceName,
+        transport: Transport.GRPC,
+        options: {
+            package: UserServiceName,
+            protoPath: UserServicePath
         }
       }
     ]),

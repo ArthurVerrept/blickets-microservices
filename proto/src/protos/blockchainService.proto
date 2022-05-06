@@ -20,6 +20,7 @@ service BlockchainService {
     rpc AllMyEvents (AllMyEventsRequest) returns (AllMyEventsResponse);
     rpc DoesAddressOwnTicket (DoesAddressOwnTicketRequest) returns (DoesAddressOwnTicketResponse);
     rpc BlockchainEventInfo (BlockchainEventInfoRequest) returns (BlockchainEventInfoResponse);
+    rpc Withdraw (WithdrawRequest) returns (WithdrawResponse);
 }
 
 message WalletKeys {
@@ -135,4 +136,14 @@ message BlockchainEventInfoResponse {
     string ticketsSold = 3;
     string ticketPrice = 4;
     string resalePrice = 5;
+}
+
+message WithdrawRequest {
+    string contractAddress = 1;
+    string address = 2;
+}
+
+message WithdrawResponse {
+    string to = 1;
+    string data = 2;
 }

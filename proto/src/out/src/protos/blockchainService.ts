@@ -120,6 +120,16 @@ export interface BlockchainEventInfoResponse {
   resalePrice: string;
 }
 
+export interface WithdrawRequest {
+  contractAddress: string;
+  address: string;
+}
+
+export interface WithdrawResponse {
+  to: string;
+  data: string;
+}
+
 export interface BlockchainService {
   /**
    * currently creating account on server, this is a security concern for that one request
@@ -174,4 +184,8 @@ export interface BlockchainService {
     request: BlockchainEventInfoRequest,
     metadata?: Metadata
   ): Observable<BlockchainEventInfoResponse>;
+  withdraw(
+    request: WithdrawRequest,
+    metadata?: Metadata
+  ): Observable<WithdrawResponse>;
 }

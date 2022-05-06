@@ -9,18 +9,20 @@ import { v4 as uuidv4 } from 'uuid'
 import AWS from 'aws-sdk'
 import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
-import { UploadImageRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest } from 'proto-npm'
+import { UploadImageRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest, UserServiceName, UserService } from 'proto-npm'
 import { NFTStorage, File, Blob } from 'nft.storage'
 import axios from'axios'
 import { lastValueFrom } from 'rxjs'
-import { AlchemyWeb3, AssetTransfersCategory, createAlchemyWeb3 } from '@alch/alchemy-web3'
+import { AlchemyWeb3, createAlchemyWeb3 } from '@alch/alchemy-web3'
 
 @Injectable()
 export class EthereumService implements OnModuleInit {
     private eventService: EventService
+    private userService: UserService
 
     onModuleInit(): void {
-        this.eventService = this.client.getService<EventService>('EventService')
+        this.eventService = this.eventClient.getService<EventService>('EventService')
+        this.userService = this.userClient.getService<UserService>('UserService')
     }
     nftstorage: NFTStorage
     web3: Web3
@@ -38,7 +40,8 @@ export class EthereumService implements OnModuleInit {
 
     constructor(
         private configService: ConfigService,
-        @Inject(EventServiceName) private client: ClientGrpc,
+        @Inject(EventServiceName) private eventClient: ClientGrpc,
+        @Inject(UserServiceName) private userClient: ClientGrpc,
         private httpService: HttpService
     ) {
         // AWS.config.update({ accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'), secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY') })
@@ -47,7 +50,7 @@ export class EthereumService implements OnModuleInit {
         this.alchemyWeb3 = createAlchemyWeb3('https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX')
         this.web3 = new Web3('https://eth-rinkeby.alchemyapi.io/v2/6PPyDP1pp4gHaYKHFm8o3G_CKiQuA1JX')
         // this.web3 = new Web3("https://eth-goerli.alchemyapi.io/v2/6BG6x2EmqojNNgMy1lr9MFeX1N7wVAwf")
-        this.EventFactoryContractAddress = '0xdc81e5a6d725bc99e41409807b78bbc3af0aa2c7'      // rinkeby
+        this.EventFactoryContractAddress = '0xec8759ac3eeff7866e30a6eee20e3bded0fff894'      // rinkeby
         // this.EventFactoryContractAddress = '0x5F313e120429320608DB5D7e1F54f98785c5AeC4'         // goerli
         this.eventFactoryContract = new this.web3.eth.Contract(this.eventFactoryABI, this.EventFactoryContractAddress)
         // gen account from passphrase web3
@@ -293,6 +296,7 @@ export class EthereumService implements OnModuleInit {
                 contractAddresses: userEventContractAddresses.contractAddresses,
                 owner: walletAddress
             })
+            console.log(nfts)
 
             // if user has no tickets return empty object for grpc to be happy
             if(nfts.totalCount === 0) {
@@ -362,5 +366,27 @@ export class EthereumService implements OnModuleInit {
         }
 
         // string resalePrice = 13;
+    }
+
+    async withdraw(req, metadata) {
+        // check person making request owns address
+        const addresses$ = this.userService.myAddresses({}, metadata)
+        const addressRes = await lastValueFrom(addresses$)
+        
+        if(!addressRes.addresses.includes(req.address)){ 
+            throw new RpcException({
+                code: status.PERMISSION_DENIED,
+                message: 'User must own address in request'
+            })
+        }
+
+        const currentContract = new this.web3.eth.Contract(this.eventABI, req.contractAddress)
+        const data = currentContract.methods.payout().encodeABI()
+        const transactionParams = {
+            to: req.contractAddress,
+            data
+        }
+        // console.log(payout)
+        return transactionParams
     }
 }

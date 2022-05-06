@@ -93,4 +93,10 @@ export class EthereumController {
     async blockchainEventInfo(req: BlockchainEventInfoRequest) {
       return this.ethereumService.blockchainEventInfo(req)
     } 
+
+    @UseGuards(GrpcAuthGuard)
+    @GrpcMethod('BlockchainService', 'Withdraw')
+    async withdraw(req, metadata: Metadata) {
+      return this.ethereumService.withdraw(req, metadata)
+    } 
 }
