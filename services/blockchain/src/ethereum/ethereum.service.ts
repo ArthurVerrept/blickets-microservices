@@ -296,7 +296,6 @@ export class EthereumService implements OnModuleInit {
                 contractAddresses: userEventContractAddresses.contractAddresses,
                 owner: walletAddress
             })
-            console.log(nfts)
 
             // if user has no tickets return empty object for grpc to be happy
             if(nfts.totalCount === 0) {
@@ -372,7 +371,7 @@ export class EthereumService implements OnModuleInit {
         // check person making request owns address
         const addresses$ = this.userService.myAddresses({}, metadata)
         const addressRes = await lastValueFrom(addresses$)
-        
+
         if(!addressRes.addresses.includes(req.address)){ 
             throw new RpcException({
                 code: status.PERMISSION_DENIED,
@@ -386,7 +385,7 @@ export class EthereumService implements OnModuleInit {
             to: req.contractAddress,
             data
         }
-        // console.log(payout)
+        
         return transactionParams
     }
 }
