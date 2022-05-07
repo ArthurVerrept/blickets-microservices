@@ -35,7 +35,7 @@ export class EventsService implements OnModuleInit {
       const createdEvent = new this.eventModel({
         ...eventData,
         userId: metadata.getMap().user.id,
-        admins: [metadata.getMap().user.id],
+        admins: [metadata.getMap().user.id.toString()],
         createdTime: new Date()
       })
 
@@ -194,8 +194,10 @@ export class EventsService implements OnModuleInit {
     return keys
   }
 
-  async validateQr(req){
+  async validateQr(req, metadata){
     // check if userId of person sending this request is an admin on this event
+    const event = await this.eventModel.findOne({contractAddress: req.contractAddress})
+    console.log(event)
     // call blockchain service check if account owns this ticket
     // add this ticketId to an entry that is keyed by the contract address of the event
     console.log(req)

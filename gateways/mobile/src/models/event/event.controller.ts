@@ -41,8 +41,8 @@ export class EventController implements OnModuleInit {
         return this.eventService.masterKey(query, metadata)
     }
 
-    @Get('validate')
-    validate(@Query() query: ValidateQrRequest, @Meta() metadata: Metadata) {
+    @Post('validate')
+    validate(@Body() query: ValidateQrRequest, @Meta() metadata: Metadata) {
         return this.eventService.validateQr(query, metadata)
     }
 

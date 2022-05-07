@@ -71,8 +71,8 @@ export class EventsController {
 
     @UseGuards(GrpcAuthGuard)
     @GrpcMethod('EventService', 'ValidateQr')
-    validateQr(req: ValidateQrRequest) {
-        return this.eventService.validateQr(req)
+    validateQr(req: ValidateQrRequest, metatdata: Metadata) {
+        return this.eventService.validateQr(req, metatdata)
     }
 
     @UseGuards(GrpcAuthGuard)
