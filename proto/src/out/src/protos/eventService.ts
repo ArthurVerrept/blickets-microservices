@@ -113,6 +113,7 @@ export interface ValidateQrRequest {
   contractAddress: string;
   address: string;
   ticketId: string;
+  accessToken: string;
 }
 
 export interface ValidateQrResponse {

@@ -129,6 +129,7 @@ message ValidateQrRequest {
     string contractAddress = 2;
     string address = 3;
     string ticketId = 4;
+    string accessToken = 5;
 }
 
 message ValidateQrResponse {

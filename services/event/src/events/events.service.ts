@@ -9,6 +9,8 @@ import { ClientGrpc, RpcException } from '@nestjs/microservices'
 import { Metadata } from '@grpc/grpc-js'
 import { lastValueFrom } from 'rxjs'
 import { Keys, KeysDocument } from 'schemas/keys.schema'
+import { JwtService } from '@nestjs/jwt'
+import { TicketsScanned, TicketsScannedDocument } from 'schemas/ticketsScanned.schama'
 
 
 @Injectable()
@@ -16,7 +18,6 @@ export class EventsService implements OnModuleInit {
   private blockchainService: BlockchainService
   private userService: UserService
 
-      
   onModuleInit(): void {
       this.blockchainService = this.blockchainClient.getService<BlockchainService>('BlockchainService')
       this.userService = this.userClient.getService<UserService>('UserService')
@@ -27,8 +28,10 @@ export class EventsService implements OnModuleInit {
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
     @InjectModel(UserEvent.name) private userEventModel: Model<UserEventDocument>,
     @InjectModel(Keys.name) private keysModel: Model<KeysDocument>,
+    @InjectModel(TicketsScanned.name) private ticketsScannedModel: Model<TicketsScannedDocument>,
     @Inject(BlockchainServiceName) private blockchainClient: ClientGrpc,
-    @Inject(UserServiceName) private userClient: ClientGrpc
+    @Inject(UserServiceName) private userClient: ClientGrpc,
+    private readonly jwtService: JwtService, 
   ) {}
 
   async createEvent(eventData, metadata) {
@@ -196,11 +199,47 @@ export class EventsService implements OnModuleInit {
 
   async validateQr(req, metadata){
     // check if userId of person sending this request is an admin on this event
-    const event = await this.eventModel.findOne({contractAddress: req.contractAddress})
-    console.log(event)
+    const event = await this.eventModel.findOne({ contractAddress: req.contractAddress })
+
+    // WORKS
+    if(!event.admins.includes(metadata.getMap().user.id.toString())){
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Request must come from an admin of this event'
+      })
+    }
+
+    const newUserMetadata = new Metadata()
+    try {
+      // decode JWT to check if valid 
+      // WORKS
+      this.jwtService.verify(req.accessToken)
+      
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // create new metadata object on behalf of user who's ticket you are checking
+      newUserMetadata.set('Authorization', 'Bearer ' + req.accessToken) 
+    } catch (e) {
+      // Error if token is expired, this block old accessTokens
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Token used for barcode has expired'
+      })
+    }
+
+    // check user owns address being sent
+    await this.doesUserOwnAddress(req.address, newUserMetadata)
+
     // call blockchain service check if account owns this ticket
+    await this.doesAddressOwnTicket(req.contractAddress, req.address, metadata)
+
+    // get eventCheckIn
+    const ticketsScanned = await this.ticketsScannedModel.findOneAndUpdate({ contractAddress: req.contractAddress }, { $set: { contractAddress: req.contractAddress }}, { upsert: true  })
+    console.log(ticketsScanned)
+    // check this ticketId has not already been used
+
     // add this ticketId to an entry that is keyed by the contract address of the event
-    console.log(req)
+
   }
 
   async addAdmin(req, metadata) {
@@ -251,6 +290,19 @@ export class EventsService implements OnModuleInit {
       throw new RpcException({
         code: status.PERMISSION_DENIED,
         message: 'User must own address in request'
+      })
+    }
+  }
+
+
+  async doesAddressOwnTicket(contractAddress: string, address: string, metadata){
+    const isOwner$ = this.blockchainService.doesAddressOwnTicket({contractAddress: contractAddress, address: address}, metadata)
+    const isOwner = await lastValueFrom(isOwner$)
+
+    if(!isOwner.result) {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Address must own NFT of event'
       })
     }
   }
