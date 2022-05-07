@@ -235,8 +235,27 @@ export class EventsService implements OnModuleInit {
 
     // get eventCheckIn
     const ticketsScanned = await this.ticketsScannedModel.findOneAndUpdate({ contractAddress: req.contractAddress }, { $set: { contractAddress: req.contractAddress }}, { upsert: true  })
-    console.log(ticketsScanned)
+
     // check this ticketId has not already been used
+    if(ticketsScanned.tokenIds.includes(req.ticketId)) {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Ticket has already been used'
+      })
+    } else {
+      // otherwise add the ticket to the tokenIds array
+      ticketsScanned.tokenIds.push(req.ticketId)
+      try {
+        // save changes to db
+        await ticketsScanned.save()
+      } catch (error) {
+        // if failed error and scan again
+        throw new RpcException({
+          code: status.ABORTED,
+          message: 'Adding ticket failed please scan again'
+        })
+      }
+    }
 
     // add this ticketId to an entry that is keyed by the contract address of the event
 
