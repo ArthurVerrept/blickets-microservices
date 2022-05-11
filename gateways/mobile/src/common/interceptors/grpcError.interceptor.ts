@@ -7,7 +7,6 @@ export class GrpcErrorIntercept implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError(err => {
-        console.log(err.code)
         switch (err.code) {
           case 16:
             return throwError(() => new UnauthorizedException(err.details))
