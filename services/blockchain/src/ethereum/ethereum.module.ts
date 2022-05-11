@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { EthereumController } from './ethereum.controller'
 import { EthereumService } from './ethereum.service'
-import { EventServiceName, EventServicePath, UserServiceName, UserServicePath } from 'proto-npm'
+import { EventServiceName, EventServicePath, UserServiceName, UserServicePath } from '@arthurverrept/proto-npm'
 import { HttpModule } from '@nestjs/axios'
 
 @Module({

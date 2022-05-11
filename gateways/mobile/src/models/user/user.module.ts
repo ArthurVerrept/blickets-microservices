@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { UserController } from './user.controller'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
-import { UserServiceName, UserServicePath } from 'proto-npm'
+import { UserServiceName, UserServicePath } from '@arthurverrept/proto-npm'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
 @Module({

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { EventController } from './event.controller'
-import { EventServiceName, EventServicePath } from 'proto-npm'
+import { EventServiceName, EventServicePath } from '@arthurverrept/proto-npm'
 
 @Module({
     imports: [

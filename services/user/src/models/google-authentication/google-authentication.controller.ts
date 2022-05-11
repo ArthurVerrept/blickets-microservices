@@ -1,7 +1,7 @@
 import { status } from '@grpc/grpc-js'
 import { Controller } from '@nestjs/common'
 import { GrpcMethod, RpcException } from '@nestjs/microservices'
-import { GoogleAuthCode } from 'proto-npm'
+import { GoogleAuthCode } from '@arthurverrept/proto-npm'
 import { GoogleAuthenticationService } from './google-authentication.service'
 
 @Controller('google-authentication')

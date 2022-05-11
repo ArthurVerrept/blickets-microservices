@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { Transport } from '@nestjs/microservices'
-import { EventServiceName, EventServicePath } from 'proto-npm'
+import { EventServiceName, EventServicePath } from '@arthurverrept/proto-npm'
 import { HttpErrorIntercept } from './common/interceptors/httpError.interceptor'
 
 const logger = new Logger('Main')

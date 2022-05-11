@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Controller, Post, Inject, OnModuleInit, Body, Get, Query, Req } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { EventService, EventServiceName, CreateEventRequest, MyEventsRequest, MasterKeyRequest, ValidateQrRequest, EventInfoRequest, AddAdminRequest } from 'proto-npm'
+import { EventService, EventServiceName, CreateEventRequest, MyEventsRequest, MasterKeyRequest, ValidateQrRequest, EventInfoRequest, AddAdminRequest } from '@arthurverrept/proto-npm'
 import { Meta } from 'src/common/decorators/meta.decorator'
 
 @Controller('event')

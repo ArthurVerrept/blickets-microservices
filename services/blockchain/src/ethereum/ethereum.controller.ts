@@ -12,7 +12,7 @@ import {
   AllMyEventsRequest,
   DoesAddressOwnTicketRequest,
   BlockchainEventInfoRequest
-} from 'proto-npm'
+} from '@arthurverrept/proto-npm'
 import { Metadata } from '@grpc/grpc-js'
 
 @Controller('ethereum')

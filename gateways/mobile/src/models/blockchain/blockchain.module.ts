@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { BlockchainController } from './blockchain.controller'
-import { BlockchainServiceName, BlockchainServicePath } from 'proto-npm'
+import { BlockchainServiceName, BlockchainServicePath } from '@arthurverrept/proto-npm'
 import { ConfigModule } from '@nestjs/config'
 @Module({
   imports: [

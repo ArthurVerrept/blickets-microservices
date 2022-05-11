@@ -3,7 +3,7 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import { GrpcAuthGuard } from 'src/authentication/grpcAuthGuard.strategy'
 import { UserService } from './user.service'
-import { AddAddressRequest, AdminEmailRequest, AdminIdRequest } from 'proto-npm'
+import { AddAddressRequest, AdminEmailRequest, AdminIdRequest } from '@arthurverrept/proto-npm'
 
 @Controller('user')
 export class UserController {

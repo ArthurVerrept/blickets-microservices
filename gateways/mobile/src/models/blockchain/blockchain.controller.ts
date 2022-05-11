@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js'
 import { Body, Controller, Get, Inject, OnModuleInit, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest, BuyTicketsParamsRequest, AllMyEventsRequest, WithdrawRequest } from 'proto-npm'
+import { BlockchainService, BlockchainServiceName, DeployEventRequest, TransactionStatusRequest, BuyTicketsParamsRequest, AllMyEventsRequest, WithdrawRequest } from '@arthurverrept/proto-npm'
 import { Express } from 'express'
 import { Meta } from 'src/common/decorators/meta.decorator'
 import { FileInterceptor } from '@nestjs/platform-express'

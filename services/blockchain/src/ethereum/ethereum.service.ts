@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid'
 import AWS from 'aws-sdk'
 import eventABI from '../helpers/eventABI.json'
 import eventFactoryABI from '../helpers/eventFactoryABI.json'
-import { UploadImageRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest, UserServiceName, UserService } from 'proto-npm'
+import { UploadImageRequest, DeployEventRequest, EventServiceName, EventService, BuyTicketsParamsRequest, UserServiceName, UserService } from '@arthurverrept/proto-npm'
 import { NFTStorage, File, Blob } from 'nft.storage'
 import axios from'axios'
 import { lastValueFrom } from 'rxjs'
@@ -217,7 +217,7 @@ export class EthereumService implements OnModuleInit {
             const userEvent$ = this.eventService.createUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
             await lastValueFrom(userEvent$)
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             throw new RpcException({
               code: status.UNKNOWN,
               message: e
@@ -270,7 +270,7 @@ export class EthereumService implements OnModuleInit {
             // TODO add check that they do not already own a ticket before removeing it from their account
             const userEvent$ = this.eventService.deleteUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
             await lastValueFrom(userEvent$)
-            console.log(e)
+            // console.log(e)
             throw new RpcException({
                 code: status.UNKNOWN,
                 message: e
