@@ -53,6 +53,11 @@ export class UserController implements OnModuleInit {
         return this.userService.addAddress(req, metadata)
     }
 
+    @Get('my-addresses')
+    myAddresses(@Meta() metadata: Metadata) {
+        return this.userService.myAddresses({}, metadata)
+    }
+
     @Get('me')
     me(@Meta() metadata: Metadata) {
         return this.userService.me({}, metadata)

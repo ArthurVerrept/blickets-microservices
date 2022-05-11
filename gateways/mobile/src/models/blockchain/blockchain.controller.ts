@@ -82,12 +82,4 @@ export class BlockchainController implements OnModuleInit {
     withdraw(@Meta() metadata: Metadata, @Body() req: WithdrawRequest) {
         return this.blockchainService.withdraw(req, metadata)
     }
-    
-    
-    
-    // @HttpCode(200)
-    // @Post('delete-image')
-    // deleteImage(@Meta() metadata: Metadata, @Body() file: DeleteImageRequest) {
-    //     return this.blockchainService.deleteFile(file, metadata)
-    // }
 }

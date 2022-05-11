@@ -11,7 +11,7 @@ export class HttpErrorIntercept implements NestInterceptor {
       catchError(err => {
         // if the error is http turn into rpc
         if (err.status) {
-          return throwError(() => new RpcException({
+        return throwError(() => new RpcException({
               code: status.UNKNOWN,
               message: err.response
           }))
@@ -19,7 +19,7 @@ export class HttpErrorIntercept implements NestInterceptor {
         } else {
           return throwError(() => new RpcException(err))
         }
-      }),
+      })
     )
   }
 } 

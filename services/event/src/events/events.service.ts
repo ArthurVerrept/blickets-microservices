@@ -256,7 +256,7 @@ export class EventsService implements OnModuleInit {
         })
       }
     }
-
+    
     // add this ticketId to an entry that is keyed by the contract address of the event
 
   }
