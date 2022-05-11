@@ -16,6 +16,8 @@ export class HttpErrorIntercept implements NestInterceptor {
               message: err.response
           }))
         // otherwise just return the rpc error 
+        } else if (err.error) {
+          return throwError(() => new RpcException(err.error))
         } else {
           return throwError(() => new RpcException(err))
         }

@@ -7,28 +7,38 @@ export class GrpcErrorIntercept implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError(err => {
-        console.log(err.details)
+        console.log(err.code)
         switch (err.code) {
           case 16:
-            return throwError(() => new UnauthorizedException({ message: err.details }))
+            return throwError(() => new UnauthorizedException(err.details))
           case 13:
-            return throwError(() => new BadRequestException({ message: err.details }))
+            return throwError(() => new BadRequestException(err.details))
           case 3:
-            return throwError(() => new BadRequestException({ message: err.details }))
+            return throwError(() => new BadRequestException(err.details))
           case 8:
-            return throwError(() => new BadRequestException({ message: err.details }))
+            return throwError(() => new BadRequestException(err.details))
           case 7:
-            return throwError(() => new ForbiddenException({ message: err.details }))
+            return throwError(() => new ForbiddenException(err.details))
           case 5:
-              return throwError(() => new NotFoundException({ message: err.details }))
+              return throwError(() => new NotFoundException(err.details))
           case 12:
-              return throwError(() => new NotImplementedException({ message: err.details }))
+              return throwError(() => new NotImplementedException(err.details))
           case 14:
-            return throwError(() => new ServiceUnavailableException({ message: err.details }))
+            return throwError(() => new ServiceUnavailableException(err.details))
           default:
-             return throwError(() => new InternalServerErrorException({ message: err.details }))
+             return throwError(() => new InternalServerErrorException(err.details))
         }
-      })
+      }),
     )
+  }
+  genError(code: number, message: string) {
+    if (message) {
+      let errMessage = message
+      if(message.includes(':')){
+        errMessage = message.split(': ')[1]
+      }
+      return {statusCode: code, message: errMessage}
+    }
+    return null
   }
 }

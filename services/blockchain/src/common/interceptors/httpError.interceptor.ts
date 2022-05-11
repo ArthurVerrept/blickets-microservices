@@ -9,16 +9,18 @@ export class HttpErrorIntercept implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError(err => {
-           // if the error is http turn into rpc
+          // if the error is http turn into rpc
         if (err.status) {
           return throwError(() => new RpcException({
                 code: status.UNKNOWN,
                 message: err.response
-            }))
-          // otherwise just return the rpc error 
-          } else {
-            return throwError(() => new RpcException(err))
-          }
+          }))
+        // otherwise just return the rpc error 
+        } else if (err.error) {
+          return throwError(() => new RpcException(err.error))
+        } else {
+          return throwError(() => new RpcException(err))
+        }
       }),
     )
   }
