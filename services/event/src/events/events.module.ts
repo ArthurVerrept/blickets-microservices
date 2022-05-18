@@ -3,13 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { MongooseModule } from '@nestjs/mongoose'
-import { Event, EventSchema } from 'schemas/event.schema'
+import { Event, EventSchema } from '../schemas/event.schema'
 import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
 import { BlockchainServiceName, BlockchainServicePath, UserServiceName, UserServicePath } from '@arthurverrept/proto-npm'
-import { UserEvent, UserEventSchema } from 'schemas/userEvent.schema'
-import { Keys, KeysSchema } from 'schemas/keys.schema'
-import { TicketsScanned, TicketsScannedSchema } from 'schemas/ticketsScanned.schama'
+import { UserEvent, UserEventSchema } from '../schemas/userEvent.schema'
+import { Keys, KeysSchema } from '../schemas/keys.schema'
+import { TicketsScanned, TicketsScannedSchema } from '../schemas/ticketsScanned.schama'
 
 @Module({
   imports: [
