@@ -178,16 +178,6 @@ export class EthereumService implements OnModuleInit {
     }
 
     async displayDetails(contractAddress: string) {
-        // try{
-        //     const a = await this.alchemyWeb3.alchemy.getAssetTransfers({
-        //         fromBlock: this.web3.utils.toHex(0),
-        //         toAddress: '0xA705121486a1440CF621615c4F312EdE7d89146D',
-        //         category: [AssetTransfersCategory.ERC721]
-        //     })
-        //     console.log(a)
-        // }catch (e){
-        //     console.log(e)
-        // }
         const currentContract = new this.web3.eth.Contract(this.eventABI, contractAddress)
         const ticketPrice = await currentContract.methods.ticketPrice.call().call()
         const ticketAmount = await currentContract.methods.ticketAmount.call().call()
@@ -364,7 +354,6 @@ export class EthereumService implements OnModuleInit {
             ticketPrice: this.web3.utils.fromWei(ticketPrice).toString()
         }
 
-        // string resalePrice = 13;
     }
 
     async withdraw(req, metadata) {

@@ -5,7 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { GrpcErrorIntercept } from './common/interceptors/grpcError.interceptor'
 
 const logger = new Logger('Main')
-const port = 3000
+const port =  process.env.PORT ? process.env.PORT : 3000
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

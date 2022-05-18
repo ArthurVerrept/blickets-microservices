@@ -10,6 +10,7 @@ import { BlockchainServiceName, BlockchainServicePath, UserServiceName, UserServ
 import { UserEvent, UserEventSchema } from '../schemas/userEvent.schema'
 import { Keys, KeysSchema } from '../schemas/keys.schema'
 import { TicketsScanned, TicketsScannedSchema } from '../schemas/ticketsScanned.schama'
+import { credentials } from '@grpc/grpc-js'
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { TicketsScanned, TicketsScannedSchema } from '../schemas/ticketsScanned.
         options: {
             package: BlockchainServiceName,
             protoPath: BlockchainServicePath,
-            url: 'localhost:50051'
+            url: 'blockchain-3jjrtrh3ha-ew.a.run.app:443',
+            credentials: credentials.createSsl()
         }
       },
       {
@@ -42,7 +44,9 @@ import { TicketsScanned, TicketsScannedSchema } from '../schemas/ticketsScanned.
         transport: Transport.GRPC,
         options: {
             package: UserServiceName,
-            protoPath: UserServicePath
+            protoPath: UserServicePath,
+            url: 'user-3jjrtrh3ha-ew.a.run.app:443',
+            credentials: credentials.createSsl()
         }
       }
     ]),

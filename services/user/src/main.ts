@@ -5,14 +5,15 @@ import { Transport } from '@nestjs/microservices'
 import { UserServiceName, UserServicePath } from '@arthurverrept/proto-npm'
 import { HttpErrorIntercept } from './common/interceptors/httpError.interceptor'
 
+const address = process.env.PORT ? `0.0.0.0:${process.env.PORT}` : 'localhost:50051'
 const logger = new Logger('Main')
 
 const microserviceOptions = {
   transport: Transport.GRPC,
   options: {
     package: UserServiceName,
-    protoPath: UserServicePath
-    // url: 'localhost:50051'
+    protoPath: UserServicePath,
+    url: address
   }
 }
 

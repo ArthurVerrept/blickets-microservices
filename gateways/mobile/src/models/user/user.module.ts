@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { UserServiceName, UserServicePath } from '@arthurverrept/proto-npm'
 import { ClientsModule, Transport } from '@nestjs/microservices'
+import { credentials } from '@grpc/grpc-js'
 
 @Module({
   imports: [
@@ -13,7 +14,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
         transport: Transport.GRPC,
         options: {
             package: UserServiceName,
-            protoPath: UserServicePath
+            protoPath: UserServicePath,
+            url: 'user-3jjrtrh3ha-ew.a.run.app:443',
+            credentials: credentials.createSsl()
         }
       }
     ]),

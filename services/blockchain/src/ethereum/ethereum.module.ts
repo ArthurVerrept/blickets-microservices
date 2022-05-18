@@ -6,6 +6,7 @@ import { EthereumController } from './ethereum.controller'
 import { EthereumService } from './ethereum.service'
 import { EventServiceName, EventServicePath, UserServiceName, UserServicePath } from '@arthurverrept/proto-npm'
 import { HttpModule } from '@nestjs/axios'
+import { credentials } from '@grpc/grpc-js'
 
 @Module({
   imports:[
@@ -24,7 +25,8 @@ import { HttpModule } from '@nestjs/axios'
         options: {
             package: EventServiceName,
             protoPath: EventServicePath,
-            url: 'localhost:50052'
+            url: 'event-3jjrtrh3ha-ew.a.run.app:443',
+            credentials: credentials.createSsl()
         }
       },
       {
@@ -32,7 +34,9 @@ import { HttpModule } from '@nestjs/axios'
         transport: Transport.GRPC,
         options: {
             package: UserServiceName,
-            protoPath: UserServicePath
+            protoPath: UserServicePath,
+            url: 'user-3jjrtrh3ha-ew.a.run.app:443',
+            credentials: credentials.createSsl()
         }
       }
     ]),

@@ -70,7 +70,7 @@ export class EventsService implements OnModuleInit {
 
   async allEvents(metadata: Metadata) {
     const events = await this.eventModel.find({ deployedStatus: 'success' }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus')).exec()
-
+    
     const returnEvents = []
     for(const event of events) {
       const price$ = this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
@@ -234,7 +234,7 @@ export class EventsService implements OnModuleInit {
     await this.doesAddressOwnTicket(req.contractAddress, req.address, metadata)
 
     // get eventCheckIn
-    const ticketsScanned = await this.ticketsScannedModel.findOneAndUpdate({ contractAddress: req.contractAddress }, { $set: { contractAddress: req.contractAddress }}, { upsert: true  })
+    const ticketsScanned = await this.ticketsScannedModel.findOneAndUpdate({ contractAddress: req.contractAddress }, { $set: { contractAddress: req.contractAddress }}, { upsert: true })
 
     // check this ticketId has not already been used
     if(ticketsScanned.tokenIds.includes(req.ticketId)) {

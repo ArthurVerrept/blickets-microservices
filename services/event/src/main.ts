@@ -5,6 +5,7 @@ import { Transport } from '@nestjs/microservices'
 import { EventServiceName, EventServicePath } from '@arthurverrept/proto-npm'
 import { HttpErrorIntercept } from './common/interceptors/httpError.interceptor'
 
+const address = process.env.PORT ? `0.0.0.0:${process.env.PORT}` : 'localhost:50051'
 const logger = new Logger('Main')
 
 const microserviceOptions = {
@@ -12,7 +13,7 @@ const microserviceOptions = {
   options: {
     package: EventServiceName,
     protoPath: EventServicePath,
-    url: 'localhost:50052'
+    url: address
   }
 }
 
