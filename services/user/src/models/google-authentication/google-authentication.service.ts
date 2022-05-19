@@ -24,7 +24,7 @@ export class GoogleAuthenticationService {
     this.oauthClient = new google.auth.OAuth2(
       clientID,
       clientSecret,
-      'http://localhost:8080/google-redirect'
+      'https://neon-bublanina-2cabfe.netlify.app/google-redirect'
     )
   }
 
