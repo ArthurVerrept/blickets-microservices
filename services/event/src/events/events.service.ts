@@ -234,15 +234,12 @@ export class EventsService implements OnModuleInit {
     await this.doesAddressOwnTicket(req.contractAddress, req.address, metadata)
 
     // get eventCheckIn
-    const ticketsScanned = await this.ticketsScannedModel.findOneAndUpdate({ contractAddress: req.contractAddress }, { $set: { contractAddress: req.contractAddress }}, { upsert: true })
+    let ticketsScanned = await this.ticketsScannedModel.findOneAndUpdate({ contractAddress: req.contractAddress }, { $set: { contractAddress: req.contractAddress }}, { upsert: true })
 
-    // check this ticketId has not already been used
-    if(ticketsScanned.tokenIds.includes(req.ticketId)) {
-      throw new RpcException({
-        code: status.PERMISSION_DENIED,
-        message: 'Ticket has already been used'
-      })
-    } else {
+    // if it was just created
+    if(!ticketsScanned) {
+      ticketsScanned = await this.ticketsScannedModel.findOne({ contractAddress: req.contractAddress })
+
       // otherwise add the ticket to the tokenIds array
       ticketsScanned.tokenIds.push(req.ticketId)
       try {
@@ -255,10 +252,26 @@ export class EventsService implements OnModuleInit {
           message: 'Adding ticket failed please scan again'
         })
       }
+    // if it was already there and ticket has not been scanned
+    } else if(!ticketsScanned.tokenIds.includes(req.ticketId)) {
+      // otherwise add the ticket to the tokenIds array
+      ticketsScanned.tokenIds.push(req.ticketId)
+      try {
+        // save changes to db
+        await ticketsScanned.save()
+      } catch (error) {
+        // if failed error and scan again
+        throw new RpcException({
+          code: status.ABORTED,
+          message: 'Adding ticket failed please scan again'
+        })
+      }
+    } else {
+      throw new RpcException({
+        code: status.PERMISSION_DENIED,
+        message: 'Ticket has already been used'
+      })
     }
-    
-    // add this ticketId to an entry that is keyed by the contract address of the event
-
   }
 
   async addAdmin(req, metadata) {
