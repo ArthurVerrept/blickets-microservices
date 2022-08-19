@@ -11,7 +11,8 @@
 			"presentation": {
 				"clear": true,
 				"group": "blickets"
-			}
+			},
+			"isBackground": true
 		},
 		{
 			"type": "npm",
@@ -22,7 +23,8 @@
 			"presentation": {
 				"clear": true,
 				"group": "blickets"
-			}
+			},
+			"isBackground": true
 		},
 		{
 			"type": "npm",
@@ -33,7 +35,9 @@
 			"presentation": {
 				"clear": true,
 				"group": "blickets"
-			}
+			},
+			"isBackground": true
+
 		},
 		{
 			"type": "npm",
@@ -44,7 +48,9 @@
 			"presentation": {
 				"clear": true,
 				"group": "blickets"
-			}
+			},
+			"isBackground": true
+
 		},
 		{
 			"label": "Start Dev",
@@ -66,8 +72,9 @@
 			"label": "install-event",
 			"group": "none",
 			"presentation": {
+				"close": true,
 				"clear": true,
-				"group": "blickets"
+				"group": "blicket-install"
 			}
 		},
 		{
@@ -77,8 +84,9 @@
 			"label": "install-user",
 			"group": "none",
 			"presentation": {
+				"close": true,
 				"clear": true,
-				"group": "blickets"
+				"group": "blicket-install"
 			}
 		},
 		{
@@ -88,8 +96,9 @@
 			"label": "install-blockchain",
 			"group": "none",
 			"presentation": {
+				"close": true,
 				"clear": true,
-				"group": "blickets"
+				"group": "blicket-install"
 			}
 		},
 		{
@@ -99,8 +108,9 @@
 			"label": "install-gateway",
 			"group": "none",
 			"presentation": {
+				"close": true,
 				"clear": true,
-				"group": "blickets"
+				"group": "blicket-install"
 			}
 		},
 		{
@@ -110,8 +120,9 @@
 			"label": "install-proto",
 			"group": "none",
 			"presentation": {
+				"close": true,
 				"clear": true,
-				"group": "blickets"
+				"group": "blicket-install"
 			}
 		},
 		{
