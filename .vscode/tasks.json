@@ -104,13 +104,25 @@
 			}
 		},
 		{
+			"type": "npm",
+			"script": "install",
+			"path": "proto",
+			"label": "install-proto",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
 			"label": "Install Dependacies",
 			"detail": "Install all project dependacies",
 			"dependsOn": [
 				"install-event",
 				"install-user",
 				"install-blockchain",
-				"install-gateway"
+				"install-gateway",
+				"install-proto"
 			],
 			"problemMatcher": []
 		},
