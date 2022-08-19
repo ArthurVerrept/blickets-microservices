@@ -49,6 +49,7 @@ This command locally generates the typescript for each service, and the gateway,
 - [ ] Investigate better gateway
 - [ ] Make calls unary
 - [ ] Use migrations
+- [ ] Move front-end into here for one giant monorepo
 
 <b>Small improvements 🌴 </b>
 - [ ] Make imports from proto-npm package service different per service i.e:    import foo from ‘photo-npm/fooService’
