@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  user-postgres:
+    container_name: user-postgres
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=rootPassword
+    ports:
+      - '5432:5432'
+  event-mongodb:
+    container_name: event-mongodb
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootPassword
+    ports:
+      - 27017:27017

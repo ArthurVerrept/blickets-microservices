@@ -1,0 +1,118 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"icon": {},
+			"type": "npm",
+			"script": "start:dev",
+			"path": "services/event",
+			"label": "event",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "start:dev",
+			"path": "services/user",
+			"label": "user",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "start:dev",
+			"path": "services/blockchain",
+			"label": "blockchain",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "start:dev",
+			"path": "gateways/mobile",
+			"label": "gateway",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"label": "Start Dev",
+			"detail": "Run development enviroment",
+			"dependsOn": [
+				"event",
+				"user",
+				"blockchain",
+				"gateway"
+			],
+			"problemMatcher": []
+		},
+
+		{
+			"icon": {},
+			"type": "npm",
+			"script": "install",
+			"path": "services/event",
+			"label": "install-event",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "install",
+			"path": "services/user",
+			"label": "install-user",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "install",
+			"path": "services/blockchain",
+			"label": "install-blockchain",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "install",
+			"path": "gateways/mobile",
+			"label": "install-gateway",
+			"group": "none",
+			"presentation": {
+				"clear": true,
+				"group": "blickets"
+			}
+		},
+		{
+			"label": "Install Dependacies",
+			"detail": "Install all project dependacies",
+			"dependsOn": [
+				"install-event",
+				"install-user",
+				"install-blockchain",
+				"install-gateway"
+			],
+			"problemMatcher": []
+		},
+	]
+}

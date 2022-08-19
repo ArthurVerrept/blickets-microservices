@@ -17,7 +17,7 @@ import { TicketsScanned, TicketsScannedSchema } from '../schemas/ticketsScanned.
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI')
+        uri: configService.get<string>('MONGODB_URI') ? configService.get<string>('MONGODB_URI') : "mongodb://127.0.0.1:27017"
       })
     }),
     JwtModule.registerAsync({
