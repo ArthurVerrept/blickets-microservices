@@ -39,7 +39,7 @@ This command locally generates the typescript for each service, and the gateway,
 ## To-do's:
 
 <b>Big improvements 🪄 </b>
-- [ ] Make onboarding better eg. Dockerify dev enviroment
+- [x] Make onboarding better eg. Dockerify dev enviroment
 - [ ] Rewrite one or more services in golang
 - [ ] Distributed transactions with temporal
 - [ ] Git actions proto stuff
