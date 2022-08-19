@@ -38,7 +38,7 @@
 		{
 			"type": "npm",
 			"script": "start:dev",
-			"path": "gateways/mobile",
+			"path": "gateways/frontend",
 			"label": "gateway",
 			"group": "none",
 			"presentation": {
@@ -95,7 +95,7 @@
 		{
 			"type": "npm",
 			"script": "install",
-			"path": "gateways/mobile",
+			"path": "gateways/frontend",
 			"label": "install-gateway",
 			"group": "none",
 			"presentation": {
