@@ -43,6 +43,7 @@ This command locally generates the typescript for each service, and the gateway,
 - [ ] Rewrite one or more services in golang
 - [ ] Distributed transactions with temporal
 - [ ] Git actions proto stuff
+- [ ] Somehow make each service deploy seperately through git
 - [ ] Make frontend not god awful
 - [ ] Generate frontend client
 - [ ] Investigate better gateway
