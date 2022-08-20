@@ -1,6 +1,7 @@
 {
 	"version": "2.0.0",
 	"tasks": [
+		// Start Dev
 		{
 			"icon": {},
 			"type": "npm",
@@ -64,6 +65,7 @@
 			"problemMatcher": []
 		},
 
+		// Install dependacies
 		{
 			"icon": {},
 			"type": "npm",
@@ -134,6 +136,29 @@
 				"install-blockchain",
 				"install-gateway",
 				"install-proto"
+			],
+			"problemMatcher": []
+		},
+
+		// Gen Code
+		{
+			"type": "npm",
+			"script": "gen",
+			"path": "proto",
+			"label": "generate",
+			"group": "build",
+			"presentation": {
+				"close": true,
+				"clear": true,
+				"group": "blicket-gen"
+			}
+		},
+		{
+			"label": "Generate and Link",
+			"detail": "Generate code from protos, and link package locally for local development",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"generate"
 			],
 			"problemMatcher": []
 		},

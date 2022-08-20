@@ -15,7 +15,7 @@ async function main() {
         }
 
         
-        const buildDir = './lib'
+        const buildDir = './proto-npm'
         const protosDir = buildDir + '/protos'
         if (fs.existsSync(buildDir)){
             fs.rmSync(buildDir, { recursive: true }, (err) => {
@@ -64,8 +64,8 @@ export const ${exportName}Path = \`\${__dirname}/protos/${serviceName}.proto\``
                 })
 
                 const outputDirPath = __dirname.substring(0, __dirname.lastIndexOf('/'))
-                // copy protos to lib file
-                fs.copyFile(`${__dirname}/protos/${serviceName}.proto`, `${outputDirPath}/lib/protos/${serviceName}.proto`, (err) => {
+                // copy protos to proto-npm file
+                fs.copyFile(`${__dirname}/protos/${serviceName}.proto`, `${outputDirPath}/proto-npm/protos/${serviceName}.proto`, (err) => {
                     if (err) throw err;
                 })
             }
