@@ -29,12 +29,15 @@ Once you have installed the dependacies using the task, we can start the project
 
 ✨ If everything is setup correctly, you should be up and running ✨
 
-## Commmands:
-To generate the protos make sure you are in the proto folder and run:
+## Generate from protos:
+To generate the protos we do much the same as before:
 ```
-npm run gen
+ cmd + shift + p
 ```
-This command locally generates the typescript for each service, and the gateway, replacing the folder locally.
+- Select the <b>Tasks: Run Task</b> option <br>
+- Then choose the: <b>Generate and Link</b> task
+
+This 💫 <b>automagically</b> 💫 makes the generated proto package use the local version you just created. Don't worry however, when deploying it will still use the version deployed to npm.
 
 ## To-do's:
 
