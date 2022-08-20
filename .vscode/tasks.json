@@ -65,7 +65,7 @@
 			"problemMatcher": []
 		},
 
-		// Install dependacies
+		// Install Dependacies
 		{
 			"icon": {},
 			"type": "npm",
@@ -145,22 +145,14 @@
 			"type": "npm",
 			"script": "gen",
 			"path": "proto",
-			"label": "generate",
+			"label": "Generate and Link",
+			"detail": "Generate code from protos, and link package locally for local development",
 			"group": "build",
 			"presentation": {
 				"close": true,
 				"clear": true,
 				"group": "blicket-gen"
 			}
-		},
-		{
-			"label": "Generate and Link",
-			"detail": "Generate code from protos, and link package locally for local development",
-			"dependsOrder": "sequence",
-			"dependsOn": [
-				"generate"
-			],
-			"problemMatcher": []
-		},
+		}
 	]
 }
