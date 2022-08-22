@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { Observable } from "rxjs";
 import { Metadata } from "@grpc/grpc-js";
 import { Empty } from "../../google/protobuf/empty";
 
@@ -54,27 +53,21 @@ export interface AdminIdResponse {
 }
 
 export interface UserService {
-  genGoogleAuthUrl(
-    request: Empty,
-    metadata?: Metadata
-  ): Observable<GoogleAuthUrl>;
-  googleLogin(request: GoogleAuthCode, metadata?: Metadata): Observable<Tokens>;
-  addAddress(
-    request: AddAddressRequest,
-    metadata?: Metadata
-  ): Observable<Empty>;
-  refresh(request: Empty, metadata?: Metadata): Observable<AccessToken>;
-  me(request: Empty, metadata?: Metadata): Observable<User>;
+  genGoogleAuthUrl(request: Empty, metadata?: Metadata): Promise<GoogleAuthUrl>;
+  googleLogin(request: GoogleAuthCode, metadata?: Metadata): Promise<Tokens>;
+  addAddress(request: AddAddressRequest, metadata?: Metadata): Promise<Empty>;
+  refresh(request: Empty, metadata?: Metadata): Promise<AccessToken>;
+  me(request: Empty, metadata?: Metadata): Promise<User>;
   myAddresses(
     request: Empty,
     metadata?: Metadata
-  ): Observable<MyAddressesResponse>;
+  ): Promise<MyAddressesResponse>;
   adminEmails(
     request: AdminEmailRequest,
     metadata?: Metadata
-  ): Observable<AdminEmailResponse>;
+  ): Promise<AdminEmailResponse>;
   adminId(
     request: AdminIdRequest,
     metadata?: Metadata
-  ): Observable<AdminIdResponse>;
+  ): Promise<AdminIdResponse>;
 }

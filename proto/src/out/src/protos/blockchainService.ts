@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { Observable } from "rxjs";
 import { Metadata } from "@grpc/grpc-js";
 import { Empty } from "../../google/protobuf/empty";
 
@@ -138,54 +137,51 @@ export interface BlockchainService {
   createEthereumAccount(
     request: Empty,
     metadata?: Metadata
-  ): Observable<WalletKeys>;
+  ): Promise<WalletKeys>;
   uploadFile(
     request: UploadImageRequest,
     metadata?: Metadata
-  ): Observable<UploadImageResponse>;
-  deleteFile(
-    request: DeleteImageRequest,
-    metadata?: Metadata
-  ): Observable<Empty>;
+  ): Promise<UploadImageResponse>;
+  deleteFile(request: DeleteImageRequest, metadata?: Metadata): Promise<Empty>;
   getAllDeployedEvents(
     request: Empty,
     metadata?: Metadata
-  ): Observable<AllDeployedEvents>;
+  ): Promise<AllDeployedEvents>;
   deployEventParameters(
     request: DeployEventRequest,
     metadata?: Metadata
-  ): Observable<DeployEventResponse>;
+  ): Promise<DeployEventResponse>;
   transactionStatus(
     request: TransactionStatusRequest,
     metadata?: Metadata
-  ): Observable<Empty>;
+  ): Promise<Empty>;
   eventDisplayDetails(
     request: EventDisplayRequest,
     metadata?: Metadata
-  ): Observable<EventDisplayResponse>;
-  ethPrice(request: Empty, metadata?: Metadata): Observable<EthPriceResponse>;
+  ): Promise<EventDisplayResponse>;
+  ethPrice(request: Empty, metadata?: Metadata): Promise<EthPriceResponse>;
   buyTicketParams(
     request: BuyTicketsParamsRequest,
     metadata?: Metadata
-  ): Observable<BuyTicketsParamsResponse>;
+  ): Promise<BuyTicketsParamsResponse>;
   ticketPriceWei(
     request: TicketPriceWeiRequest,
     metadata?: Metadata
-  ): Observable<TicketPriceWeiResponse>;
+  ): Promise<TicketPriceWeiResponse>;
   allMyEvents(
     request: AllMyEventsRequest,
     metadata?: Metadata
-  ): Observable<AllMyEventsResponse>;
+  ): Promise<AllMyEventsResponse>;
   doesAddressOwnTicket(
     request: DoesAddressOwnTicketRequest,
     metadata?: Metadata
-  ): Observable<DoesAddressOwnTicketResponse>;
+  ): Promise<DoesAddressOwnTicketResponse>;
   blockchainEventInfo(
     request: BlockchainEventInfoRequest,
     metadata?: Metadata
-  ): Observable<BlockchainEventInfoResponse>;
+  ): Promise<BlockchainEventInfoResponse>;
   withdraw(
     request: WithdrawRequest,
     metadata?: Metadata
-  ): Observable<WithdrawResponse>;
+  ): Promise<WithdrawResponse>;
 }

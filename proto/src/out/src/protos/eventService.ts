@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { Observable } from "rxjs";
 import { Metadata } from "@grpc/grpc-js";
 import { Empty } from "../../google/protobuf/empty";
 
@@ -128,47 +127,41 @@ export interface AddAdminRequest {
 }
 
 export interface EventService {
-  createEvent(
-    request: CreateEventRequest,
-    metadata?: Metadata
-  ): Observable<Empty>;
+  createEvent(request: CreateEventRequest, metadata?: Metadata): Promise<Empty>;
   myCreatedEvents(
     request: MyEventsRequest,
     metadata?: Metadata
-  ): Observable<MyEvents>;
+  ): Promise<MyEvents>;
   updateEventStatus(
     request: UpdateEventRequest,
     metadata?: Metadata
-  ): Observable<Empty>;
+  ): Promise<Empty>;
   /** get all events where deployed status = 'success' */
-  allEvents(request: Empty, metadata?: Metadata): Observable<AllEventsResponse>;
+  allEvents(request: Empty, metadata?: Metadata): Promise<AllEventsResponse>;
   eventByContractAddress(
     request: EventByContractRequest,
     metadata?: Metadata
-  ): Observable<Event>;
+  ): Promise<Event>;
   createUserEvent(
     request: CreateUserEventRequest,
     metadata?: Metadata
-  ): Observable<Empty>;
+  ): Promise<Empty>;
   deleteUserEvent(
     request: DeleteUserEventRequest,
     metadata?: Metadata
-  ): Observable<Empty>;
+  ): Promise<Empty>;
   allUserEvents(
     request: AllUserEventsRequest,
     metadata?: Metadata
-  ): Observable<AllUserEventResponse>;
+  ): Promise<AllUserEventResponse>;
   eventInfo(
     request: EventInfoRequest,
     metadata?: Metadata
-  ): Observable<EventInfoResponse>;
+  ): Promise<EventInfoResponse>;
   masterKey(
     request: MasterKeyRequest,
     metadata?: Metadata
-  ): Observable<MasterKeyResponse>;
-  validateQr(
-    request: ValidateQrRequest,
-    metadata?: Metadata
-  ): Observable<Empty>;
-  addAdmin(request: AddAdminRequest, metadata?: Metadata): Observable<Empty>;
+  ): Promise<MasterKeyResponse>;
+  validateQr(request: ValidateQrRequest, metadata?: Metadata): Promise<Empty>;
+  addAdmin(request: AddAdminRequest, metadata?: Metadata): Promise<Empty>;
 }

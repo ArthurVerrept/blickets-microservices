@@ -7,7 +7,6 @@ import { UserEvent, UserEventDocument } from '../schemas/userEvent.schema'
 import { UpdateEventRequest, BlockchainServiceName, BlockchainService, UserServiceName, UserService } from '@arthurverrept/proto-npm'
 import { ClientGrpc, RpcException } from '@nestjs/microservices'
 import { Metadata } from '@grpc/grpc-js'
-import { lastValueFrom } from 'rxjs'
 import { Keys, KeysDocument } from '../schemas/keys.schema'
 import { JwtService } from '@nestjs/jwt'
 import { TicketsScanned, TicketsScannedDocument } from '../schemas/ticketsScanned.schama'
@@ -73,8 +72,7 @@ export class EventsService implements OnModuleInit {
 
     const returnEvents = []
     for(const event of events) {
-      const price$ = this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
-      const price = await lastValueFrom(price$)
+      const price = await this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
 
       returnEvents.push({ 
         eventDate: event.eventDate, 
@@ -94,8 +92,7 @@ export class EventsService implements OnModuleInit {
   async eventByContractAddress(contractAddress: string, metadata: Metadata) {
       const [event] = await this.eventModel.find({ contractAddress }).select(('-_id -__v -createdTime -userId -txHash -deployedStatus')).exec()
 
-      const price$ = this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
-      const price = await lastValueFrom(price$)
+      const price = await this.blockchainService.eventDisplayDetails({contractAddress: event.contractAddress}, metadata)
 
       const returnEvent = { 
         eventDate: event.eventDate, 
@@ -153,12 +150,10 @@ export class EventsService implements OnModuleInit {
     const event = await this.eventModel.findOne({ userId: metadata.getMap().user.id, deployerAddress: req.address, contractAddress: req.contractAddress }).select('-_id -__v -userId')
 
     // get event info from blockchain service
-    const blockchainEventInfo$ = this.blockchainService.blockchainEventInfo({contractAddress: req.contractAddress}, metadata)
-    const blockchainEventInfo = await lastValueFrom(blockchainEventInfo$)
+    const blockchainEventInfo = await this.blockchainService.blockchainEventInfo({contractAddress: req.contractAddress}, metadata)
 
     // get admin info from user service 
-    const admins$ = this.userService.adminEmails({adminIds: event.admins}, metadata)
-    const admins = await lastValueFrom(admins$)
+    const admins = await this.userService.adminEmails({adminIds: event.admins}, metadata)
     return {
       eventName: event.eventName,
       symbol: event.symbol,
@@ -181,8 +176,7 @@ export class EventsService implements OnModuleInit {
     await this.doesUserOwnAddress(req.address, metadata)
 
     // check if address in question owns any tickets to event
-    const isOwner$ = this.blockchainService.doesAddressOwnTicket({contractAddress: req.contractAddress, address: req.address}, metadata)
-    const isOwner = await lastValueFrom(isOwner$)
+    const isOwner = await this.blockchainService.doesAddressOwnTicket({contractAddress: req.contractAddress, address: req.address}, metadata)
 
     if(!isOwner.result) {
       throw new RpcException({
@@ -299,8 +293,7 @@ export class EventsService implements OnModuleInit {
 
     // get userId as string from user service
     // will return error if no user is found by email
-    const res$ = this.userService.adminId({ email: req.email }, metadata)
-    const res = await lastValueFrom(res$)
+    const res = await this.userService.adminId({ email: req.email }, metadata)
 
     if(event.admins.includes(res.adminId)) {
       throw new RpcException({
@@ -315,10 +308,9 @@ export class EventsService implements OnModuleInit {
   }
 
   async doesUserOwnAddress(address: string, metadata){
-    const addresses$ = this.userService.myAddresses({}, metadata)
-    const addressRes = await lastValueFrom(addresses$)
+    const addressesRes = await this.userService.myAddresses({}, metadata)
 
-    if(!addressRes.addresses.includes(address)){ 
+    if(!addressesRes.addresses.includes(address)){ 
       throw new RpcException({
         code: status.PERMISSION_DENIED,
         message: 'User must own address in request'
@@ -328,8 +320,7 @@ export class EventsService implements OnModuleInit {
 
 
   async doesAddressOwnTicket(contractAddress: string, address: string, metadata){
-    const isOwner$ = this.blockchainService.doesAddressOwnTicket({contractAddress: contractAddress, address: address}, metadata)
-    const isOwner = await lastValueFrom(isOwner$)
+    const isOwner = await this.blockchainService.doesAddressOwnTicket({contractAddress: contractAddress, address: address}, metadata)
 
     if(!isOwner.result) {
       throw new RpcException({

@@ -159,9 +159,7 @@ export class EthereumService implements OnModuleInit {
                 // if they match, we have the correct transaction
                 if (txn.hash === txHash) {
                     // this is where the new contract address is passed with the txnHash to the event microservice to update the entry
-                    const newStat$ = this.eventService.updateEventStatus({ txHash, contractAddress: txn.contractAddress }, metadata)
-                    // rxjs observables mean we have to do this jank lastValueFrom function to wait for a response
-                    await lastValueFrom(newStat$)
+                    await this.eventService.updateEventStatus({ txHash, contractAddress: txn.contractAddress }, metadata)
                     return {}
                 }
             }
@@ -170,9 +168,7 @@ export class EthereumService implements OnModuleInit {
         if (res.status == false) {
             // here we dont sent the contract address which tells the event service
             // to set the event status as 'failed'
-            const newStat$ = this.eventService.updateEventStatus({ txHash }, metadata)
-            // rxjs observables mean we have to do this jank lastValueFrom function to wait for a response
-            await lastValueFrom(newStat$)
+            await this.eventService.updateEventStatus({ txHash }, metadata)
             return {}
         }
     }
@@ -214,12 +210,11 @@ export class EthereumService implements OnModuleInit {
 
     async buyTicketParams(req: BuyTicketsParamsRequest, metadata) {
         try {
-            const userEvent$ = this.eventService.createUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
-            await lastValueFrom(userEvent$)
+            await this.eventService.createUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
         } catch (e) {
             // console.log(e)
             throw new RpcException({
-              code: status.UNKNOWN,
+              code: status.INTERNAL,
               message: e
           })
         }
@@ -229,8 +224,7 @@ export class EthereumService implements OnModuleInit {
         // removed id counter since a purchase of multiple tickets breaks it
         // const ticketIdCounter = await currentContract.methods.ticketIdCounter.call().call()
         // get date, event name and image url from db
-        const event$ = this.eventService.eventByContractAddress({ contractAddress: req.contractAddress }, metadata)
-        const event = await lastValueFrom(event$)
+        const event = await this.eventService.eventByContractAddress({ contractAddress: req.contractAddress }, metadata)
         const cleanScript = {
             name: 'Ticket',
             description: 'An NFT that grants you access to ' + event.eventName + ', this NFT will be locked for resale on every website other than Blickets.com until the day after the event. You will be able to list this item however the sale will not go through unless it is past the event date.',
@@ -268,11 +262,10 @@ export class EthereumService implements OnModuleInit {
 
         } catch (e) {
             // TODO add check that they do not already own a ticket before removeing it from their account
-            const userEvent$ = this.eventService.deleteUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
-            await lastValueFrom(userEvent$)
+            await this.eventService.deleteUserEvent({ contractAddress: req.contractAddress, walletAddress: req.walletAddress }, metadata) 
             // console.log(e)
             throw new RpcException({
-                code: status.UNKNOWN,
+                code: status.INTERNAL,
                 message: e
             })
         }
@@ -283,8 +276,7 @@ export class EthereumService implements OnModuleInit {
     async allMyEvents(walletAddress, metadata) {
         // get events that user is going to addresses from mongodb
         // we do this to stop random nft's from being returned.
-        const userEvents$ = this.eventService.allUserEvents({walletAddress}, metadata)
-        const userEventContractAddresses = await lastValueFrom(userEvents$)
+        const userEventContractAddresses = await this.eventService.allUserEvents({walletAddress}, metadata)
         if(!userEventContractAddresses.contractAddresses) {
             return {}
         }
@@ -305,8 +297,8 @@ export class EthereumService implements OnModuleInit {
             const eventInfo = []
             // for each users nft get data from event service
             for (const contract of userEventContractAddresses.contractAddresses) {
-                const eventInfo$ = this.eventService.eventByContractAddress({ contractAddress: contract }, metadata)
-                eventInfo.push(await lastValueFrom(eventInfo$))
+                const event = await this.eventService.eventByContractAddress({ contractAddress: contract }, metadata)
+                eventInfo.push(event)
             }
 
             for (const nft of nfts.ownedNfts) {
@@ -369,10 +361,9 @@ export class EthereumService implements OnModuleInit {
 
     async withdraw(req, metadata) {
         // check person making request owns address
-        const addresses$ = this.userService.myAddresses({}, metadata)
-        const addressRes = await lastValueFrom(addresses$)
+        const addressesRes = await this.userService.myAddresses({}, metadata)
 
-        if(!addressRes.addresses.includes(req.address)){ 
+        if(!addressesRes.addresses.includes(req.address)){ 
             throw new RpcException({
                 code: status.PERMISSION_DENIED,
                 message: 'User must own address in request'
